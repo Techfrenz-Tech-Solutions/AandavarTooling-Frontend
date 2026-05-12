@@ -29,8 +29,10 @@ function ToolInwardEntry() {
   // Fetch Items
   const fetchItems = async () => {
     try {
-      const res = await api.get("/items/activeitem");
+      const res = await api.get("/activeitems/activeitem");
+      console.log("Items API raw response:", res.data);
       const items = res.data?.data || [];
+      console.log("First item keys:", items[0] ? Object.keys(items[0]) : "empty");
       setToolOptions(items);
       setFilteredTools(items);
     } catch (err) {
