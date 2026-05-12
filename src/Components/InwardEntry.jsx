@@ -400,6 +400,11 @@
 // export default ToolInwardEntry;
 
 
+// 
+
+
+
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
@@ -410,8 +415,8 @@ import api from "../api";
 function ToolInwardEntry() {
   const navigate = useNavigate();
 
-  const [toolName, setToolName] = useState(""); // (UI same)
-  const [toolId, setToolId] = useState("");     // now ItemID
+  const [toolName, setToolName] = useState("");
+  const [toolId, setToolId] = useState("");
 
   const [uom, setUom] = useState("");
   const [uomId, setUomId] = useState("");
@@ -425,15 +430,19 @@ function ToolInwardEntry() {
   const [uomOptions, setUomOptions] = useState([]);
 
   useEffect(() => {
-    fetchItems();   // ✅ changed
+    fetchItems();
     fetchUOMs();
   }, []);
 
-  // ✅ FETCH FROM ITEM MASTER
+  // ✅ FETCH ITEMS
   const fetchItems = async () => {
     try {
-      const res = await api.get("/items/activeitem"); // already item API
-      const items = res.data.data || [];
+      const res = await api.get("/items/activeitem");
+
+      console.log("Items API:", res.data);
+
+      const items = res.data?.data || [];
+
       setToolOptions(items);
       setFilteredTools(items);
     } catch (err) {
@@ -441,45 +450,54 @@ function ToolInwardEntry() {
     }
   };
 
+  // ✅ FETCH UOM
   const fetchUOMs = async () => {
     try {
       const res = await api.get("/Toolstock/activeuom");
-      setUomOptions(res.data.data || []);
+
+      console.log("UOM API:", res.data);
+
+      setUomOptions(res.data?.data || []);
     } catch (err) {
       console.error("Error fetching UOMs:", err);
     }
   };
 
-  /* FILTER + CAPTURE ITEM ID */
+  // ✅ HANDLE INPUT CHANGE
   const handleFilter = (e) => {
     const value = e.target.value;
     setToolName(value);
 
-    const filtered = toolOptions.filter((item) =>
-      item.ItemName.toLowerCase().includes(value.toLowerCase())
-    );
+    const filtered = toolOptions.filter((item) => {
+      const name =
+        item.ItemName || item.itemName || item.Name || "";
+      return name.toLowerCase().includes(value.toLowerCase());
+    });
+
     setFilteredTools(filtered);
 
-    // ✅ Capture ItemID
-    const selected = toolOptions.find(
-      (item) => item.ItemName === value
-    );
+    const selected = toolOptions.find((item) => {
+      const name =
+        item.ItemName || item.itemName || item.Name || "";
+      return name.toLowerCase() === value.toLowerCase();
+    });
 
-    setToolId(selected ? selected.SI : ""); // ⚠️ use SI (your PK)
+    setToolId(selected ? selected.SI || selected.id : "");
   };
 
-  /* HANDLE UOM */
+  // ✅ HANDLE UOM
   const handleUOMChange = (e) => {
     const selectedId = e.target.value;
     setUomId(selectedId);
 
     const selected = uomOptions.find(
-      (u) => String(u.UOMID) === String(selectedId)
+      (u) => Number(u.UOMID) === Number(selectedId)
     );
 
     setUom(selected ? selected.UOMName : "");
   };
 
+  // ✅ SUBMIT
   const handleSubmit = async () => {
     if (!toolId || !uomId || !quantity || !rate) {
       alert("Select valid Item and UOM");
@@ -488,23 +506,24 @@ function ToolInwardEntry() {
 
     try {
       const payload = {
-        ItemID: toolId,   // ✅ item id
-        UOMID: uomId,
+        ItemID: Number(toolId),
+        UOMID: Number(uomId),
         Quantity: Number(quantity),
         Rate: Number(rate),
       };
 
-      await api.post("/items/iteminward", payload); 
-      // (API name same, backend should handle ItemID)
+      console.log("Payload:", payload);
+
+      await api.post("/items/iteminward", payload);
 
       alert("Item Inward submitted & stock updated!");
       navigate("/tool-stock");
     } catch (err) {
-      console.error("Error submitting inward:", err);
+      console.error("Error:", err.response || err);
       alert("Error updating stock");
     }
 
-    // Reset
+    // RESET
     setToolName("");
     setToolId("");
     setUom("");
@@ -520,25 +539,42 @@ function ToolInwardEntry() {
       <Topbar />
 
       <div className="ie-header">
-        <h1>Item Inward Entry</h1> {/* ✅ text only changed */}
+        <h1>Item Inward Entry</h1>
       </div>
 
       <div className="ie-form">
         <div className="ie-row">
           <div className="ie-group">
-            <label>Item Name</label> {/* ✅ label only */}
+            <label>Item Name</label>
 
             <input
               list="toolList"
               value={toolName}
               onChange={handleFilter}
-              placeholder="Select Item"
+              placeholder="Type to search item..."
+              autoComplete="off"
             />
 
+            {/* ✅ IMPORTANT FIX */}
             <datalist id="toolList">
-              {filteredTools.map((item) => (
-                <option key={item.SI} value={item.ItemName} />
-              ))}
+              {filteredTools.length > 0 ? (
+                filteredTools.map((item) => {
+                  const name =
+                    item.ItemName ||
+                    item.itemName ||
+                    item.Name ||
+                    "Unnamed";
+
+                  return (
+                    <option
+                      key={item.SI || item.id}
+                      value={name}
+                    />
+                  );
+                })
+              ) : (
+                <option value="No items found" />
+              )}
             </datalist>
           </div>
 
@@ -584,3 +620,4 @@ function ToolInwardEntry() {
 }
 
 export default ToolInwardEntry;
+
