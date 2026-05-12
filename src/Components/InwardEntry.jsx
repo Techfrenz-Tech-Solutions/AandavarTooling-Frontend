@@ -12,11 +12,13 @@ function ToolInwardEntry() {
   const [toolId, setToolId] = useState("");
 
   const [uom, setUom] = useState("");
+
   const [quantity, setQuantity] = useState("");
   const [rate, setRate] = useState("");
 
   const [toolOptions, setToolOptions] = useState([]);
   const [filteredTools, setFilteredTools] = useState([]);
+
   const [uomOptions, setUomOptions] = useState([]);
 
   useEffect(() => {
@@ -24,38 +26,29 @@ function ToolInwardEntry() {
     fetchUOMs();
   }, []);
 
-  // Fetch Items from API
+  // Fetch Items
   const fetchItems = async () => {
     try {
       const res = await api.get("/items/activeitem");
-      console.log("✅ Items API Response:", res.data);
-
       const items = res.data?.data || [];
-      console.log("✅ Parsed Items:", items);
-
       setToolOptions(items);
       setFilteredTools(items);
     } catch (err) {
-      console.error("❌ Error fetching items:", err);
+      console.error("Error fetching items:", err);
     }
   };
 
-  // Fetch UOMs from API
+  // Fetch UOMs
   const fetchUOMs = async () => {
     try {
       const res = await api.get("/activeuoms/activeUOM");
-      console.log("✅ UOM API Response:", res.data);
-
-      const uoms = res.data?.data || [];
-      console.log("✅ Parsed UOMs:", uoms);
-
-      setUomOptions(uoms);
+      setUomOptions(res.data?.data || []);
     } catch (err) {
-      console.error("❌ Error fetching UOMs:", err);
+      console.error("Error fetching UOMs:", err);
     }
   };
 
-  // Handle Item Name Input Change
+  // Handle Item Name Input
   const handleFilter = (e) => {
     const value = e.target.value;
     setToolName(value);
@@ -64,47 +57,40 @@ function ToolInwardEntry() {
       const name = item.ItemName || item.itemName || item.Name || "";
       return name.toLowerCase().includes(value.toLowerCase());
     });
-
     setFilteredTools(filtered);
 
-    // Auto-select if exact match
     const selected = toolOptions.find((item) => {
       const name = item.ItemName || item.itemName || item.Name || "";
       return name.toLowerCase() === value.toLowerCase();
     });
-
     setToolId(selected ? selected.SI || selected.id : "");
   };
 
-  // Submit Form
+  // Submit
   const handleSubmit = async () => {
     if (!toolId || !uom || !quantity || !rate) {
-      alert("Please fill all fields");
+      alert("Select valid Item and UOM");
       return;
     }
 
     try {
       const payload = {
-        ItemName: toolName,
-        ItemCode: toolOptions.find(t => t.SI === toolId)?.ItemCode || "",
+        ItemID: Number(toolId),
         UOMName: uom,
         Quantity: Number(quantity),
         Rate: Number(rate),
-        Status: "Completed",
       };
-
-      console.log("📤 Submitting Payload:", payload);
 
       await api.post("/inward/iteminward", payload);
 
       alert("Item Inward submitted & stock updated!");
       navigate("/current-stock");
     } catch (err) {
-      console.error("❌ Submit Error:", err.response || err);
+      console.error("Error:", err.response || err);
       alert("Error updating stock");
     }
 
-    // Reset form
+    // Reset
     setToolName("");
     setToolId("");
     setUom("");
@@ -134,14 +120,10 @@ function ToolInwardEntry() {
               autoComplete="off"
             />
             <datalist id="toolList">
-              {filteredTools.length > 0 ? (
-                filteredTools.map((item) => {
-                  const name = item.ItemName || item.itemName || item.Name || "Unnamed";
-                  return <option key={item.SI || item.id} value={name} />;
-                })
-              ) : (
-                <option value="No items found" />
-              )}
+              {filteredTools.map((item) => {
+                const name = item.ItemName || item.itemName || item.Name || "Unnamed";
+                return <option key={item.SI || item.id} value={name} />;
+              })}
             </datalist>
           </div>
 
