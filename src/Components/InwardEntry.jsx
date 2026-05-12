@@ -30,9 +30,7 @@ function ToolInwardEntry() {
   const fetchItems = async () => {
     try {
       const res = await api.get("/activeitems/activeitem");
-      console.log("Items API raw response:", res.data);
       const items = res.data?.data || [];
-      console.log("First item keys:", items[0] ? Object.keys(items[0]) : "empty");
       setToolOptions(items);
       setFilteredTools(items);
     } catch (err) {
@@ -55,16 +53,14 @@ function ToolInwardEntry() {
     const value = e.target.value;
     setToolName(value);
 
-    const filtered = toolOptions.filter((item) => {
-      const name = item.product_name || "";
-      return name.toLowerCase().includes(value.toLowerCase());
-    });
+    const filtered = toolOptions.filter((item) =>
+      (item.product_name || "").toLowerCase().includes(value.toLowerCase())
+    );
     setFilteredTools(filtered);
 
-    const selected = toolOptions.find((item) => {
-      const name = item.product_name || "";
-      return name.toLowerCase() === value.toLowerCase();
-    });
+    const selected = toolOptions.find(
+      (item) => (item.product_name || "").toLowerCase() === value.toLowerCase()
+    );
     setToolId(selected ? selected.SI || selected.id : "");
   };
 
@@ -123,7 +119,9 @@ function ToolInwardEntry() {
             />
             <datalist id="toolList">
               {filteredTools.map((item, i) => (
-                <option key={item.SI || i} value={item.product_name} />
+                <option key={item.SI || i} value={item.product_name || item}>
+                  {item.product_name || item}
+                </option>
               ))}
             </datalist>
           </div>
