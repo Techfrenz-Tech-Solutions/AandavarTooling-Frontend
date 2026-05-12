@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
@@ -10,23 +10,33 @@ function ToolInwardEntry() {
 
   const [toolName, setToolName] = useState("");
   const [toolId, setToolId] = useState("");
-
   const [uom, setUom] = useState("");
-
   const [quantity, setQuantity] = useState("");
   const [rate, setRate] = useState("");
 
   const [toolOptions, setToolOptions] = useState([]);
   const [filteredTools, setFilteredTools] = useState([]);
-
   const [uomOptions, setUomOptions] = useState([]);
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     fetchItems();
     fetchUOMs();
   }, []);
 
-  // Fetch Items
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const fetchItems = async () => {
     try {
       const res = await api.get("/activeitems/activeitem");
@@ -38,7 +48,6 @@ function ToolInwardEntry() {
     }
   };
 
-  // Fetch UOMs
   const fetchUOMs = async () => {
     try {
       const res = await api.get("/activeuoms/activeUOM");
@@ -48,26 +57,27 @@ function ToolInwardEntry() {
     }
   };
 
-  // Handle Item Name Input
-  const handleFilter = (e) => {
+  const handleSearchChange = (e) => {
     const value = e.target.value;
     setToolName(value);
+    setToolId("");
+    setDropdownOpen(true);
 
     const filtered = toolOptions.filter((item) =>
       (item.product_name || "").toLowerCase().includes(value.toLowerCase())
     );
     setFilteredTools(filtered);
-
-    const selected = toolOptions.find(
-      (item) => (item.product_name || "").toLowerCase() === value.toLowerCase()
-    );
-    setToolId(selected ? selected.SI || selected.id : "");
   };
 
-  // Submit
+  const handleSelectItem = (item) => {
+    setToolName(item.product_name || "");
+    setToolId(item.SI || item.id || "");
+    setDropdownOpen(false);
+  };
+
   const handleSubmit = async () => {
     if (!toolId || !uom || !quantity || !rate) {
-      alert("Select valid Item and UOM");
+      alert("Please fill all fields");
       return;
     }
 
@@ -80,7 +90,6 @@ function ToolInwardEntry() {
       };
 
       await api.post("/inward/iteminward", payload);
-
       alert("Item Inward submitted & stock updated!");
       navigate("/current-stock");
     } catch (err) {
@@ -88,7 +97,6 @@ function ToolInwardEntry() {
       alert("Error updating stock");
     }
 
-    // Reset
     setToolName("");
     setToolId("");
     setUom("");
@@ -108,24 +116,48 @@ function ToolInwardEntry() {
 
       <div className="ie-form">
         <div className="ie-row">
-          <div className="ie-group">
-            <label>Item Name</label>
-            <input
-              list="toolList"
-              value={toolName}
-              onChange={handleFilter}
-              placeholder="Type to search item..."
-              autoComplete="off"
-            />
-            <datalist id="toolList">
-              {filteredTools.map((item, i) => (
-                <option key={item.SI || i} value={item.product_name || item}>
-                  {item.product_name || item}
-                </option>
-              ))}
-            </datalist>
+
+          {/* ── Product Name Custom Dropdown ── */}
+          <div className="ie-group" ref={dropdownRef}>
+            <label>Product Name</label>
+            <div className="ie-custom-select">
+              <input
+                type="text"
+                className="ie-custom-input"
+                value={toolName}
+                onChange={handleSearchChange}
+                onFocus={() => setDropdownOpen(true)}
+                placeholder="Select the Product Name"
+                autoComplete="off"
+              />
+              <span
+                className="ie-custom-arrow"
+                onClick={() => setDropdownOpen((prev) => !prev)}
+              >
+                ▾
+              </span>
+
+              {dropdownOpen && (
+                <ul className="ie-custom-dropdown">
+                  {filteredTools.length > 0 ? (
+                    filteredTools.map((item, i) => (
+                      <li
+                        key={item.SI || i}
+                        className="ie-custom-option"
+                        onMouseDown={() => handleSelectItem(item)}
+                      >
+                        {item.product_name}
+                      </li>
+                    ))
+                  ) : (
+                    <li className="ie-custom-option ie-no-result">No items found</li>
+                  )}
+                </ul>
+              )}
+            </div>
           </div>
 
+          {/* ── UOM ── */}
           <div className="ie-group">
             <label>UOM</label>
             <select value={uom} onChange={(e) => setUom(e.target.value)}>
