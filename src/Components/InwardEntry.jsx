@@ -8,16 +8,15 @@ import api from "../api";
 function ToolInwardEntry() {
   const navigate = useNavigate();
 
-  const [itemName, setItemName] = useState("");
-  const [itemCode, setItemCode] = useState("");
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [toolName, setToolName] = useState("");
+  const [toolId, setToolId] = useState("");
 
   const [uom, setUom] = useState("");
   const [quantity, setQuantity] = useState("");
   const [rate, setRate] = useState("");
 
-  const [itemOptions, setItemOptions] = useState([]);
-  const [filteredItems, setFilteredItems] = useState([]);
+  const [toolOptions, setToolOptions] = useState([]);
+  const [filteredTools, setFilteredTools] = useState([]);
   const [uomOptions, setUomOptions] = useState([]);
 
   useEffect(() => {
@@ -25,84 +24,93 @@ function ToolInwardEntry() {
     fetchUOMs();
   }, []);
 
-  // Fetch active items — returns objects with ItemName, ItemCode, SI
+  // Fetch Items from API
   const fetchItems = async () => {
     try {
       const res = await api.get("/items/activeitem");
+      console.log("✅ Items API Response:", res.data);
+
       const items = res.data?.data || [];
-      setItemOptions(items);
-      setFilteredItems(items);
+      console.log("✅ Parsed Items:", items);
+
+      setToolOptions(items);
+      setFilteredTools(items);
     } catch (err) {
-      console.error("Error fetching items:", err);
+      console.error("❌ Error fetching items:", err);
     }
   };
 
-  // Fetch active UOMs — returns plain strings e.g. ["Nos", "Kg", ...]
+  // Fetch UOMs from API
   const fetchUOMs = async () => {
     try {
       const res = await api.get("/activeuoms/activeUOM");
-      setUomOptions(res.data?.data || []);
+      console.log("✅ UOM API Response:", res.data);
+
+      const uoms = res.data?.data || [];
+      console.log("✅ Parsed UOMs:", uoms);
+
+      setUomOptions(uoms);
     } catch (err) {
-      console.error("Error fetching UOMs:", err);
+      console.error("❌ Error fetching UOMs:", err);
     }
   };
 
-  // Filter items as user types; auto-fill ItemCode when exact match found
-  const handleItemNameChange = (e) => {
+  // Handle Item Name Input Change
+  const handleFilter = (e) => {
     const value = e.target.value;
-    setItemName(value);
+    setToolName(value);
 
-    const filtered = itemOptions.filter((item) =>
-      (item.ItemName || "").toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredItems(filtered);
+    const filtered = toolOptions.filter((item) => {
+      const name = item.ItemName || item.itemName || item.Name || "";
+      return name.toLowerCase().includes(value.toLowerCase());
+    });
 
-    const exact = itemOptions.find(
-      (item) => (item.ItemName || "").toLowerCase() === value.toLowerCase()
-    );
-    if (exact) {
-      setSelectedItem(exact);
-      setItemCode(exact.ItemCode || "");
-    } else {
-      setSelectedItem(null);
-      setItemCode("");
-    }
+    setFilteredTools(filtered);
+
+    // Auto-select if exact match
+    const selected = toolOptions.find((item) => {
+      const name = item.ItemName || item.itemName || item.Name || "";
+      return name.toLowerCase() === value.toLowerCase();
+    });
+
+    setToolId(selected ? selected.SI || selected.id : "");
   };
 
-  // Submit
+  // Submit Form
   const handleSubmit = async () => {
-    if (!selectedItem || !uom || !quantity || !rate) {
-      alert("Please select a valid Item and fill all fields");
+    if (!toolId || !uom || !quantity || !rate) {
+      alert("Please fill all fields");
       return;
     }
 
     try {
       const payload = {
-        ItemName: selectedItem.ItemName,
-        ItemCode: selectedItem.ItemCode,
+        ItemName: toolName,
+        ItemCode: toolOptions.find(t => t.SI === toolId)?.ItemCode || "",
         UOMName: uom,
         Quantity: Number(quantity),
         Rate: Number(rate),
         Status: "Completed",
       };
 
+      console.log("📤 Submitting Payload:", payload);
+
       await api.post("/inward/iteminward", payload);
 
       alert("Item Inward submitted & stock updated!");
       navigate("/current-stock");
     } catch (err) {
-      console.error("Error:", err.response || err);
+      console.error("❌ Submit Error:", err.response || err);
       alert("Error updating stock");
     }
 
-    // Reset
-    setItemName("");
-    setItemCode("");
-    setSelectedItem(null);
+    // Reset form
+    setToolName("");
+    setToolId("");
     setUom("");
     setQuantity("");
     setRate("");
-    setFilteredItems(itemOptions);
+    setFilteredTools(toolOptions);
   };
 
   return (
@@ -119,31 +127,24 @@ function ToolInwardEntry() {
           <div className="ie-group">
             <label>Item Name</label>
             <input
-              list="itemList"
-              value={itemName}
-              onChange={handleItemNameChange}
+              list="toolList"
+              value={toolName}
+              onChange={handleFilter}
               placeholder="Type to search item..."
               autoComplete="off"
             />
-            <datalist id="itemList">
-              {filteredItems.map((item) => (
-                <option key={item.SI} value={item.ItemName} />
-              ))}
+            <datalist id="toolList">
+              {filteredTools.length > 0 ? (
+                filteredTools.map((item) => {
+                  const name = item.ItemName || item.itemName || item.Name || "Unnamed";
+                  return <option key={item.SI || item.id} value={name} />;
+                })
+              ) : (
+                <option value="No items found" />
+              )}
             </datalist>
           </div>
 
-          <div className="ie-group">
-            <label>Item Code</label>
-            <input
-              type="text"
-              value={itemCode}
-              readOnly
-              placeholder="Auto-filled"
-            />
-          </div>
-        </div>
-
-        <div className="ie-row">
           <div className="ie-group">
             <label>UOM</label>
             <select value={uom} onChange={(e) => setUom(e.target.value)}>
@@ -155,7 +156,9 @@ function ToolInwardEntry() {
               ))}
             </select>
           </div>
+        </div>
 
+        <div className="ie-row">
           <div className="ie-group">
             <label>Quantity</label>
             <input
@@ -164,9 +167,7 @@ function ToolInwardEntry() {
               onChange={(e) => setQuantity(e.target.value)}
             />
           </div>
-        </div>
 
-        <div className="ie-row">
           <div className="ie-group">
             <label>Rate</label>
             <input
