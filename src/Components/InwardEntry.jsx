@@ -54,13 +54,13 @@ function ToolInwardEntry() {
     setToolName(value);
 
     const filtered = toolOptions.filter((item) => {
-      const name = item.ItemName || item.itemName || item.Name || "";
+      const name = item.product_name || "";
       return name.toLowerCase().includes(value.toLowerCase());
     });
     setFilteredTools(filtered);
 
     const selected = toolOptions.find((item) => {
-      const name = item.ItemName || item.itemName || item.Name || "";
+      const name = item.product_name || "";
       return name.toLowerCase() === value.toLowerCase();
     });
     setToolId(selected ? selected.SI || selected.id : "");
@@ -120,10 +120,9 @@ function ToolInwardEntry() {
               autoComplete="off"
             />
             <datalist id="toolList">
-              {filteredTools.map((item) => {
-                const name = item.ItemName || item.itemName || item.Name || "Unnamed";
-                return <option key={item.SI || item.id} value={name} />;
-              })}
+              {filteredTools.map((item, i) => (
+                <option key={item.SI || i} value={item.product_name} />
+              ))}
             </datalist>
           </div>
 
