@@ -1,46 +1,32 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import "../CSS/InwardEntry.css";
 import api from "../api";
 
-function InwardEntry() {
+function ToolInwardEntry() {
   const navigate = useNavigate();
 
-  const [toolName, setToolName]     = useState("");
-  const [toolId, setToolId]         = useState("");
-  const [uom, setUom]               = useState("");
-  const [quantity, setQuantity]     = useState("");
-  const [rate, setRate]             = useState("");
+  const [toolName, setToolName] = useState("");
+  const [toolId, setToolId] = useState("");
 
-  const [toolOptions, setToolOptions]     = useState([]);
+  const [uom, setUom] = useState("");
+
+  const [quantity, setQuantity] = useState("");
+  const [rate, setRate] = useState("");
+
+  const [toolOptions, setToolOptions] = useState([]);
   const [filteredTools, setFilteredTools] = useState([]);
-  const [uomOptions, setUomOptions]       = useState([]);
 
-  const [inwardList, setInwardList] = useState([]);
-
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const [uomOptions, setUomOptions] = useState([]);
 
   useEffect(() => {
     fetchItems();
     fetchUOMs();
-    fetchInwards();
   }, []);
 
-  // Close dropdown on outside click
-  useEffect(() => {
-    const handler = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  // GET /activeitems/activeitem
+  // Fetch Items
   const fetchItems = async () => {
     try {
       const res = await api.get("/activeitems/activeitem");
@@ -52,7 +38,7 @@ function InwardEntry() {
     }
   };
 
-  // GET /activeuoms/activeUOM
+  // Fetch UOMs
   const fetchUOMs = async () => {
     try {
       const res = await api.get("/activeuoms/activeUOM");
@@ -62,74 +48,53 @@ function InwardEntry() {
     }
   };
 
-  // GET /inward/getItemInwards
-  const fetchInwards = async () => {
-    try {
-      const res = await api.get("/inward/getItemInwards");
-      setInwardList(res.data?.data || []);
-    } catch (err) {
-      console.error("Error fetching inwards:", err);
-    }
-  };
-
-  // Search filter for product dropdown
-  const handleSearchChange = (e) => {
+  // Handle Item Name Input
+  const handleFilter = (e) => {
     const value = e.target.value;
     setToolName(value);
-    setToolId("");
-    setDropdownOpen(true);
+
     const filtered = toolOptions.filter((item) =>
       (item.product_name || "").toLowerCase().includes(value.toLowerCase())
     );
     setFilteredTools(filtered);
+
+    const selected = toolOptions.find(
+      (item) => (item.product_name || "").toLowerCase() === value.toLowerCase()
+    );
+    setToolId(selected ? selected.SI || selected.id : "");
   };
 
-  const handleSelectItem = (item) => {
-    setToolName(item.product_name || "");
-    setToolId(item.SI || item.id || "");
-    setDropdownOpen(false);
-  };
-
-  // POST /inward/iteminward
+  // Submit
   const handleSubmit = async () => {
     if (!toolId || !uom || !quantity || !rate) {
-      alert("Please fill all fields");
+      alert("Select valid Item and UOM");
       return;
     }
 
     try {
-      await api.post("/inward/iteminward", {
-        ItemID:   Number(toolId),
-        UOMName:  uom,
+      const payload = {
+        ItemID: Number(toolId),
+        UOMName: uom,
         Quantity: Number(quantity),
-        Rate:     Number(rate),
-      });
+        Rate: Number(rate),
+      };
+
+      await api.post("/inward/iteminward", payload);
 
       alert("Item Inward submitted & stock updated!");
-      setToolName("");
-      setToolId("");
-      setUom("");
-      setQuantity("");
-      setRate("");
-      setFilteredTools(toolOptions);
-      fetchInwards();
+      navigate("/current-stock");
     } catch (err) {
-      console.error("Submit error:", err.response || err);
-      alert("Error submitting inward");
+      console.error("Error:", err.response || err);
+      alert("Error updating stock");
     }
-  };
 
-  // POST /inward/deleteItemInward
-  const handleDelete = async (inwardId) => {
-    if (!window.confirm("Delete this inward record?")) return;
-    try {
-      await api.post("/inward/deleteItemInward", { InwardID: inwardId });
-      alert("Deleted successfully");
-      fetchInwards();
-    } catch (err) {
-      console.error("Delete error:", err.response || err);
-      alert("Error deleting record");
-    }
+    // Reset
+    setToolName("");
+    setToolId("");
+    setUom("");
+    setQuantity("");
+    setRate("");
+    setFilteredTools(toolOptions);
   };
 
   return (
@@ -141,56 +106,34 @@ function InwardEntry() {
         <h1>Item Inward Entry</h1>
       </div>
 
-      {/* ── FORM ── */}
       <div className="ie-form">
         <div className="ie-row">
-
-          {/* Product Name — custom searchable dropdown */}
-          <div className="ie-group" ref={dropdownRef}>
-            <label>Product Name</label>
-            <div className="ie-custom-select">
-              <input
-                type="text"
-                className="ie-custom-input"
-                value={toolName}
-                onChange={handleSearchChange}
-                onFocus={() => setDropdownOpen(true)}
-                placeholder="Select the Product Name"
-                autoComplete="off"
-              />
-              <span
-                className="ie-custom-arrow"
-                onClick={() => setDropdownOpen((p) => !p)}
-              >
-                ▾
-              </span>
-              {dropdownOpen && (
-                <ul className="ie-custom-dropdown">
-                  {filteredTools.length > 0 ? (
-                    filteredTools.map((item, i) => (
-                      <li
-                        key={item.SI || i}
-                        className="ie-custom-option"
-                        onMouseDown={() => handleSelectItem(item)}
-                      >
-                        {item.product_name}
-                      </li>
-                    ))
-                  ) : (
-                    <li className="ie-custom-option ie-no-result">No items found</li>
-                  )}
-                </ul>
-              )}
-            </div>
+          <div className="ie-group">
+            <label>Item Name</label>
+            <input
+              list="toolList"
+              value={toolName}
+              onChange={handleFilter}
+              placeholder="Type to search item..."
+              autoComplete="off"
+            />
+            <datalist id="toolList">
+              {filteredTools.map((item, i) => (
+                <option key={item.SI || i} value={item.product_name || item}>
+                  {item.product_name || item}
+                </option>
+              ))}
+            </datalist>
           </div>
 
-          {/* UOM */}
           <div className="ie-group">
             <label>UOM</label>
             <select value={uom} onChange={(e) => setUom(e.target.value)}>
               <option value="">Select UOM</option>
               {uomOptions.map((opt, i) => (
-                <option key={i} value={opt}>{opt}</option>
+                <option key={i} value={opt}>
+                  {opt}
+                </option>
               ))}
             </select>
           </div>
@@ -220,55 +163,8 @@ function InwardEntry() {
           Submit
         </button>
       </div>
-
-      {/* ── INWARD HISTORY TABLE ── */}
-      <div className="ie-table-card">
-        <table className="ie-table">
-          <thead>
-            <tr>
-              <th>S.No</th>
-              <th>Item Name</th>
-              <th>UOM</th>
-              <th>Quantity</th>
-              <th>Rate</th>
-              <th>Date</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {inwardList.length === 0 ? (
-              <tr>
-                <td colSpan="7" className="ie-empty">No inward records found</td>
-              </tr>
-            ) : (
-              inwardList.map((item, index) => (
-                <tr key={item.InwardID || index}>
-                  <td>{index + 1}</td>
-                  <td>{item.ItemName || item.product_name || "-"}</td>
-                  <td>{item.UOMName || "-"}</td>
-                  <td>{item.Quantity}</td>
-                  <td>{item.Rate}</td>
-                  <td>
-                    {item.CreatedDate
-                      ? new Date(item.CreatedDate).toLocaleDateString()
-                      : "-"}
-                  </td>
-                  <td>
-                    <button
-                      className="ie-delete-btn"
-                      onClick={() => handleDelete(item.InwardID)}
-                    >
-                      <i className="fa fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 }
 
-export default InwardEntry;
+export default ToolInwardEntry;
