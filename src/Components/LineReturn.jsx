@@ -370,6 +370,7 @@ function WorkOrderHistory() {
   useEffect(() => {
     fetchHistory();
     fetchWorkers();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ================= DOWNLOAD PDF =================

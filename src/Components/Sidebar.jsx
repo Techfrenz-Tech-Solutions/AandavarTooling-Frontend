@@ -155,6 +155,14 @@ const Sidebar = ({ collapsed }) => {
         </div>
 
         <div
+          className={`menu-item ${isActive("/dashboard/IGSTSalesPage") ? "active" : ""}`}
+          onClick={() => navigate("/dashboard/IGSTSalesPage")}
+        >
+          <i className="fa fa-undo"></i>
+          {!collapsed && <span>IGST-Sales Page</span>}
+        </div>
+
+        <div
           className={`menu-item ${isActive("/dashboard/InvoiceHistory") ? "active" : ""}`}
           onClick={() => navigate("/dashboard/InvoiceHistory")}
           >

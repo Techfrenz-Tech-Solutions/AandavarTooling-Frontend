@@ -11,6 +11,7 @@ import CustomerMaster from "./Components/CustomerMaster";
 import WorkOrder from "./Components/LineOut";
 import ReturnPage from "./Components/LineReturn";
 import SalesPage from "./Components/SalesPage";
+import IGSTSalesPage from "./Components/IGSTSalesPage";
 import CurrentStock from "./Components/CurrentStock";
 import Reports from "./Components/Reports";
 import InwardEntry from "./Components/InwardEntry";
@@ -23,6 +24,7 @@ import Returndeliverychallan from "./Components/Returndeliverychallan";
 import Toolstack from "./Components/Toolstack";
 import InvoiceHistory from "./Components/InvoiceHistory";
 import InvoiceTemplate from "./Components/InvoiceTemplate";
+import InvoiceTemplate2 from "./Components/InvoiceTemplate2";
 import InstrumentMaster from "./Components/Instrument";
 
 function App() {
@@ -46,6 +48,7 @@ function App() {
         <Route path="/dashboard/salesproducts" element={<SalesProductMaster />} />
         <Route path="/dashboard/CustomerMaster" element={<CustomerMaster />} />
         <Route path="/dashboard/SalesPage" element={<SalesPage />} />
+        <Route path="/dashboard/IGSTSalesPage" element={<IGSTSalesPage/>} />
         <Route path="/dashboard/ToolMaster" element={<ToolMaster />} />
         <Route path="/dashboard/ToolInwardEntry" element={<ToolInwardEntry />} />
         <Route path="/dashboard/DeliveryChallan" element={<DeliveryChallan />} />
@@ -57,6 +60,7 @@ function App() {
 
         {/* FIXED ROUTE */}
         <Route path="/dashboard/invoice/:invoiceNo" element={<InvoiceTemplate />} />
+        <Route path="/dashboard/invoice/:invoiceNo" element={<InvoiceTemplate2 />} />
       </Routes>
     </BrowserRouter>
   );

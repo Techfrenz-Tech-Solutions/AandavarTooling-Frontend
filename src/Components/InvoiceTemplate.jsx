@@ -322,12 +322,6 @@ function InvoiceTemplate(props) {
   const [invoice, setInvoice] = useState(null);
   const [items, setItems] = useState([]);
 
-  useEffect(() => {
-    if (invoiceNo) {
-      fetchInvoice();
-    }
-  }, [invoiceNo]);
-
   const fetchInvoice = async () => {
     try {
       const res = await axios.get(
@@ -345,6 +339,13 @@ function InvoiceTemplate(props) {
     }
   };
 
+  useEffect(() => {
+    if (invoiceNo) {
+      fetchInvoice();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [invoiceNo]);
+
   /* ✅ DOWNLOAD PDF FUNCTION */
   const handleDownload = async () => {
     const input = document.getElementById("invoice");
@@ -357,7 +358,6 @@ function InvoiceTemplate(props) {
 
     const pdf = new jsPDF("p", "mm", "a4");
     const imgWidth = 210;
-    const pageHeight = 295;
 
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
 

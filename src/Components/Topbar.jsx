@@ -14,6 +14,7 @@ const routeNames = {
   "/dashboard/feedout": "Line Out",
   "/dashboard/returns": "Line Return",
   "/dashboard/SalesPage": "Sales Page",
+  "/dashboard/IGSTSalasPage": "IGST-Sales Page",
   "/dashboard/InwardEntry": "product Inward Entry",
   "/dashboard/ToolInward": "Tool Inward Entry",
   "/dashboard/CurrentStock": "Current Stock",
@@ -46,10 +47,6 @@ const currentPage = getCurrentPage();
 
   const handleRefresh = () => {
     window.location.reload();
-  };
-
-  const handleAdminClick = () => {
-    alert("Admin Profile Clicked!");
   };
 
   const handleLogout = () => {
