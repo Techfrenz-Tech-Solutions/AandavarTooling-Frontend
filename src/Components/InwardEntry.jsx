@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import "../CSS/InwardEntry.css";
@@ -6,7 +6,7 @@ import api from "../api";
 
 function InwardEntry() {
   const [toolName, setToolName] = useState("");
-  const [toolId, setToolId] = useState("");
+  const [toolId, setToolId] = useState(null);
   const [uom, setUom] = useState("");
   const [quantity, setQuantity] = useState("");
   const [rate, setRate] = useState("");
@@ -25,13 +25,15 @@ function InwardEntry() {
   const [editUOM, setEditUOM] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
+  // ── stores the raw selected item object so we can inspect all its fields ──
+  const [selectedItemObj, setSelectedItemObj] = useState(null);
+
   useEffect(() => {
     fetchItems();
     fetchUOMs();
     fetchInwards();
   }, []);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handler = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -42,61 +44,75 @@ function InwardEntry() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  // ── FETCH PRODUCTS ──
   const fetchItems = async () => {
     try {
       const res = await api.get("/activeitems/activeitem");
-      const raw = res.data?.data || [];
-
-      // Normalize: API may return plain strings or objects
-      const items = raw.map((item) =>
-        typeof item === "string"
-          ? { product_name: item, SI: null }
-          : item
-      );
-
-      console.log("=== ACTIVE ITEMS API RESPONSE ===");
-      console.log("Full response:", res.data);
-      console.log("First item sample:", items[0]);
+      const raw = res.data?.data || res.data || [];
+      const items = Array.isArray(raw) ? raw : [];
       setToolOptions(items);
       setFilteredTools(items);
     } catch (err) {
-      console.error("Error fetching items:", err);
+      console.error("fetchItems error:", err);
     }
   };
 
+  // ── FETCH UOMs ──
   const fetchUOMs = async () => {
     try {
       const res = await api.get("/activeuoms/activeUOM");
-      setUomOptions(res.data?.data || []);
+      const raw = res.data?.data || res.data || [];
+      setUomOptions(Array.isArray(raw) ? raw : []);
     } catch (err) {
-      console.error("Error fetching UOMs:", err);
+      console.error("fetchUOMs error:", err);
     }
   };
 
+  // ── FETCH INWARD LIST ──
   const fetchInwards = async () => {
     try {
       const res = await api.get("/inward/getItemInwards");
-      console.log("=== GET INWARDS RESPONSE ===", res.data);
-      // Accept data regardless of status field
-      const data = res.data?.data || res.data?.Data || [];
+      // Try every possible key the backend might use
+      const data =
+        res.data?.data ||
+        res.data?.Data ||
+        res.data?.result ||
+        res.data?.Result ||
+        res.data?.records ||
+        (Array.isArray(res.data) ? res.data : []);
       setInwardList(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error("Error fetching inwards:", err);
+      console.error("fetchInwards error:", err);
     }
   };
 
-  const getLabel = (item) => item.product_name || item.ItemName || item.name || String(item);
-  // Always return the numeric SI — never fall back to a string name as ID
-  const getId = (item) => {
-    const id = item.SI ?? item.id ?? item.ItemID ?? null;
-    console.log("getId for item:", item, "=> id:", id);
-    return id;
+  // ── HELPERS: get display label and numeric ID from any item shape ──
+  const getLabel = (item) =>
+    item?.ItemName || item?.product_name || item?.name || String(item);
+
+  const getNumericId = (item) => {
+    // Try every possible numeric ID field
+    const candidates = [
+      item?.SI,
+      item?.id,
+      item?.ID,
+      item?.ItemID,
+      item?.item_id,
+      item?.ProductID,
+    ];
+    for (const c of candidates) {
+      const n = Number(c);
+      if (!isNaN(n) && n > 0) return n;
+    }
+    return null;
   };
 
+  // ── DROPDOWN HANDLERS ──
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setToolName(value);
-    setToolId("");
+    setToolId(null);
+    setSelectedItemObj(null);
     setDropdownOpen(true);
     setFilteredTools(
       toolOptions.filter((item) =>
@@ -107,36 +123,43 @@ function InwardEntry() {
 
   const handleSelectItem = (item) => {
     setToolName(getLabel(item));
-    setToolId(getId(item));
+    setToolId(getNumericId(item));
+    setSelectedItemObj(item);
     setDropdownOpen(false);
   };
 
+  // ── SUBMIT ──
   const handleSubmit = async () => {
-    if (!toolId || !uom || !quantity || !rate) {
+    if (!toolName || !uom || !quantity || !rate) {
       alert("Please fill all fields");
       return;
     }
 
+    if (!toolId) {
+      alert(
+        "Could not get a numeric ID for the selected product.\n\n" +
+        "Item object received from API:\n" +
+        JSON.stringify(selectedItemObj, null, 2) +
+        "\n\nPlease share this with the developer to fix the field mapping."
+      );
+      return;
+    }
+
     const payload = {
-      ItemID: Number(toolId),
+      ItemID: toolId,
       UOMName: uom,
       Quantity: Number(quantity),
       Rate: Number(rate),
     };
 
-    if (isNaN(payload.ItemID) || payload.ItemID === 0) {
-      alert("Invalid product selected. Please select a product from the dropdown list.");
-      return;
-    }
-
-    console.log("=== SUBMIT PAYLOAD ===", payload);
-
     try {
       const res = await api.post("/inward/iteminward", payload);
-      console.log("=== SUBMIT RESPONSE ===", res.data);
 
       if (res.data?.status === 0) {
-        alert("DB Error: " + (res.data?.message || "Unknown error from server"));
+        alert(
+          "Server returned an error:\n" +
+          JSON.stringify(res.data, null, 2)
+        );
         return;
       }
 
@@ -144,20 +167,24 @@ function InwardEntry() {
       resetForm();
       fetchInwards();
     } catch (err) {
-      console.error("Submit error:", err.response?.data || err);
-      alert("Error submitting inward: " + (err.response?.data?.message || err.message));
+      alert(
+        "Submit failed:\n" +
+        JSON.stringify(err.response?.data || err.message, null, 2)
+      );
     }
   };
 
   const resetForm = () => {
     setToolName("");
-    setToolId("");
+    setToolId(null);
+    setSelectedItemObj(null);
     setUom("");
     setQuantity("");
     setRate("");
     setFilteredTools(toolOptions);
   };
 
+  // ── EDIT / UPDATE ──
   const openEdit = (item) => {
     setEditItem(item);
     setEditQty(item.Quantity);
@@ -178,21 +205,25 @@ function InwardEntry() {
       return;
     }
     try {
-      await api.post("/inward/updateItemInward", {
+      const res = await api.post("/inward/updateItemInward", {
         InwardID: editItem.InwardID,
         UOMName: editUOM,
         Quantity: Number(editQty),
         Rate: Number(editRate),
       });
+      if (res.data?.status === 0) {
+        alert("Update error: " + JSON.stringify(res.data));
+        return;
+      }
       alert("Updated successfully");
       closeEdit();
       fetchInwards();
     } catch (err) {
-      console.error("Update error:", err.response || err);
-      alert("Error updating record");
+      alert("Update failed: " + (err.response?.data?.message || err.message));
     }
   };
 
+  // ── DELETE ──
   const handleDelete = async (inwardId) => {
     if (!window.confirm("Delete this inward record?")) return;
     try {
@@ -200,15 +231,19 @@ function InwardEntry() {
       alert("Deleted successfully");
       fetchInwards();
     } catch (err) {
-      console.error("Delete error:", err.response || err);
-      alert("Error deleting record");
+      alert("Delete failed: " + (err.response?.data?.message || err.message));
     }
   };
 
+  // ── GRID FILTER ──
   const filteredList = inwardList.filter(
     (item) =>
-      (item.ItemName || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (item.UOMName || "").toLowerCase().includes(searchTerm.toLowerCase())
+      (item.ItemName || item.item_name || "")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      (item.UOMName || item.uom_name || "")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -224,7 +259,7 @@ function InwardEntry() {
       <div className="ie-form">
         <div className="ie-row">
 
-          {/* Product Name — searchable dropdown */}
+          {/* Product Name */}
           <div className="ie-group ie-dropdown-group" ref={dropdownRef}>
             <label>Product Name</label>
             <div className="ie-custom-select">
@@ -251,26 +286,26 @@ function InwardEntry() {
                 ▾
               </span>
 
-              {dropdownOpen && (
+              {dropdownOpen && filteredTools.length > 0 && (
                 <ul className="ie-custom-dropdown">
-                  {filteredTools.length > 0 ? (
-                    filteredTools.map((item, i) => (
-                      <li
-                        key={getId(item) || i}
-                        className="ie-custom-option"
-                        onMouseDown={(e) => {
-                          e.preventDefault();
-                          handleSelectItem(item);
-                        }}
-                      >
-                        {getLabel(item)}
-                      </li>
-                    ))
-                  ) : (
-                    <li className="ie-custom-option ie-no-result">
-                      No items found
+                  {filteredTools.map((item, i) => (
+                    <li
+                      key={getNumericId(item) ?? i}
+                      className="ie-custom-option"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        handleSelectItem(item);
+                      }}
+                    >
+                      {getLabel(item)}
                     </li>
-                  )}
+                  ))}
+                </ul>
+              )}
+
+              {dropdownOpen && filteredTools.length === 0 && (
+                <ul className="ie-custom-dropdown">
+                  <li className="ie-custom-option ie-no-result">No items found</li>
                 </ul>
               )}
             </div>
@@ -282,8 +317,8 @@ function InwardEntry() {
             <select value={uom} onChange={(e) => setUom(e.target.value)}>
               <option value="">Select UOM</option>
               {uomOptions.map((opt, i) => (
-                <option key={i} value={opt}>
-                  {opt}
+                <option key={i} value={typeof opt === "string" ? opt : opt.UOMName || opt.uom_name || String(opt)}>
+                  {typeof opt === "string" ? opt : opt.UOMName || opt.uom_name || String(opt)}
                 </option>
               ))}
             </select>
@@ -349,12 +384,8 @@ function InwardEntry() {
             </div>
 
             <div className="ie-modal-actions">
-              <button className="ie-save-btn" onClick={handleUpdate}>
-                Save
-              </button>
-              <button className="ie-cancel-btn" onClick={closeEdit}>
-                Cancel
-              </button>
+              <button className="ie-save-btn" onClick={handleUpdate}>Save</button>
+              <button className="ie-cancel-btn" onClick={closeEdit}>Cancel</button>
             </div>
           </div>
         </div>
@@ -396,26 +427,22 @@ function InwardEntry() {
               filteredList.map((item, index) => (
                 <tr key={item.InwardID || index}>
                   <td>{index + 1}</td>
-                  <td>{item.ItemName || "-"}</td>
-                  <td>{item.UOMName || "-"}</td>
-                  <td>{item.Quantity}</td>
-                  <td>{item.Rate}</td>
+                  <td>{item.ItemName || item.item_name || "-"}</td>
+                  <td>{item.UOMName || item.uom_name || "-"}</td>
+                  <td>{item.Quantity || item.quantity}</td>
+                  <td>{item.Rate || item.rate}</td>
                   <td>
                     {item.CreatedDate
                       ? new Date(item.CreatedDate).toLocaleDateString()
+                      : item.created_date
+                      ? new Date(item.created_date).toLocaleDateString()
                       : "-"}
                   </td>
                   <td>
-                    <button
-                      className="ie-edit-btn"
-                      onClick={() => openEdit(item)}
-                    >
+                    <button className="ie-edit-btn" onClick={() => openEdit(item)}>
                       <i className="fa fa-edit"></i>
                     </button>
-                    <button
-                      className="ie-delete-btn"
-                      onClick={() => handleDelete(item.InwardID)}
-                    >
+                    <button className="ie-delete-btn" onClick={() => handleDelete(item.InwardID)}>
                       <i className="fa fa-trash"></i>
                     </button>
                   </td>
