@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import "../CSS/InwardEntry.css";
 import api from "../api";
 
 function InwardEntry() {
+  const [selectedItem, setSelectedItem] = useState(null); // full item object
   const [toolName, setToolName] = useState("");
-  const [toolId, setToolId] = useState("");
   const [uom, setUom] = useState("");
   const [quantity, setQuantity] = useState("");
   const [rate, setRate] = useState("");
@@ -31,7 +31,6 @@ function InwardEntry() {
     fetchInwards();
   }, []);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handler = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -42,127 +41,145 @@ function InwardEntry() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  // ── FETCH PRODUCTS from /activeitems/activeitem ──
   const fetchItems = async () => {
     try {
       const res = await api.get("/activeitems/activeitem");
-      const raw = res.data?.data || [];
-
-      // Normalize: API may return plain strings or objects
-      const items = raw.map((item) =>
-        typeof item === "string"
-          ? { product_name: item, SI: null }
-          : item
-      );
-
-      console.log("=== ACTIVE ITEMS API RESPONSE ===");
-      console.log("Full response:", res.data);
-      console.log("First item sample:", items[0]);
+      const raw = res.data?.data || res.data || [];
+      const items = Array.isArray(raw) ? raw : [];
       setToolOptions(items);
       setFilteredTools(items);
     } catch (err) {
-      console.error("Error fetching items:", err);
+      console.error("fetchItems error:", err);
     }
   };
 
+  // ── FETCH UOMs ──
   const fetchUOMs = async () => {
     try {
       const res = await api.get("/activeuoms/activeUOM");
-      setUomOptions(res.data?.data || []);
+      const raw = res.data?.data || res.data || [];
+      setUomOptions(Array.isArray(raw) ? raw : []);
     } catch (err) {
-      console.error("Error fetching UOMs:", err);
+      console.error("fetchUOMs error:", err);
     }
   };
 
+  // ── FETCH INWARD LIST ──
   const fetchInwards = async () => {
     try {
       const res = await api.get("/inward/getItemInwards");
-      console.log("=== GET INWARDS RESPONSE ===", res.data);
-      // Accept data regardless of status field
-      const data = res.data?.data || res.data?.Data || [];
+      const data =
+        res.data?.data ||
+        res.data?.Data ||
+        res.data?.result ||
+        (Array.isArray(res.data) ? res.data : []);
       setInwardList(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error("Error fetching inwards:", err);
+      console.error("fetchInwards error:", err);
     }
   };
 
-  const getLabel = (item) => item.product_name || item.ItemName || item.name || String(item);
-  // Always return the numeric SI — never fall back to a string name as ID
-  const getId = (item) => {
-    const id = item.SI ?? item.id ?? item.ItemID ?? null;
-    console.log("getId for item:", item, "=> id:", id);
-    return id;
+  // ── Get display name from any item shape ──
+  const getItemName = (item) =>
+    item?.ItemName || item?.product_name || item?.name || String(item);
+
+  // ── Get numeric ID from any item shape ──
+  const getItemId = (item) => {
+    const val = item?.SI ?? item?.id ?? item?.ID ?? item?.ItemID ?? null;
+    const n = Number(val);
+    return !isNaN(n) && n > 0 ? n : null;
   };
 
+  // ── DROPDOWN: typing ──
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setToolName(value);
-    setToolId("");
+    setSelectedItem(null);
     setDropdownOpen(true);
     setFilteredTools(
       toolOptions.filter((item) =>
-        getLabel(item).toLowerCase().includes(value.toLowerCase())
+        getItemName(item).toLowerCase().includes(value.toLowerCase())
       )
     );
   };
 
+  // ── DROPDOWN: pick an item ──
   const handleSelectItem = (item) => {
-    setToolName(getLabel(item));
-    setToolId(getId(item));
+    setToolName(getItemName(item));
+    setSelectedItem(item);
     setDropdownOpen(false);
   };
 
+  // ── SUBMIT ──
   const handleSubmit = async () => {
-    if (!toolId || !uom || !quantity || !rate) {
-      alert("Please fill all fields");
+    // Validate — only check name, uom, quantity, rate (NOT toolId)
+    if (!toolName.trim()) {
+      alert("Please select a Product Name");
+      return;
+    }
+    if (!uom) {
+      alert("Please select UOM");
+      return;
+    }
+    if (!quantity) {
+      alert("Please enter Quantity");
+      return;
+    }
+    if (!rate) {
+      alert("Please enter Rate");
       return;
     }
 
-    const payload = {
-      ItemID: Number(toolId),
-      UOMName: uom,
-      Quantity: Number(quantity),
-      Rate: Number(rate),
-    };
+    // Build payload — send ItemID if we have it, otherwise send ItemName
+    const itemId = selectedItem ? getItemId(selectedItem) : null;
 
-    if (isNaN(payload.ItemID) || payload.ItemID === 0) {
-      alert("Invalid product selected. Please select a product from the dropdown list.");
-      return;
-    }
-
-    console.log("=== SUBMIT PAYLOAD ===", payload);
+    const payload = itemId
+      ? {
+          ItemID: itemId,
+          UOMName: uom,
+          Quantity: Number(quantity),
+          Rate: Number(rate),
+        }
+      : {
+          ItemName: toolName.trim(),
+          UOMName: uom,
+          Quantity: Number(quantity),
+          Rate: Number(rate),
+        };
 
     try {
       const res = await api.post("/inward/iteminward", payload);
-      console.log("=== SUBMIT RESPONSE ===", res.data);
 
       if (res.data?.status === 0) {
-        alert("DB Error: " + (res.data?.message || "Unknown error from server"));
+        alert("Server error: " + (res.data?.message || JSON.stringify(res.data)));
         return;
       }
 
       alert("Item Inward submitted successfully!");
       resetForm();
-      fetchInwards();
+      // Small delay so DB has time to commit before re-fetching
+      setTimeout(() => fetchInwards(), 300);
     } catch (err) {
-      console.error("Submit error:", err.response?.data || err);
-      alert("Error submitting inward: " + (err.response?.data?.message || err.message));
+      alert("Submit failed: " + (err.response?.data?.message || err.message));
     }
   };
 
   const resetForm = () => {
     setToolName("");
-    setToolId("");
+    setSelectedItem(null);
     setUom("");
     setQuantity("");
     setRate("");
     setFilteredTools(toolOptions);
   };
 
+  // ── EDIT ──
   const openEdit = (item) => {
     setEditItem(item);
-    setEditQty(item.Quantity);
-    setEditRate(item.Rate);
-    setEditUOM(item.UOMName || "");
+    setEditQty(item.Quantity ?? item.quantity ?? "");
+    setEditRate(item.Rate ?? item.rate ?? "");
+    setEditUOM(item.UOMName ?? item.uom_name ?? "");
   };
 
   const closeEdit = () => {
@@ -178,21 +195,25 @@ function InwardEntry() {
       return;
     }
     try {
-      await api.post("/inward/updateItemInward", {
+      const res = await api.post("/inward/updateItemInward", {
         InwardID: editItem.InwardID,
         UOMName: editUOM,
         Quantity: Number(editQty),
         Rate: Number(editRate),
       });
+      if (res.data?.status === 0) {
+        alert("Update error: " + (res.data?.message || ""));
+        return;
+      }
       alert("Updated successfully");
       closeEdit();
       fetchInwards();
     } catch (err) {
-      console.error("Update error:", err.response || err);
-      alert("Error updating record");
+      alert("Update failed: " + (err.response?.data?.message || err.message));
     }
   };
 
+  // ── DELETE ──
   const handleDelete = async (inwardId) => {
     if (!window.confirm("Delete this inward record?")) return;
     try {
@@ -200,16 +221,21 @@ function InwardEntry() {
       alert("Deleted successfully");
       fetchInwards();
     } catch (err) {
-      console.error("Delete error:", err.response || err);
-      alert("Error deleting record");
+      alert("Delete failed: " + (err.response?.data?.message || err.message));
     }
   };
 
-  const filteredList = inwardList.filter(
-    (item) =>
-      (item.ItemName || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (item.UOMName || "").toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // ── UOM option label (handles string or object) ──
+  const getUomLabel = (opt) =>
+    typeof opt === "string" ? opt : opt?.UOMName || opt?.uom_name || String(opt);
+
+  // ── GRID FILTER ──
+  const filteredList = inwardList.filter((item) => {
+    const name = (item.ItemName || item.item_name || "").toLowerCase();
+    const uomVal = (item.UOMName || item.uom_name || "").toLowerCase();
+    const term = searchTerm.toLowerCase();
+    return name.includes(term) || uomVal.includes(term);
+  });
 
   return (
     <div className="ie-page">
@@ -256,14 +282,14 @@ function InwardEntry() {
                   {filteredTools.length > 0 ? (
                     filteredTools.map((item, i) => (
                       <li
-                        key={getId(item) || i}
+                        key={getItemId(item) ?? i}
                         className="ie-custom-option"
                         onMouseDown={(e) => {
                           e.preventDefault();
                           handleSelectItem(item);
                         }}
                       >
-                        {getLabel(item)}
+                        {getItemName(item)}
                       </li>
                     ))
                   ) : (
@@ -282,8 +308,8 @@ function InwardEntry() {
             <select value={uom} onChange={(e) => setUom(e.target.value)}>
               <option value="">Select UOM</option>
               {uomOptions.map((opt, i) => (
-                <option key={i} value={opt}>
-                  {opt}
+                <option key={i} value={getUomLabel(opt)}>
+                  {getUomLabel(opt)}
                 </option>
               ))}
             </select>
@@ -297,6 +323,7 @@ function InwardEntry() {
               type="number"
               value={quantity}
               onChange={(e) => setQuantity(e.target.value)}
+              placeholder="Enter quantity"
             />
           </div>
 
@@ -306,6 +333,7 @@ function InwardEntry() {
               type="number"
               value={rate}
               onChange={(e) => setRate(e.target.value)}
+              placeholder="Enter rate"
             />
           </div>
         </div>
@@ -319,7 +347,7 @@ function InwardEntry() {
       {editItem && (
         <div className="ie-modal-overlay">
           <div className="ie-modal">
-            <h3>Edit Inward — {editItem.ItemName}</h3>
+            <h3>Edit Inward — {editItem.ItemName || editItem.item_name}</h3>
 
             <div className="ie-modal-group">
               <label>UOM</label>
@@ -349,12 +377,8 @@ function InwardEntry() {
             </div>
 
             <div className="ie-modal-actions">
-              <button className="ie-save-btn" onClick={handleUpdate}>
-                Save
-              </button>
-              <button className="ie-cancel-btn" onClick={closeEdit}>
-                Cancel
-              </button>
+              <button className="ie-save-btn" onClick={handleUpdate}>Save</button>
+              <button className="ie-cancel-btn" onClick={closeEdit}>Cancel</button>
             </div>
           </div>
         </div>
@@ -394,27 +418,24 @@ function InwardEntry() {
               </tr>
             ) : (
               filteredList.map((item, index) => (
-                <tr key={item.InwardID || index}>
+                <tr key={item.InwardID || item.inward_id || index}>
                   <td>{index + 1}</td>
-                  <td>{item.ItemName || "-"}</td>
-                  <td>{item.UOMName || "-"}</td>
-                  <td>{item.Quantity}</td>
-                  <td>{item.Rate}</td>
+                  <td>{item.ItemName || item.item_name || "-"}</td>
+                  <td>{item.UOMName || item.uom_name || "-"}</td>
+                  <td>{item.Quantity ?? item.quantity ?? "-"}</td>
+                  <td>{item.Rate ?? item.rate ?? "-"}</td>
                   <td>
-                    {item.CreatedDate
-                      ? new Date(item.CreatedDate).toLocaleDateString()
+                    {item.CreatedDate || item.created_date
+                      ? new Date(item.CreatedDate || item.created_date).toLocaleDateString()
                       : "-"}
                   </td>
                   <td>
-                    <button
-                      className="ie-edit-btn"
-                      onClick={() => openEdit(item)}
-                    >
+                    <button className="ie-edit-btn" onClick={() => openEdit(item)}>
                       <i className="fa fa-edit"></i>
                     </button>
                     <button
                       className="ie-delete-btn"
-                      onClick={() => handleDelete(item.InwardID)}
+                      onClick={() => handleDelete(item.InwardID || item.inward_id)}
                     >
                       <i className="fa fa-trash"></i>
                     </button>
