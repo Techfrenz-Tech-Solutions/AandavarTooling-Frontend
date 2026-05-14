@@ -45,8 +45,16 @@ function InwardEntry() {
   const fetchItems = async () => {
     try {
       const res = await api.get("/activeitems/activeitem");
-      const items = res.data?.data || [];
-      console.log("Active items response:", items); // debug
+      const raw = res.data?.data || [];
+
+      // Normalize: API may return plain strings or objects with product_name
+      const items = raw.map((item) =>
+        typeof item === "string"
+          ? { product_name: item, SI: item }
+          : item
+      );
+
+      console.log("Fetched items:", items); // check browser console
       setToolOptions(items);
       setFilteredTools(items);
     } catch (err) {
@@ -72,6 +80,9 @@ function InwardEntry() {
     }
   };
 
+  const getLabel = (item) => item.product_name || item.ItemName || item.name || String(item);
+  const getId = (item) => item.SI || item.id || item.product_name || String(item);
+
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setToolName(value);
@@ -79,14 +90,14 @@ function InwardEntry() {
     setDropdownOpen(true);
     setFilteredTools(
       toolOptions.filter((item) =>
-        (item.ItemName || "").toLowerCase().includes(value.toLowerCase())
+        getLabel(item).toLowerCase().includes(value.toLowerCase())
       )
     );
   };
 
   const handleSelectItem = (item) => {
-    setToolName(item.ItemName || "");
-    setToolId(item.SI || "");
+    setToolName(getLabel(item));
+    setToolId(getId(item));
     setDropdownOpen(false);
   };
 
@@ -187,7 +198,7 @@ function InwardEntry() {
         <div className="ie-row">
 
           {/* Product Name — searchable dropdown */}
-          <div className="ie-group" ref={dropdownRef}>
+          <div className="ie-group ie-dropdown-group" ref={dropdownRef}>
             <label>Product Name</label>
             <div className="ie-custom-select">
               <input
@@ -196,32 +207,36 @@ function InwardEntry() {
                 value={toolName}
                 onChange={handleSearchChange}
                 onFocus={() => {
-                  setDropdownOpen(true);
                   setFilteredTools(toolOptions);
+                  setDropdownOpen(true);
                 }}
-                placeholder="Select the Product Name"
+                placeholder="Search or select product..."
                 autoComplete="off"
               />
               <span
                 className="ie-custom-arrow"
                 onMouseDown={(e) => {
                   e.preventDefault();
+                  setFilteredTools(toolOptions);
                   setDropdownOpen((prev) => !prev);
-                  if (!dropdownOpen) setFilteredTools(toolOptions);
                 }}
               >
                 ▾
               </span>
+
               {dropdownOpen && (
                 <ul className="ie-custom-dropdown">
                   {filteredTools.length > 0 ? (
                     filteredTools.map((item, i) => (
                       <li
-                        key={item.SI || i}
+                        key={getId(item) || i}
                         className="ie-custom-option"
-                        onMouseDown={() => handleSelectItem(item)}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          handleSelectItem(item);
+                        }}
                       >
-                        {item.ItemName}
+                        {getLabel(item)}
                       </li>
                     ))
                   ) : (
