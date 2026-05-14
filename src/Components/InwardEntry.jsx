@@ -46,6 +46,7 @@ function InwardEntry() {
     try {
       const res = await api.get("/activeitems/activeitem");
       const items = res.data?.data || [];
+      console.log("Active items response:", items); // debug
       setToolOptions(items);
       setFilteredTools(items);
     } catch (err) {
@@ -78,14 +79,14 @@ function InwardEntry() {
     setDropdownOpen(true);
     setFilteredTools(
       toolOptions.filter((item) =>
-        (item.product_name || "").toLowerCase().includes(value.toLowerCase())
+        (item.ItemName || "").toLowerCase().includes(value.toLowerCase())
       )
     );
   };
 
   const handleSelectItem = (item) => {
-    setToolName(item.product_name || "");
-    setToolId(item.id || item.SI || "");
+    setToolName(item.ItemName || "");
+    setToolId(item.SI || "");
     setDropdownOpen(false);
   };
 
@@ -216,11 +217,11 @@ function InwardEntry() {
                   {filteredTools.length > 0 ? (
                     filteredTools.map((item, i) => (
                       <li
-                        key={item.id || item.SI || i}
+                        key={item.SI || i}
                         className="ie-custom-option"
                         onMouseDown={() => handleSelectItem(item)}
                       >
-                        {item.product_name}
+                        {item.ItemName}
                       </li>
                     ))
                   ) : (
