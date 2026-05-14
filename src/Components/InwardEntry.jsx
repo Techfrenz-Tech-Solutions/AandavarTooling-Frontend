@@ -83,6 +83,13 @@ function InwardEntry() {
   const getItemName = (item) =>
     item?.ItemName || item?.product_name || item?.name || String(item);
 
+  // ── Get numeric ID from any item shape ──
+  const getItemId = (item) => {
+    const val = item?.SI ?? item?.id ?? item?.ID ?? item?.ItemID ?? null;
+    const n = Number(val);
+    return !isNaN(n) && n > 0 ? n : null;
+  };
+
   // ── DROPDOWN: typing ──
   const handleSearchChange = (e) => {
     const value = e.target.value;
