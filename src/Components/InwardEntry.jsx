@@ -47,14 +47,16 @@ function InwardEntry() {
       const res = await api.get("/activeitems/activeitem");
       const raw = res.data?.data || [];
 
-      // Normalize: API may return plain strings or objects with product_name
+      // Normalize: API may return plain strings or objects
       const items = raw.map((item) =>
         typeof item === "string"
-          ? { product_name: item, SI: item }
+          ? { product_name: item, SI: null }
           : item
       );
 
-      console.log("Fetched items:", items); // check browser console
+      console.log("=== ACTIVE ITEMS API RESPONSE ===");
+      console.log("Full response:", res.data);
+      console.log("First item sample:", items[0]);
       setToolOptions(items);
       setFilteredTools(items);
     } catch (err) {
@@ -74,14 +76,22 @@ function InwardEntry() {
   const fetchInwards = async () => {
     try {
       const res = await api.get("/inward/getItemInwards");
-      setInwardList(res.data?.data || []);
+      console.log("=== GET INWARDS RESPONSE ===", res.data);
+      // Accept data regardless of status field
+      const data = res.data?.data || res.data?.Data || [];
+      setInwardList(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Error fetching inwards:", err);
     }
   };
 
   const getLabel = (item) => item.product_name || item.ItemName || item.name || String(item);
-  const getId = (item) => item.SI || item.id || item.product_name || String(item);
+  // Always return the numeric SI — never fall back to a string name as ID
+  const getId = (item) => {
+    const id = item.SI ?? item.id ?? item.ItemID ?? null;
+    console.log("getId for item:", item, "=> id:", id);
+    return id;
+  };
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -106,19 +116,36 @@ function InwardEntry() {
       alert("Please fill all fields");
       return;
     }
+
+    const payload = {
+      ItemID: Number(toolId),
+      UOMName: uom,
+      Quantity: Number(quantity),
+      Rate: Number(rate),
+    };
+
+    if (isNaN(payload.ItemID) || payload.ItemID === 0) {
+      alert("Invalid product selected. Please select a product from the dropdown list.");
+      return;
+    }
+
+    console.log("=== SUBMIT PAYLOAD ===", payload);
+
     try {
-      await api.post("/inward/iteminward", {
-        ItemID: Number(toolId),
-        UOMName: uom,
-        Quantity: Number(quantity),
-        Rate: Number(rate),
-      });
+      const res = await api.post("/inward/iteminward", payload);
+      console.log("=== SUBMIT RESPONSE ===", res.data);
+
+      if (res.data?.status === 0) {
+        alert("DB Error: " + (res.data?.message || "Unknown error from server"));
+        return;
+      }
+
       alert("Item Inward submitted successfully!");
       resetForm();
       fetchInwards();
     } catch (err) {
-      console.error("Submit error:", err.response || err);
-      alert("Error submitting inward");
+      console.error("Submit error:", err.response?.data || err);
+      alert("Error submitting inward: " + (err.response?.data?.message || err.message));
     }
   };
 
