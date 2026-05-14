@@ -287,3 +287,95 @@
     padding: 10px;
   }
 }
+
+
+/* ================= EDIT MODAL ================= */
+
+.ie-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.ie-modal {
+  background: #fff;
+  border-radius: 10px;
+  padding: 28px 32px;
+  width: 360px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.ie-modal h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 20px;
+}
+
+.ie-modal-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.ie-modal-group label {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.ie-modal-group input {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #dcdcdc;
+  font-size: 14px;
+}
+
+.ie-modal-group input:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+.ie-modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.ie-save-btn {
+  flex: 1;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.ie-save-btn:hover {
+  background: #4338ca;
+}
+
+.ie-cancel-btn {
+  flex: 1;
+  background: #f0f0f0;
+  color: #333;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.ie-cancel-btn:hover {
+  background: #e0e0e0;
+}
