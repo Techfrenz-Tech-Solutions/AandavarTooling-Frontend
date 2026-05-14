@@ -5,9 +5,8 @@ import "../CSS/InwardEntry.css";
 import api from "../api";
 
 function InwardEntry() {
-  const [selectedItem, setSelectedItem] = useState(null); // full item object
-  const [toolName, setToolName] = useState("");
-  const [uom, setUom] = useState("");
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [toolName, setToolName] = useState("");  const [uom, setUom] = useState("");
   const [quantity, setQuantity] = useState("");
   const [rate, setRate] = useState("");
 
@@ -84,13 +83,6 @@ function InwardEntry() {
   const getItemName = (item) =>
     item?.ItemName || item?.product_name || item?.name || String(item);
 
-  // ── Get numeric ID from any item shape ──
-  const getItemId = (item) => {
-    const val = item?.SI ?? item?.id ?? item?.ID ?? item?.ItemID ?? null;
-    const n = Number(val);
-    return !isNaN(n) && n > 0 ? n : null;
-  };
-
   // ── DROPDOWN: typing ──
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -131,22 +123,13 @@ function InwardEntry() {
       return;
     }
 
-    // Build payload — send ItemID if we have it, otherwise send ItemName
-    const itemId = selectedItem ? getItemId(selectedItem) : null;
-
-    const payload = itemId
-      ? {
-          ItemID: itemId,
-          UOMName: uom,
-          Quantity: Number(quantity),
-          Rate: Number(rate),
-        }
-      : {
-          ItemName: toolName.trim(),
-          UOMName: uom,
-          Quantity: Number(quantity),
-          Rate: Number(rate),
-        };
+    // DB table stores ItemName (varchar) — send the name directly
+    const payload = {
+      ItemName: toolName.trim(),
+      UOMName: uom,
+      Quantity: Number(quantity),
+      Rate: Number(rate),
+    };
 
     try {
       const res = await api.post("/inward/iteminward", payload);
