@@ -180,28 +180,33 @@ function InwardEntry() {
   };
 
   const handleUpdate = async () => {
-    if (!editQty || !editRate) {
-      alert("Fill all fields");
+  if (!editQty || !editRate) {
+    alert("Fill all fields");
+    return;
+  }
+
+  try {
+    const res = await api.post("/inward/updateItemInward", {
+      InwardID: editItem.InwardID,
+      ItemName: editItem.ItemName,   // ✅ ADD THIS
+      UOMName: editUOM,
+      Quantity: Number(editQty),
+      Rate: Number(editRate),
+    });
+
+    if (res.data?.status === 0) {
+      alert("Update error: " + (res.data?.message || ""));
       return;
     }
-    try {
-      const res = await api.post("/inward/updateItemInward", {
-        InwardID: editItem.InwardID,
-        UOMName: editUOM,
-        Quantity: Number(editQty),
-        Rate: Number(editRate),
-      });
-      if (res.data?.status === 0) {
-        alert("Update error: " + (res.data?.message || ""));
-        return;
-      }
-      alert("Updated successfully");
-      closeEdit();
-      fetchInwards();
-    } catch (err) {
-      alert("Update failed: " + (err.response?.data?.message || err.message));
-    }
-  };
+
+    alert("Updated successfully");
+    closeEdit();
+    fetchInwards();
+
+  } catch (err) {
+    alert("Update failed: " + (err.response?.data?.message || err.message));
+  }
+};
 
   // ── DELETE ──
   const handleDelete = async (inwardId) => {
