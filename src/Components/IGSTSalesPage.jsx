@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import api from "../api";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
-import InvoicePDF from "./InvoicePDF";
+import InvoicePDF from "./InvoicePDF1";
 import "../CSS/SalesPage.css";
 
 function IGSTSalesPage() {

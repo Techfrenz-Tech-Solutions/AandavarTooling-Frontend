@@ -95,8 +95,8 @@ function InvoiceTemplate2(props) {
 
   if (!invoice) return <div>Loading Invoice...</div>;
 
-  const cgst = (invoice.GST_Total || 0) / 2;
-  const sgst = (invoice.GST_Total || 0) / 2;
+  const cgst = (invoice.GST_Total || 0) / 1;
+  const sgst = (invoice.GST_Total || 0) / 0;
 
   const amountInWords = numberToWords(invoice.Total_Amount || 0);
 
