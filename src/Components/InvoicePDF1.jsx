@@ -61,7 +61,6 @@ function InvoicePDF() {
           minHeight: "297mm",
         }}
       >
-        <InvoiceTemplate />
         <InvoiceTemplate2/>
       </div>
     </div>

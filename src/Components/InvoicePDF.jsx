@@ -62,7 +62,6 @@ function InvoicePDF() {
         }}
       >
         <InvoiceTemplate />
-        <InvoiceTemplate2/>
       </div>
     </div>
   );
