@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import api from "../api";
 import Sidebar from "../Components/Sidebar";
 import Topbar from "../Components/Topbar";
@@ -15,7 +15,6 @@ function SalesPage() {
   const [price, setPrice] = useState("");
 
   const [itemList, setItemList] = useState([]);
-  const [productOptions, setProductOptions] = useState([]);
   const [customerOptions, setCustomerOptions] = useState([]);
 
   const sgst = 9;
@@ -26,7 +25,6 @@ function SalesPage() {
   /* LOAD PAGE */
   useEffect(() => {
     getInvoiceNumber();
-    fetchProducts();
     fetchCustomers();
   }, []);
 
@@ -42,16 +40,6 @@ function SalesPage() {
       setInvoiceDate(new Date().toISOString().split("T")[0]);
     } catch (error) {
       console.error(error);
-    }
-  };
-
-  /* FETCH PRODUCTS */
-  const fetchProducts = async () => {
-    try {
-      const res = await api.get("/items/getItems");
-      setProductOptions(res.data.data || []);
-    } catch (err) {
-      console.error(err);
     }
   };
 
@@ -229,17 +217,12 @@ function SalesPage() {
 
           <div className="sales-group">
             <label>Product</label>
-            <select
+            <input
+              type="text"
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
-            >
-              <option value="">Select</option>
-              {productOptions.map((p) => (
-                <option key={p.SI} value={p.ItemName}>
-                  {p.ItemName}
-                </option>
-              ))}
-            </select>
+              placeholder="Enter product name"
+            />
           </div>
         </div>
 
