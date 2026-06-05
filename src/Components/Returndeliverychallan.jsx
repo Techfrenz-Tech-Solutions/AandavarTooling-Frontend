@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import api from "../api";
 import Sidebar from "../Components/Sidebar";
 import Topbar from "../Components/Topbar";
@@ -16,24 +16,13 @@ function DeliveryChallan() {
   const [quantity, setQuantity] = useState("");
 
   const [productsList, setProductsList] = useState([]);
-  const [productOptions, setProductOptions] = useState([]);
   const [customerOptions, setCustomerOptions] = useState([]);
 
   const challanRef = useRef();
 
   useEffect(() => {
-    fetchProducts();
     fetchCustomers();
   }, []);
-
-  const fetchProducts = async () => {
-    try {
-      const res = await api.get("/activeitems/activeitem");
-      setProductOptions(res.data?.data || []);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const fetchCustomers = async () => {
     try {
@@ -160,17 +149,12 @@ function DeliveryChallan() {
         <div className="sales-row">
           <div className="sales-group">
             <label>Product Name</label>
-            <select
+            <input
+              type="text"
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
-            >
-              <option value="">Select Product</option>
-              {productOptions.map((p, i) => (
-                <option key={i} value={p.product_name || p}>
-                  {p.product_name || p}
-                </option>
-              ))}
-            </select>
+              placeholder="Enter product name"
+            />
           </div>
 
           <div className="sales-group">
