@@ -109,18 +109,15 @@ function DeliveryHistory() {
 
   /* ================= PRINT ================= */
   const handlePrint = () => {
-    const content = printRef.current.innerHTML;
-    const newWindow = window.open("", "", "width=900,height=700");
+    if (!printRef.current) return;
 
-    newWindow.document.write(`
-      <html>
-        <head><title>Challan</title></head>
-        <body>${content}</body>
-      </html>
-    `);
-
-    newWindow.document.close();
-    newWindow.print();
+    // Add print-only class to the template wrapper, then trigger browser print
+    printRef.current.classList.add("dc-print-area");
+    document.body.classList.add("dc-printing");
+    window.print();
+    // Clean up after print dialog closes
+    printRef.current.classList.remove("dc-print-area");
+    document.body.classList.remove("dc-printing");
   };
 
   /* ================= SEARCH ================= */

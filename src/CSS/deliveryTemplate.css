@@ -523,3 +523,38 @@
 .download-btn:hover {
   background-color: #1a252f;
 }
+
+
+/* ============================= */
+/* PRINT — show only the challan template */
+/* ============================= */
+
+@media print {
+  /* Hide everything on the page */
+  body.dc-printing * {
+    visibility: hidden;
+  }
+
+  /* Show only the marked print area and its children */
+  body.dc-printing .dc-print-area,
+  body.dc-printing .dc-print-area * {
+    visibility: visible;
+  }
+
+  /* Position the print area to fill the page */
+  body.dc-printing .dc-print-area {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 210mm;
+    padding: 6mm;
+    box-sizing: border-box;
+    background: #fff;
+  }
+
+  /* No margin on page */
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+}
