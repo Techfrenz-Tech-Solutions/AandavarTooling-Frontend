@@ -1,5 +1,4 @@
-
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import api from "../api";
 import Sidebar from "../Components/Sidebar";
 import Topbar from "../Components/Topbar";
@@ -13,26 +12,32 @@ function DeliveryHistory() {
   const [selectedChallan, setSelectedChallan] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
+  // Which row's date is being edited and its temp value
+  const [editingDateRow, setEditingDateRow] = useState(null); // DeliveryChallanNo
+  const [editingDateValue, setEditingDateValue] = useState("");
+
   const printRef = useRef();
 
   useEffect(() => {
     fetchHistory();
   }, []);
 
-  /* ✅ DATE FORMAT FUNCTION */
+  /* DATE FORMAT — returns YYYY-MM-DD */
   const formatDate = (dateValue) => {
     if (!dateValue) return "-";
-
     const str = String(dateValue);
-
-    if (str.includes("T")) {
-      return str.split("T")[0];
-    }
-
+    if (str.includes("T")) return str.split("T")[0];
     const date = new Date(str);
     if (isNaN(date)) return "-";
-
     return date.toISOString().split("T")[0];
+  };
+
+  /* Display as DD/MM/YYYY */
+  const displayDate = (dateValue) => {
+    const iso = formatDate(dateValue);
+    if (iso === "-") return "-";
+    const [y, m, d] = iso.split("-");
+    return `${d}/${m}/${y}`;
   };
 
   const fetchHistory = async () => {
@@ -48,37 +53,69 @@ function DeliveryHistory() {
   const viewChallan = async (challanNo) => {
     try {
       const res = await api.get(`/delivery/getChallanByNumber/${challanNo}`);
-
       if (res.data.status) {
         const data = res.data.data;
 
-        const formattedData = {
+        // Use the edited date from historyList if available
+        const rowDate = historyList.find(
+          (r) => r.DeliveryChallanNo === challanNo
+        )?.created_date;
+
+        setSelectedChallan({
           recipientName: data[0]?.customer_name,
           recipientAddress: data[0]?.address || "",
           orderNo: challanNo,
-          date: formatDate(data[0]?.created_date), // ✅ formatted
+          date: formatDate(rowDate || data[0]?.created_date),
           items: data.map((item) => ({
             name: item.product_name,
             quantity: item.quantity,
           })),
-        };
-
-        setSelectedChallan(formattedData);
+        });
       }
     } catch (error) {
       console.error(error);
     }
   };
 
+  /* ================= INLINE DATE EDIT ================= */
+  const startEditDate = (challanNo, currentDate) => {
+    setEditingDateRow(challanNo);
+    setEditingDateValue(formatDate(currentDate));
+  };
+
+  const confirmDateEdit = (challanNo) => {
+    if (!editingDateValue) return;
+
+    // Update historyList locally
+    setHistoryList((prev) =>
+      prev.map((row) =>
+        row.DeliveryChallanNo === challanNo
+          ? { ...row, created_date: editingDateValue }
+          : row
+      )
+    );
+
+    // If this challan is currently open in preview, update the date there too
+    if (selectedChallan?.orderNo === challanNo) {
+      setSelectedChallan((prev) => ({ ...prev, date: editingDateValue }));
+    }
+
+    setEditingDateRow(null);
+    setEditingDateValue("");
+  };
+
+  const cancelDateEdit = () => {
+    setEditingDateRow(null);
+    setEditingDateValue("");
+  };
+
   /* ================= DELETE ================= */
   const deleteChallan = async (challanNo) => {
     if (!window.confirm("Are you sure you want to delete this challan?")) return;
-
     try {
       const res = await api.post("/delivery/deleteChallan", {
         challan_no: challanNo,
       });
-
       if (res.data.status) {
         alert("Challan deleted successfully");
         fetchHistory();
@@ -95,7 +132,6 @@ function DeliveryHistory() {
   /* ================= DOWNLOAD PDF ================= */
   const downloadPDF = () => {
     if (!printRef.current) return alert("Nothing to download");
-
     const opt = {
       margin: 10,
       filename: `Challan_${selectedChallan?.orderNo || "file"}.pdf`,
@@ -103,19 +139,15 @@ function DeliveryHistory() {
       html2canvas: { scale: 2, useCORS: true },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
     };
-
     html2pdf().set(opt).from(printRef.current).save();
   };
 
   /* ================= PRINT ================= */
   const handlePrint = () => {
     if (!printRef.current) return;
-
-    // Add print-only class to the template wrapper, then trigger browser print
     printRef.current.classList.add("dc-print-area");
     document.body.classList.add("dc-printing");
     window.print();
-    // Clean up after print dialog closes
     printRef.current.classList.remove("dc-print-area");
     document.body.classList.remove("dc-printing");
   };
@@ -123,7 +155,6 @@ function DeliveryHistory() {
   /* ================= SEARCH ================= */
   const filteredHistory = historyList.filter((item) => {
     const search = searchTerm.toLowerCase();
-
     return (
       item.DeliveryChallanNo?.toLowerCase().includes(search) ||
       item.customer_name?.toLowerCase().includes(search) ||
@@ -145,7 +176,6 @@ function DeliveryHistory() {
       <div className="sales-table-card">
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <h2>History</h2>
-
           <input
             type="text"
             placeholder="Search..."
@@ -158,7 +188,7 @@ function DeliveryHistory() {
         <table className="sales-table">
           <thead>
             <tr>
-              <th>SL No</th> {/* ✅ CHANGED */}
+              <th>SL No</th>
               <th>Customer</th>
               <th>Date</th>
               <th>Total Items</th>
@@ -166,7 +196,6 @@ function DeliveryHistory() {
               <th>Action</th>
             </tr>
           </thead>
-
           <tbody>
             {filteredHistory.length === 0 ? (
               <tr>
@@ -175,17 +204,53 @@ function DeliveryHistory() {
             ) : (
               filteredHistory.map((item, index) => (
                 <tr key={index}>
-                  <td>{index + 1}</td> {/* ✅ SERIAL NUMBER */}
+                  <td>{index + 1}</td>
                   <td>{item.customer_name}</td>
-                  <td>{formatDate(item.created_date)}</td> {/* ✅ FORMAT */}
+
+                  {/* ── INLINE EDITABLE DATE CELL ── */}
+                  <td>
+                    {editingDateRow === item.DeliveryChallanNo ? (
+                      <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                        <input
+                          type="date"
+                          value={editingDateValue}
+                          onChange={(e) => setEditingDateValue(e.target.value)}
+                          style={{ padding: "4px 6px", fontSize: "13px", borderRadius: "4px", border: "1px solid #4f46e5" }}
+                          autoFocus
+                        />
+                        <button
+                          onClick={() => confirmDateEdit(item.DeliveryChallanNo)}
+                          style={{ background: "#4f46e5", color: "#fff", border: "none", borderRadius: "4px", padding: "4px 10px", cursor: "pointer" }}
+                        >
+                          ✓
+                        </button>
+                        <button
+                          onClick={cancelDateEdit}
+                          style={{ background: "#e0e0e0", color: "#333", border: "none", borderRadius: "4px", padding: "4px 10px", cursor: "pointer" }}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <span>{displayDate(item.created_date)}</span>
+                        <button
+                          onClick={() => startEditDate(item.DeliveryChallanNo, item.created_date)}
+                          title="Edit date"
+                          style={{ background: "none", border: "none", cursor: "pointer", fontSize: "14px", color: "#4f46e5", padding: "0" }}
+                        >
+                          ✏️
+                        </button>
+                      </div>
+                    )}
+                  </td>
+
                   <td>{item.total_items}</td>
                   <td>{item.total_quantity}</td>
-
                   <td>
                     <button onClick={() => viewChallan(item.DeliveryChallanNo)}>
                       View
                     </button>
-
                     <button
                       onClick={() => deleteChallan(item.DeliveryChallanNo)}
                       style={{ marginLeft: "10px", backgroundColor: "red", color: "#fff" }}
@@ -200,12 +265,11 @@ function DeliveryHistory() {
         </table>
       </div>
 
-      {/* PREVIEW */}
+      {/* ── PREVIEW ── */}
       {selectedChallan && (
         <div className="sales-table-card">
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <h2>Challan Preview</h2>
-
             <div style={{ display: "flex", gap: "10px" }}>
               <button onClick={downloadPDF}>Download PDF</button>
               <button onClick={handlePrint}>Print</button>
@@ -223,6 +287,7 @@ function DeliveryHistory() {
 }
 
 export default DeliveryHistory;
+
 
 
 
