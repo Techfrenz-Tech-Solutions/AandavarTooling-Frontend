@@ -1,8 +1,6 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
-import Page from "./Page";
 
 function Dashboard() {
   return (
@@ -13,9 +11,8 @@ function Dashboard() {
         <Topbar />
 
         <div className="page-content">
-          <Routes>
-            <Route path="/" element={<Page />} />
-          </Routes>
+          {/* Nested routes are rendered here via App.js route definitions */}
+          <Outlet />
         </div>
       </div>
     </div>

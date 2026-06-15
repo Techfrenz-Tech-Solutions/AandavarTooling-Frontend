@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import logo from "../Assets/AandavarLogo1.png";
 import { useNavigate } from "react-router-dom";
 import "../CSS/Login.css";
@@ -9,13 +9,7 @@ const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  // ✅ Auto redirect if already logged in
-  useEffect(() => {
-    const isAuth = localStorage.getItem("isAuthenticated");
-    if (isAuth === "true") {
-      navigate("/dashboard");
-    }
-  }, [navigate]);
+  // Auto-redirect handled by PublicRoute in App.js — no manual check needed here
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -29,7 +23,7 @@ const LoginPage = () => {
     }
 
     if (username === validUsername && password === validPassword) {
-      localStorage.setItem("isAuthenticated", "true"); // ✅ Store session
+      localStorage.setItem("isLoggedIn", "true"); // ✅ Store session
       navigate("/dashboard");
     } else {
       alert("Invalid Credentials");

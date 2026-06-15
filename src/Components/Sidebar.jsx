@@ -269,14 +269,8 @@ const Sidebar = ({ collapsed }) => {
   <div
     className="menu-item logout"
     onClick={() => {
-      // ✅ Remove correct auth key
-      localStorage.removeItem("isAuthenticated");
-
-      // Optional: clear everything if needed
-      // localStorage.clear();
-
-      // ✅ Navigate to login
-      navigate("/", { replace: true });
+      localStorage.removeItem("isLoggedIn"); // ✅ Clear session
+      navigate("/login", { replace: true });
     }}
   >
     <i className="fa-solid fa-right-from-bracket"></i>

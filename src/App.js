@@ -1,5 +1,6 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import ProtectedRoute from "./Components/ProtectedRoute";
+import PublicRoute from "./Components/PublicRoute";
 import Login from "./Components/Login";
 import Dashboard from "./Components/Dashboard";
 import CategoryMaster from "./Components/CategoryMaster";
@@ -26,41 +27,62 @@ import InvoiceHistory from "./Components/InvoiceHistory";
 import InvoiceTemplate from "./Components/InvoiceTemplate";
 import InvoiceTemplate2 from "./Components/InvoiceTemplate2";
 import InstrumentMaster from "./Components/Instrument";
+import Page from "./Components/Page";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        {/* Redirect root to /login */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
 
-        <Route path="/dashboard/*" element={<Dashboard />} />
+        {/* ── Public routes (redirect to /dashboard if already logged in) ── */}
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<Login />} />
+        </Route>
 
-        <Route path="/dashboard/categories" element={<CategoryMaster />} />
-        <Route path="/dashboard/machines" element={<MachineMaster />} />
-        <Route path="/dashboard/workers" element={<WorkerMaster />} />
-        <Route path="/dashboard/products" element={<ProductMaster />} />
-        <Route path="/dashboard/lineout" element={<WorkOrder />} />
-        <Route path="/dashboard/returns" element={<ReturnPage />} />
-        <Route path="/dashboard/CurrentStock" element={<CurrentStock />} />
-        <Route path="/dashboard/reports" element={<Reports />} />
-        <Route path="/dashboard/InwardEntry" element={<InwardEntry />} />
-        <Route path="/dashboard/uom" element={<UOMMaster />} />
-        <Route path="/dashboard/salesproducts" element={<SalesProductMaster />} />
-        <Route path="/dashboard/CustomerMaster" element={<CustomerMaster />} />
-        <Route path="/dashboard/SalesPage" element={<SalesPage />} />
-        <Route path="/dashboard/IGSTSalesPage" element={<IGSTSalesPage/>} />
-        <Route path="/dashboard/ToolMaster" element={<ToolMaster />} />
-        <Route path="/dashboard/ToolInwardEntry" element={<ToolInwardEntry />} />
-        <Route path="/dashboard/DeliveryChallan" element={<DeliveryChallan />} />
-        <Route path="/dashboard/DeliveryHistory" element={<DeliveryHistory />} />
-        <Route path="/dashboard/Returndeliverychallan" element={<Returndeliverychallan />} />
-        <Route path="/dashboard/Toolstack" element={<Toolstack />} />
-        <Route path="/dashboard/InvoiceHistory" element={<InvoiceHistory />} />
-        <Route path="/dashboard/InstrumentMaster" element={<InstrumentMaster />} />
+        {/* ── Protected routes (redirect to /login if not logged in) ── */}
+        <Route element={<ProtectedRoute />}>
+          {/* Dashboard layout wraps all nested pages via <Outlet /> */}
+          <Route path="/dashboard" element={<Dashboard />}>
+            <Route index element={<Page />} />
 
-        {/* FIXED ROUTE */}
-        <Route path="/dashboard/invoice/:invoiceNo" element={<InvoiceTemplate />} />
-        <Route path="/dashboard/invoice/:invoiceNo" element={<InvoiceTemplate2 />} />
+            {/* Masters */}
+            <Route path="categories" element={<CategoryMaster />} />
+            <Route path="machines" element={<MachineMaster />} />
+            <Route path="workers" element={<WorkerMaster />} />
+            <Route path="products" element={<ProductMaster />} />
+            <Route path="salesproducts" element={<SalesProductMaster />} />
+            <Route path="CustomerMaster" element={<CustomerMaster />} />
+            <Route path="uom" element={<UOMMaster />} />
+            <Route path="ToolMaster" element={<ToolMaster />} />
+            <Route path="InstrumentMaster" element={<InstrumentMaster />} />
+
+            {/* Transactions */}
+            <Route path="lineout" element={<WorkOrder />} />
+            <Route path="returns" element={<ReturnPage />} />
+            <Route path="SalesPage" element={<SalesPage />} />
+            <Route path="IGSTSalesPage" element={<IGSTSalesPage />} />
+            <Route path="InvoiceHistory" element={<InvoiceHistory />} />
+
+            {/* Inventory */}
+            <Route path="InwardEntry" element={<InwardEntry />} />
+            <Route path="ToolInwardEntry" element={<ToolInwardEntry />} />
+            <Route path="DeliveryChallan" element={<DeliveryChallan />} />
+            <Route path="DeliveryHistory" element={<DeliveryHistory />} />
+            <Route path="Returndeliverychallan" element={<Returndeliverychallan />} />
+            <Route path="CurrentStock" element={<CurrentStock />} />
+            <Route path="Toolstack" element={<Toolstack />} />
+            <Route path="Reports" element={<Reports />} />
+
+            {/* Invoice templates — two separate printable routes */}
+            <Route path="invoice/:invoiceNo" element={<InvoiceTemplate />} />
+            <Route path="invoice2/:invoiceNo" element={<InvoiceTemplate2 />} />
+          </Route>
+        </Route>
+
+        {/* Catch-all → login */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   );
