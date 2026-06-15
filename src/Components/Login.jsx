@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import logo from "../Assets/AandavarLogo1.png";
 import { useNavigate } from "react-router-dom";
 import "../CSS/Login.css";
@@ -23,7 +23,13 @@ const LoginPage = () => {
     }
 
     if (username === validUsername && password === validPassword) {
-      localStorage.setItem("isLoggedIn", "true"); // ✅ Store session
+      // Write to both storages:
+      // - sessionStorage → tab-scoped flag (blocks new-tab URL access)
+      // - localStorage   → persists across refreshes in the same tab
+      // - tabInitialized → marks this tab as the one that performed login
+      sessionStorage.setItem("tabInitialized", "true");
+      sessionStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("isLoggedIn", "true");
       navigate("/dashboard");
     } else {
       alert("Invalid Credentials");

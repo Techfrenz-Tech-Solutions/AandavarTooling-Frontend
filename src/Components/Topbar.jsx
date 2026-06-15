@@ -50,6 +50,8 @@ const currentPage = getCurrentPage();
   };
 
   const handleLogout = () => {
+    sessionStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("tabInitialized");
     localStorage.removeItem("isLoggedIn");
     navigate("/login", { replace: true });
   };
