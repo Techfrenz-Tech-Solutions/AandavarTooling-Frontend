@@ -5,7 +5,6 @@ import "../CSS/InwardEntry.css";
 import api from "../api";
 
 function InwardEntry() {
-  const [selectedItem, setSelectedItem] = useState(null);
   const [toolName, setToolName] = useState("");  const [uom, setUom] = useState("");
   const [quantity, setQuantity] = useState("");
   const [rate, setRate] = useState("");
@@ -94,7 +93,6 @@ function InwardEntry() {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setToolName(value);
-    setSelectedItem(null);
     setDropdownOpen(true);
     setFilteredTools(
       toolOptions.filter((item) =>
@@ -106,7 +104,6 @@ function InwardEntry() {
   // ── DROPDOWN: pick an item ──
   const handleSelectItem = (item) => {
     setToolName(getItemName(item));
-    setSelectedItem(item);
     setDropdownOpen(false);
   };
 
@@ -157,7 +154,6 @@ function InwardEntry() {
 
   const resetForm = () => {
     setToolName("");
-    setSelectedItem(null);
     setUom("");
     setQuantity("");
     setRate("");

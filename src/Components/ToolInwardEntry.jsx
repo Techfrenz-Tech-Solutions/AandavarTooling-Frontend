@@ -72,7 +72,7 @@ function ToolInwardEntry() {
       await api.post("/toolinward/toolinwards", payload);
 
       alert("Tool Inward submitted & stock updated!");
-      navigate("/tool-stock");
+      navigate("/dashboard/Toolstack");
     } catch (err) {
       console.error("Error submitting Tool Inward:", err);
       alert("Error updating Tool stock");

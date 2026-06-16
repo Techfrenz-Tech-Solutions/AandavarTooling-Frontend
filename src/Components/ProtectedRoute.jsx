@@ -19,7 +19,8 @@ const ProtectedRoute = () => {
   const isLoggedIn   = sessionStorage.getItem("isLoggedIn")  === "true";
   const tabKey       = sessionStorage.getItem("tabKey");
   const authTabKey   = sessionStorage.getItem("authTabKey");
-  const validSession = isLoggedIn && tabKey && authTabKey === tabKey;
+  const authToken    = sessionStorage.getItem("authToken");
+  const validSession = isLoggedIn && authToken && tabKey && authTabKey === tabKey;
 
   return validSession ? <Outlet /> : <Navigate to="/login" replace />;
 };

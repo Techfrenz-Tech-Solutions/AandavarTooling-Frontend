@@ -268,10 +268,11 @@ const Sidebar = ({ collapsed }) => {
       <div className="sidebar-footer">
   <div
     className="menu-item logout"
-    onClick={() => {
-      sessionStorage.removeItem("isLoggedIn");
-      sessionStorage.removeItem("authTabKey");
-      navigate("/login", { replace: true });
+	    onClick={() => {
+	      sessionStorage.removeItem("authToken");
+	      sessionStorage.removeItem("isLoggedIn");
+	      sessionStorage.removeItem("authTabKey");
+	      navigate("/login", { replace: true });
     }}
   >
     <i className="fa-solid fa-right-from-bracket"></i>

@@ -30,7 +30,7 @@ const Page = () => {
             totalProducts: data.total_products || 0,
             totalMachines: data.total_machines || 0,
             totalWorkers: data.total_workers || 0,
-            totalStock: data.total_stock || 0,
+            totalStock: data.total_stock_quantity || data.total_stock || 0,
           });
         }
       } catch (err) {
@@ -104,7 +104,7 @@ const Page = () => {
 
             <button
               className="outline-btn"
-              onClick={() => navigate("/dashboard/feedout")}
+              onClick={() => navigate("/dashboard/lineout")}
             >
               <i className="fa fa-arrow-right"></i> Issue Material
             </button>
@@ -125,7 +125,7 @@ const Page = () => {
 
             <button
               className="outline-btn"
-              onClick={() => navigate("/dashboard/reports")}
+              onClick={() => navigate("/dashboard/Reports")}
             >
               <i className="fa fa-chart-bar"></i> View Reports
             </button>

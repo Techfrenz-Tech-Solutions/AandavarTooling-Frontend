@@ -281,7 +281,7 @@
 import React, { useEffect, useState } from "react";
 import logo from "../Assets/AandavarLogo1.png";
 import "../CSS/InvoiceTemplate.css";
-import axios from "axios";
+import api from "../api";
 import { useParams } from "react-router-dom";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -324,22 +324,22 @@ function InvoiceTemplate2(props) {
   const [invoice, setInvoice] = useState(null);
   const [items, setItems] = useState([]);
 
-  const fetchInvoice = async () => {
-    try {
-      const res = await axios.get(
-        `https://admin.shreeaandavartooling.in/backend/sales/invoice/${encodeURIComponent(invoiceNo)}`
-      );
-
-      if (res.data.status === 1) {
-        setInvoice(res.data.invoice);
-        setItems(res.data.items);
-      }
-    } catch (error) {
-      console.log("Invoice fetch error:", error);
-    }
-  };
-
   useEffect(() => {
+    const fetchInvoice = async () => {
+      try {
+        const res = await api.get(
+          `/sales/invoice/${encodeURIComponent(invoiceNo)}`
+        );
+
+        if (res.data.status === 1) {
+          setInvoice(res.data.invoice);
+          setItems(res.data.items);
+        }
+      } catch (error) {
+        console.log("Invoice fetch error:", error);
+      }
+    };
+
     if (invoiceNo) fetchInvoice();
   }, [invoiceNo]);
 

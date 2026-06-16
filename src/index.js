@@ -38,6 +38,7 @@ if (!existingTabKey) {
   // Brand-new tab: generate a fresh identity
   const newKey = crypto.randomUUID();
   sessionStorage.setItem("tabKey", newKey);
+  sessionStorage.removeItem("authToken");
   sessionStorage.removeItem("isLoggedIn");
   sessionStorage.removeItem("authTabKey");
 } else if (tabLive === "true") {
@@ -46,6 +47,7 @@ if (!existingTabKey) {
   // Invalidate the copied auth so the user must log in fresh.
   const newKey = crypto.randomUUID();
   sessionStorage.setItem("tabKey", newKey);
+  sessionStorage.removeItem("authToken");
   sessionStorage.removeItem("isLoggedIn");
   sessionStorage.removeItem("authTabKey");
   sessionStorage.removeItem("tabLive");
