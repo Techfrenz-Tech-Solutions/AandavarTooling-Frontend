@@ -270,8 +270,7 @@ const Sidebar = ({ collapsed }) => {
     className="menu-item logout"
     onClick={() => {
       sessionStorage.removeItem("isLoggedIn");
-      sessionStorage.removeItem("tabInitialized");
-      localStorage.removeItem("isLoggedIn");
+      sessionStorage.removeItem("authTabKey");
       navigate("/login", { replace: true });
     }}
   >

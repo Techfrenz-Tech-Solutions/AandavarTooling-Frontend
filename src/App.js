@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import PublicRoute from "./Components/PublicRoute";
@@ -30,6 +31,12 @@ import InstrumentMaster from "./Components/Instrument";
 import Page from "./Components/Page";
 
 function App() {
+  // Mark this tab as "live" after React mounts.
+  // index.js uses this to detect duplicate tabs on next cold start.
+  useEffect(() => {
+    sessionStorage.setItem("tabLive", "true");
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>

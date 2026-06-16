@@ -51,8 +51,7 @@ const currentPage = getCurrentPage();
 
   const handleLogout = () => {
     sessionStorage.removeItem("isLoggedIn");
-    sessionStorage.removeItem("tabInitialized");
-    localStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("authTabKey");
     navigate("/login", { replace: true });
   };
 
