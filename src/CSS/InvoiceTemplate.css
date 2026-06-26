@@ -59,7 +59,7 @@
    ══════════════════════════════════════════════════ */
 .inv-header {
   display: flex;
-  height: 20px;
+  height: 46px;
   margin: 0;
   padding: 0;
 }
@@ -106,7 +106,7 @@
 .inv-company-band {
   display: flex;
   align-items: stretch;
-  min-height: 40px;
+  min-height: 80px;
   margin: 0;
   padding: 0;
 }
