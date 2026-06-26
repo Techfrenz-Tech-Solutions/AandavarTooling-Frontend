@@ -26,7 +26,7 @@ import Returndeliverychallan from "./Components/Returndeliverychallan";
 import Toolstack from "./Components/Toolstack";
 import InvoiceHistory from "./Components/InvoiceHistory";
 import InvoiceTemplate from "./Components/InvoiceTemplate";
-import InvoiceTemplate2 from "./Components/InvoiceTemplate2";
+import InvoiceTemplate2 from "./Components/InvoiceTemplate2.jsx";
 import InstrumentMaster from "./Components/Instrument";
 import Page from "./Components/Page";
 

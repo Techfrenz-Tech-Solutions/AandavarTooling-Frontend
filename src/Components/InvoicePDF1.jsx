@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import InvoiceTemplate2 from "./InvoiceTemplate2";
+import InvoiceTemplate2 from "./InvoiceTemplate2.jsx";
 import "../CSS/InvoiceTemplate.css";
  
 function InvoicePDF() {
