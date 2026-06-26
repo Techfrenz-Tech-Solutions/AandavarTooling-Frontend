@@ -283,7 +283,7 @@ function InvoiceHistory() {
                     </div>
                   </div>
 
-                  {/* ── Bill To ── */}
+                  {/* ── Bill To / Ship To ── */}
                   <div className="inv-parties">
                     <div className="inv-bill-to">
                       <div className="inv-section-label">Bill To</div>
@@ -292,6 +292,13 @@ function InvoiceHistory() {
                       <p>Phone: {modalInvoice.Customer_Phone}</p>
                       <p>GSTIN: {modalInvoice.Customer_GSTIN}</p>
                       <p>State: 33 - Tamil Nadu</p>
+                    </div>
+                    <div className="inv-bill-from">
+                      <div className="inv-section-label">Supplier</div>
+                      <p><b>SHREE AANDAVAR TOOLING</b></p>
+                      <p>5/520 D, Kabeer Nagar MasthanPatti</p>
+                      <p>Madurai - 625020</p>
+                      <p>Phone: 9944130610</p>
                     </div>
                   </div>
 
