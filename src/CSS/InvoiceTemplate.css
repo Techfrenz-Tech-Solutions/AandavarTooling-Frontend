@@ -5,9 +5,11 @@
 /* ── A4 container ───────────────────────────────── */
 .invoice-container {
   position: relative;
-  width: 210mm;
+  display: block;
+  width: min(210mm, calc(100% - 24px));
+  max-width: 210mm;
   min-height: 297mm;
-  margin: auto;
+  margin: 20px auto;
   background: #ffffff;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
@@ -53,7 +55,7 @@
 }
 
 .inv-header-dark {
-  background: #e04b3a;
+  background: black;
   color: #fff;
   display: flex;
   align-items: center;
@@ -68,7 +70,7 @@
 }
 
 .inv-header-red {
-  background: #e04b3a;
+  background: black;
   color: #fff;
   display: flex;
   align-items: center;
