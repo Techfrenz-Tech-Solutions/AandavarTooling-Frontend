@@ -283,8 +283,6 @@ function InvoiceHistory() {
                     </div>
                   </div>
 
-                  <div className="inv-divider" />
-
                   {/* ── Bill To / Ship To ── */}
                   <div className="inv-parties">
                     <div className="inv-bill-to">
