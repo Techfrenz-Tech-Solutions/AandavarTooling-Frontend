@@ -9,22 +9,27 @@
   width: min(210mm, calc(100% - 24px));
   max-width: 210mm;
   min-height: 297mm;
-  margin: 20px auto;
+  margin: 0 auto;
   background: #ffffff;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 11px;
+  font-size: 13px;
   box-sizing: border-box;
   overflow: hidden;
   color: #222;
   padding: 0;
+  line-height: normal;
 }
 
-/* top strip + company band flush together — no gap */
+/* top strip + company band flush — zero gap */
 .inv-header,
 .inv-company-band {
   margin: 0;
-  padding: 0;
   display: flex;
+}
+
+/* Explicitly kill any whitespace between header and company band */
+.inv-header + .inv-company-band {
+  margin-top: 0 !important;
 }
 
 /* ── Watermark ──────────────────────────────────── */
