@@ -35,7 +35,7 @@
   padding-top: 0 !important;
 }
 
-/* ── Watermark ──────────────────────────────────── */
+/* ── Watermark — absolutely positioned, never in flex flow ── */
 .invoice-watermark {
   position: absolute;
   top: 50%;
@@ -46,6 +46,9 @@
   width: 460px;
   height: auto;
   pointer-events: none;
+  /* Remove from flex flow entirely */
+  flex: none;
+  align-self: auto;
 }
 
 /* keep all content above watermark */

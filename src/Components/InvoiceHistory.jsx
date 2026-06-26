@@ -238,9 +238,6 @@ function InvoiceHistory() {
                 /* ── Invoice template rendered inside modal ── */
                 <div ref={invoiceRef} id="invoice-print" className="invoice-container">
 
-                  {/* Watermark */}
-                  <img src="/AandavarLogo2.png" alt="" className="invoice-watermark" />
-
                   {/* ── Two-tone top header ── */}
                   <div className="inv-header">
                     <div className="inv-header-dark">
@@ -254,6 +251,8 @@ function InvoiceHistory() {
 
                   {/* ── Company band ── */}
                   <div className="inv-company-band">
+                    {/* Watermark — inside company band so it stays behind content */}
+                    <img src="/AandavarLogo2.png" alt="" className="invoice-watermark" />
                     <div className="inv-company-panel">
                       <img src={logo} alt="Logo" className="inv-company-logo" />
                       <div className="inv-company-text">
