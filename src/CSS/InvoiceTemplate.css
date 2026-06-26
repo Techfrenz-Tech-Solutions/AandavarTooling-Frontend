@@ -101,7 +101,7 @@
 .inv-company-band {
   display: flex;
   align-items: stretch;
-  min-height: 80px;
+  min-height: 40px;
 }
 
 /* Grey left panel with big curve on bottom-right */
