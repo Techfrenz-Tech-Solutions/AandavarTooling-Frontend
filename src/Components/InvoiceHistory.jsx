@@ -269,9 +269,9 @@ function InvoiceHistory() {
 
                   {/* ── Invoice meta — right side ── */}
                   <div className="inv-meta-block">
-                    <p>Invoice No: <span>{modalInvoice.Invoice_No}</span></p>
-                    <p>Date: <span>{new Date(modalInvoice.Invoice_Date).toLocaleDateString("en-IN")}</span></p>
-                    <p>Place of Supply: <span>33-Tamil Nadu</span></p>
+                    <p><span className="meta-label">Invoice No:</span><span className="meta-value">{modalInvoice.Invoice_No}</span></p>
+                    <p><span className="meta-label">Date:</span><span className="meta-value">{new Date(modalInvoice.Invoice_Date).toLocaleDateString("en-IN")}</span></p>
+                    <p><span className="meta-label">Place of Supply:</span><span className="meta-value">33-Tamil Nadu</span></p>
                   </div>
 
                   {/* ── Bill To ── */}

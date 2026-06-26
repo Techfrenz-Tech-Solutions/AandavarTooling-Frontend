@@ -189,14 +189,26 @@
 
 .inv-meta-block p {
   margin: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0;
 }
 
-.inv-meta-block span {
-  display: inline-block;
-  min-width: 60px;
-  border-bottom: 1px solid #555;
-  margin-left: 6px;
-  vertical-align: bottom;
+.inv-meta-block .meta-label {
+  color: #555;
+  white-space: nowrap;
+  min-width: 110px;
+  text-align: right;
+}
+
+.inv-meta-block .meta-value {
+  min-width: 120px;
+  text-align: left;
+  padding-left: 8px;
+  font-weight: 600;
+  color: #111;
+  /* NO underline */
+  border-bottom: none;
 }
 
 /* ══════════════════════════════════════════════════════
@@ -218,11 +230,9 @@
   margin: 0;
 }
 
+/* Remove underlines — plain text values */
 .inv-bill-section span.underline {
-  display: inline-block;
-  min-width: 80px;
-  border-bottom: 1px solid #444;
-  vertical-align: bottom;
+  border-bottom: none;
   margin-left: 4px;
 }
 
@@ -296,10 +306,7 @@
 }
 
 .inv-payto span.underline {
-  display: inline-block;
-  min-width: 90px;
-  border-bottom: 1px solid #444;
-  vertical-align: bottom;
+  border-bottom: none;
   margin-left: 4px;
 }
 
