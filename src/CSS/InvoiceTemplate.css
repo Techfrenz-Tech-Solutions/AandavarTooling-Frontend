@@ -1,372 +1,414 @@
-/* ============================= */
-/* A4 PAGE SIZE */
-/* ============================= */
+/* ═══════════════════════════════════════════════════
+   INVOICE TEMPLATE  —  Matches physical invoice design
+   ═══════════════════════════════════════════════════ */
 
+/* ── A4 container ───────────────────────────────── */
 .invoice-container {
+  position: relative;
   width: 210mm;
   min-height: 297mm;
   margin: auto;
   background: #ffffff;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
-  padding: 6mm;
   box-sizing: border-box;
   overflow: hidden;
+  color: #222;
 }
 
-/* InvoiceTemplate.css */
-
-/* Watermark styling */
-.invoice-container {
-  position: relative;
-}
-
+/* ── Watermark ──────────────────────────────────── */
 .invoice-watermark {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-30deg);
-  opacity: 0.1;
-  /* very light */
+  opacity: 0.07;
   z-index: 0;
-  /* behind content */
-  width: 500px;
-  /* adjust size */
+  width: 460px;
   height: auto;
   pointer-events: none;
-  /* so it doesn’t block clicks */
 }
 
-/* ============================= */
-/* TOP BAR */
-/* ============================= */
+/* keep all content above watermark */
+.invoice-container > *:not(.invoice-watermark) {
+  position: relative;
+  z-index: 1;
+}
 
-.top-bar {
-  background: #e11d2e;
+/* ══════════════════════════════════════════════════
+   TOP HEADER  — two-tone strip
+   ══════════════════════════════════════════════════ */
+.inv-header {
+  display: flex;
+  height: 28px;
+}
+
+.inv-header-dark {
+  background: #1e1e1e;
   color: #fff;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 5px 15px;
+  padding: 0 16px;
   font-size: 10px;
+  width: 36%;
+  flex-shrink: 0;
+  gap: 6px;
+  letter-spacing: 0.2px;
 }
 
-
-
-
-/* ============================= */
-/* COMPANY HEADER */
-/* ============================= */
-
-/* Logo + Text wrapper */
-.logo-text-wrapper {
+.inv-header-red {
+  background: #c0392b;
+  color: #fff;
   display: flex;
   align-items: center;
+  justify-content: space-around;
+  padding: 0 12px;
+  font-size: 10px;
+  flex: 1;
+  gap: 10px;
 }
 
-/* Logo styling */
-.company-logo {
-  width: 85px;
-  height: 60px;
-  margin-right: 10px;
+.inv-header-red span,
+.inv-header-dark span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+/* ══════════════════════════════════════════════════
+   COMPANY BAND  — dark panel left, title right
+   ══════════════════════════════════════════════════ */
+.inv-company-band {
+  display: flex;
+  align-items: stretch;
+  min-height: 80px;
+  border-bottom: 2px solid #c0392b;
+}
+
+/* Dark left panel with big curve on bottom-right */
+.inv-company-panel {
+  background: #1e1e1e;
+  color: #fff;
+  width: 46%;
+  display: flex;
+  align-items: center;
+  padding: 14px 22px;
+  gap: 14px;
+  border-bottom-right-radius: 70px;
+  flex-shrink: 0;
+}
+
+.inv-company-logo {
+  width: 54px;
+  height: 54px;
   object-fit: contain;
-  /* keeps logo proportions */
+  flex-shrink: 0;
+  border-radius: 4px;
 }
 
-/* Optional: adjust company info spacing */
-.company-info h2 {
-  margin: 0;
-  font-size: 17px;
+.inv-company-text h2 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
 }
 
-.company-info p {
-  margin: 2px 0;
-  font-size: 10px;
+.inv-company-text p {
+  margin: 1px 0;
+  font-size: 9.5px;
+  color: #cccccc;
 }
 
-.company-header {
+/* Right panel — Tax Invoice heading + meta */
+.inv-title-panel {
+  flex: 1;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 6px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 12px 22px 12px 12px;
 }
 
-.company-left {
-  background: #aeb2b8;
-  color: black;
-  padding: 15px 25px;
-  border-bottom-right-radius: 100px;
+.inv-title-panel h1 {
+  margin: 0 0 10px 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e1e1e;
+  letter-spacing: 0.5px;
+}
+
+.inv-meta-table {
+  border-collapse: collapse;
+  font-size: 10.5px;
+}
+
+.inv-meta-table td {
+  padding: 1.5px 6px 1.5px 0;
+  vertical-align: top;
+}
+
+.inv-meta-table td:first-child {
+  color: #555;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.inv-meta-table td:last-child {
+  font-weight: 500;
+  color: #111;
+}
+
+/* ══════════════════════════════════════════════════
+   BILL TO / SUPPLIER  —  two columns
+   ══════════════════════════════════════════════════ */
+.inv-parties {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+}
+
+.inv-bill-to {
   width: 55%;
+  padding: 10px 16px;
+  border-right: 1px solid #ddd;
 }
 
-.company-left h2 {
-  margin: 0;
-  font-size: 17px;
+.inv-bill-from {
+  flex: 1;
+  padding: 10px 16px;
 }
 
-.company-left p {
+/* Red section label — "Bill To", "Pay To" etc. */
+.inv-section-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #c0392b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #f0c0bc;
+  padding-bottom: 3px;
+}
+
+.inv-parties p {
   margin: 2px 0;
   font-size: 10px;
+  line-height: 1.5;
 }
 
-.invoice-title {
-  text-align: right;
-  width: 40%;
+.inv-parties b {
+  font-size: 11px;
+  color: #111;
 }
 
-.invoice-title h1 {
-  font-size: 20px;
-  margin: 0;
-}
-
-/* ============================= */
-/* BILL DETAILS */
-/* ============================= */
-
-.bill-details {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-}
-
-.bill-left {
-  width: 60%;
-}
-
-.bill-left p {
-  margin: 2px 0;
-}
-
-.bill-right {
-  text-align: right;
-}
-
-.bill-right p {
-  margin: 2px 0;
-}
-
-/* ============================= */
-/* PRODUCT TABLE */
-/* ============================= */
-
+/* ══════════════════════════════════════════════════
+   ITEMS TABLE
+   ══════════════════════════════════════════════════ */
 .invoice-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 8px;
+}
+
+.invoice-table thead tr {
+  background: #c0392b;
 }
 
 .invoice-table th {
-  background: #e11d2e;
-  color: #fff;
-  padding: 5px;
-  border: 1px solid #ccc;
+  padding: 7px 6px;
+  border: 1px solid #a93226;
   font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 0.2px;
+}
+
+.invoice-table tbody tr:nth-child(even) {
+  background: #fdf5f4;
+}
+
+.invoice-table tbody tr:hover {
+  background: #fce8e6;
 }
 
 .invoice-table td {
-  border: 1px solid #ccc;
-  padding: 5px;
+  border: 1px solid #e0e0e0;
+  padding: 5px 6px;
   text-align: center;
-  height: 18px;
+  font-size: 10px;
+  height: 22px;
+  color: #222;
 }
 
-/* ============================= */
-/* PAYMENT SECTION */
-/* ============================= */
+/* item name — left-aligned */
+.invoice-table td:nth-child(2) {
+  text-align: left;
+  padding-left: 8px;
+}
 
-.payment-wrapper {
+/* empty filler rows */
+.invoice-table tr.filler-row td {
+  color: transparent;
+  height: 20px;
+  background: #fff;
+}
+
+/* ══════════════════════════════════════════════════
+   BOTTOM  —  Bank details (left) + Totals (right)
+   ══════════════════════════════════════════════════ */
+.inv-bottom {
   display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
+  align-items: flex-start;
+  border-top: 1px solid #ddd;
 }
 
-.payto {
+.inv-payto {
   width: 55%;
+  padding: 10px 16px;
+  border-right: 1px solid #ddd;
   font-size: 10px;
 }
 
-.payto p {
+.inv-payto p {
   margin: 2px 0;
+  line-height: 1.5;
 }
 
-.total-box {
-  width: 40%;
+/* Totals box */
+.inv-totals {
+  flex: 1;
 }
 
-.total-box table {
+.inv-totals table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.total-box td {
-  border: 1px solid #ccc;
-  padding: 4px;
+.inv-totals td {
+  border: 1px solid #e0e0e0;
+  padding: 4px 10px;
   font-size: 10px;
+  vertical-align: middle;
 }
 
-.total-row {
-  background: #e11d2e;
-  color: #fff;
-  font-weight: bold;
+.inv-totals td:last-child {
+  text-align: right;
+  font-weight: 500;
+  min-width: 68px;
 }
 
-.bottom-section {
+/* Red total highlight row */
+.inv-total-final td {
+  background: #c0392b !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  border-color: #a93226 !important;
+  font-size: 11px !important;
+}
+
+/* Received / Balance rows — slightly shaded */
+.inv-totals tr.inv-sub-row td {
+  background: #fafafa;
+  color: #555;
+}
+
+/* ══════════════════════════════════════════════════
+   FOOTER  —  Amount in words + Signatures
+   ══════════════════════════════════════════════════ */
+.inv-footer {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-top: -40px;
-  width: 100%;
+  align-items: flex-end;
+  padding: 14px 16px 18px;
+  border-top: 1px solid #ddd;
+  margin-top: 6px;
+  gap: 20px;
 }
 
-.left-side {
-  width: 60%;
-  text-align: left;
+.inv-footer-left {
+  width: 55%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-height: 80px;
+}
+
+.inv-footer-right {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
+  min-height: 80px;
 }
 
 /* Amount in words */
-.amount-words {
-  margin-bottom: 10px;
+.inv-amount-words b {
+  font-size: 9.5px;
+  color: #c0392b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 4px;
 }
 
-.amount-words p {
-  margin: 3px 0;
-}
-
-/* Terms */
-.terms {
-  margin-bottom: 10px;
-}
-
-.terms p {
-  margin: 3px 0;
-}
-
-/* Signature block */
-.signature {
-  margin-top: -10px;
-}
-
-.signature p {
-  margin: 5px 0;
-}
-
-.signature .sign-box {
-  width: 220px;
-  height: 30px;
-  border-bottom: 2px solid black;
-  margin: 15px 0;
-}
-
-/* RIGHT SIDE */
-.right-side {
-  width: 40%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-}
-
-/* Receiver sign */
-.receiver-sign {
-  width: 250px;
-  text-align: center;
-  margin-top: 140px;
-  /* pushes it down to align with signature */
-}
-
-.receiver-sign .line {
-  border-bottom: 2px solid black;
-  margin-bottom: 6px;
-}
-
-.receiver-sign p {
-  font-size: 12px;
-  color: #333;
+.inv-amount-words p {
+  font-size: 10.5px;
   margin: 0;
+  color: #222;
+  font-style: italic;
+  line-height: 1.4;
 }
 
-/* ============================= */
-/* PREVENT PAGE BREAK */
-/* ============================= */
+/* Signature lines */
+.inv-sig-line {
+  border-top: 1px solid #444;
+  width: 160px;
+  margin: 0 auto 4px;
+}
 
+.inv-sig-label {
+  font-size: 9.5px;
+  color: #444;
+  text-align: center;
+}
+
+.inv-auth-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  margin-top: 4px;
+  color: #111;
+}
+
+/* ── Prevent page break ─────────────────────────── */
 .invoice-container,
 .invoice-container * {
   page-break-inside: avoid !important;
   break-inside: avoid !important;
 }
 
-
-
-
-.invoice-footer {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 40px;
-}
-
-.footer-left {
-  width: 60%;
-}
-
-.footer-right {
-  width: 35%;
-  text-align: center;
-}
-
-.amount-words {
-  margin-bottom: 20px;
-}
-
-.terms {
-  margin-bottom: 30px;
-}
-
-.authorized {
-  margin-top: 30px;
-}
-
-.seal-box {
-  height: 120px;
-  border: 2px dashed #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  margin-top: 10px;
-}
-
-
-
-
-.authorized {
-  margin-top: 70px;
-}
-
-.seal-box {
-  height: 120px;
-  border: 2px dashed #000;
-  margin-top: 10px;
-}
-
-.total-row {
-  font-weight: bold;
-}
-
-.footer-right {
-  margin-top: 10px;
-}
-
+/* ── Download button (used in modal header) ──────── */
 .download-btn {
-  background-color: #2c3e50;
+  background: #c0392b;
   color: #fff;
-  padding: 8px 16px;
+  padding: 7px 18px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
 }
 
-.download-btn:hover {
-  background-color: #1a252f;
+.download-btn:hover:not(:disabled) {
+  background: #96281b;
+}
+
+.download-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
