@@ -10,18 +10,17 @@
   margin: auto;
   background: #ffffff;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 11px;
+  font-size: 13px;
   box-sizing: border-box;
   overflow: hidden;
   color: #222;
   padding: 0;
 }
 
-/* top strip + company band flush together — no gap */
+/* top strip + company band flush — zero gap */
 .inv-header,
 .inv-company-band {
   margin: 0;
-  padding: 0;
   display: flex;
 }
 
@@ -38,65 +37,71 @@
   pointer-events: none;
 }
 
-/* keep all content above watermark */
 .invoice-container > *:not(.invoice-watermark) {
   position: relative;
   z-index: 1;
 }
 
 /* ══════════════════════════════════════════════════
-   TOP HEADER  — two-tone strip
+   TOP HEADER  — fully red, taller, bigger font
    ══════════════════════════════════════════════════ */
 .inv-header {
-  display: flex;
-  height: 28px;
+  height: 46px;
 }
 
+/* left strip — same red as right */
 .inv-header-dark {
-  background: #1e1e1e;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  font-size: 10px;
-  width: 36%;
-  flex-shrink: 0;
-  gap: 6px;
-  letter-spacing: 0.2px;
-}
-
-.inv-header-red {
   background: #c0392b;
   color: #fff;
   display: flex;
   align-items: center;
+  padding: 0 18px;
+  font-size: 13px;
+  font-weight: 600;
+  width: 36%;
+  flex-shrink: 0;
+  gap: 8px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* right strip — slightly lighter red for two-tone look */
+.inv-header-red {
+  background: #e04b3a;
+  color: #fff;
+  display: flex;
+  align-items: center;
   justify-content: space-around;
-  padding: 0 12px;
-  font-size: 10px;
+  padding: 0 18px;
+  font-size: 13px;
+  font-weight: 500;
   flex: 1;
-  gap: 10px;
+  gap: 12px;
+  overflow: hidden;
 }
 
 .inv-header-red span,
 .inv-header-dark span {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ══════════════════════════════════════════════════
-   COMPANY BAND  — dark panel left, title right
+   COMPANY BAND  — grey panel left, title right
    ══════════════════════════════════════════════════ */
 .inv-company-band {
-  display: flex;
   align-items: stretch;
-  min-height: 80px;
+  min-height: 90px;
 }
 
-/* Dark left panel with big curve on bottom-right */
+/* Grey left panel with curved bottom-right */
 .inv-company-panel {
-  background: #1e1e1e;
+  background: #6b6b6b;
   color: #fff;
   width: 46%;
   display: flex;
@@ -108,8 +113,8 @@
 }
 
 .inv-company-logo {
-  width: 54px;
-  height: 54px;
+  width: 58px;
+  height: 58px;
   object-fit: contain;
   flex-shrink: 0;
   border-radius: 4px;
@@ -117,7 +122,7 @@
 
 .inv-company-text h2 {
   margin: 0 0 4px 0;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: #ffffff;
   letter-spacing: 0.4px;
@@ -126,8 +131,8 @@
 
 .inv-company-text p {
   margin: 1px 0;
-  font-size: 9.5px;
-  color: #cccccc;
+  font-size: 11px;
+  color: #eeeeee;
 }
 
 /* Right panel — Tax Invoice heading + meta */
@@ -142,7 +147,7 @@
 
 .inv-title-panel h1 {
   margin: 0 0 10px 0;
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 700;
   color: #1e1e1e;
   letter-spacing: 0.5px;
@@ -150,11 +155,11 @@
 
 .inv-meta-table {
   border-collapse: collapse;
-  font-size: 10.5px;
+  font-size: 12px;
 }
 
 .inv-meta-table td {
-  padding: 1.5px 6px 1.5px 0;
+  padding: 2px 6px 2px 0;
   vertical-align: top;
 }
 
@@ -170,7 +175,7 @@
 }
 
 /* ══════════════════════════════════════════════════
-   BILL TO / SUPPLIER  —  two columns
+   BILL TO  —  full width single column
    ══════════════════════════════════════════════════ */
 .inv-parties {
   display: flex;
@@ -178,9 +183,8 @@
 }
 
 .inv-bill-to {
-  width: 55%;
+  width: 100%;
   padding: 10px 16px;
-  border-right: 1px solid #ddd;
 }
 
 .inv-bill-from {
@@ -188,9 +192,9 @@
   padding: 10px 16px;
 }
 
-/* Red section label — "Bill To", "Pay To" etc. */
+/* Red section label */
 .inv-section-label {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   color: #c0392b;
   text-transform: uppercase;
@@ -202,12 +206,12 @@
 
 .inv-parties p {
   margin: 2px 0;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.5;
 }
 
 .inv-parties b {
-  font-size: 11px;
+  font-size: 13px;
   color: #111;
 }
 
@@ -224,9 +228,9 @@
 }
 
 .invoice-table th {
-  padding: 7px 6px;
+  padding: 8px 6px;
   border: 1px solid #a93226;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   color: #fff;
   text-align: center;
@@ -237,34 +241,29 @@
   background: #fdf5f4;
 }
 
-.invoice-table tbody tr:hover {
-  background: #fce8e6;
-}
-
 .invoice-table td {
   border: 1px solid #e0e0e0;
   padding: 5px 6px;
   text-align: center;
-  font-size: 10px;
+  font-size: 12px;
   height: 22px;
   color: #222;
 }
 
-/* item name — left-aligned */
 .invoice-table td:nth-child(2) {
   text-align: left;
   padding-left: 8px;
 }
 
-/* empty filler rows */
 .invoice-table tr.filler-row td {
   color: transparent;
   height: 20px;
   background: #fff;
+  border-color: #f0f0f0;
 }
 
 /* ══════════════════════════════════════════════════
-   BOTTOM  —  Bank details (left) + Totals (right)
+   BOTTOM  —  Bank details + Totals
    ══════════════════════════════════════════════════ */
 .inv-bottom {
   display: flex;
@@ -276,7 +275,7 @@
   width: 55%;
   padding: 10px 16px;
   border-right: 1px solid #ddd;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .inv-payto p {
@@ -284,7 +283,6 @@
   line-height: 1.5;
 }
 
-/* Totals box */
 .inv-totals {
   flex: 1;
 }
@@ -296,27 +294,25 @@
 
 .inv-totals td {
   border: 1px solid #e0e0e0;
-  padding: 4px 10px;
-  font-size: 10px;
+  padding: 5px 10px;
+  font-size: 12px;
   vertical-align: middle;
 }
 
 .inv-totals td:last-child {
   text-align: right;
   font-weight: 500;
-  min-width: 68px;
+  min-width: 72px;
 }
 
-/* Red total highlight row */
 .inv-total-final td {
   background: #c0392b !important;
   color: #fff !important;
   font-weight: 700 !important;
   border-color: #a93226 !important;
-  font-size: 11px !important;
+  font-size: 13px !important;
 }
 
-/* Received / Balance rows — slightly shaded */
 .inv-totals tr.inv-sub-row td {
   background: #fafafa;
   color: #555;
@@ -353,9 +349,8 @@
   min-height: 80px;
 }
 
-/* Amount in words */
 .inv-amount-words b {
-  font-size: 9.5px;
+  font-size: 11px;
   color: #c0392b;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -364,14 +359,13 @@
 }
 
 .inv-amount-words p {
-  font-size: 10.5px;
+  font-size: 12px;
   margin: 0;
   color: #222;
   font-style: italic;
   line-height: 1.4;
 }
 
-/* Signature lines */
 .inv-sig-line {
   border-top: 1px solid #444;
   width: 160px;
@@ -379,13 +373,13 @@
 }
 
 .inv-sig-label {
-  font-size: 9.5px;
+  font-size: 11px;
   color: #444;
   text-align: center;
 }
 
 .inv-auth-label {
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 700;
   margin-top: 4px;
   color: #111;
@@ -398,7 +392,7 @@
   break-inside: avoid !important;
 }
 
-/* ── Download button (used in modal header) ──────── */
+/* ── Download button ────────────────────────────── */
 .download-btn {
   background: #c0392b;
   color: #fff;
