@@ -54,6 +54,16 @@
   z-index: 1;
 }
 
+/* Reset browser default margins on all children — prevents gaps */
+.invoice-container h1,
+.invoice-container h2,
+.invoice-container h3,
+.invoice-container h4,
+.invoice-container p {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
 /* ══════════════════════════════════════════════════
    TOP HEADER  — two-tone strip
    ══════════════════════════════════════════════════ */
@@ -101,48 +111,62 @@
 }
 
 /* ══════════════════════════════════════════════════
-   COMPANY BAND  — dark panel left, title right
+   COMPANY BAND  — grey panel left, title right
    ══════════════════════════════════════════════════ */
 .inv-company-band {
   display: flex;
   align-items: stretch;
   min-height: 80px;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
 }
 
-/* Dark left panel with big curve on bottom-right */
+/* Grey left panel with big curve on bottom-right */
 .inv-company-panel {
   background: #6b6b6b;
   color: #fff;
   width: 46%;
   display: flex;
   align-items: center;
-  padding: 14px 22px;
+  padding: 14px 50px 14px 22px;
   gap: 14px;
   border-bottom-right-radius: 70px;
   flex-shrink: 0;
+  margin: 0;
 }
 
 .inv-company-logo {
-  width: 54px;
-  height: 54px;
+  width: 58px;
+  height: 58px;
   object-fit: contain;
   flex-shrink: 0;
   border-radius: 4px;
+  display: block;
+}
+
+.inv-company-text {
+  margin: 0;
+  padding: 0;
 }
 
 .inv-company-text h2 {
-  margin: 0 0 4px 0;
+  margin: 0 0 3px 0;
+  padding: 0;
   font-size: 16px;
   font-weight: 700;
   color: #ffffff;
   letter-spacing: 0.4px;
   white-space: nowrap;
+  line-height: 1.2;
 }
 
 .inv-company-text p {
-  margin: 1px 0;
+  margin: 1px 0 0 0;
+  padding: 0;
   font-size: 11.5px;
   color: #eeeeee;
+  line-height: 1.3;
 }
 
 /* Right panel — Tax Invoice heading + meta */
@@ -153,14 +177,17 @@
   justify-content: center;
   align-items: flex-end;
   padding: 12px 22px 12px 12px;
+  margin: 0;
 }
 
 .inv-title-panel h1 {
-  margin: 0 0 10px 0;
+  margin: 0 0 8px 0;
+  padding: 0;
   font-size: 26px;
   font-weight: 700;
   color: #1e1e1e;
   letter-spacing: 0.5px;
+  line-height: 1;
 }
 
 .inv-meta-table {
