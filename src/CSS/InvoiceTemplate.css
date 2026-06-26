@@ -110,26 +110,24 @@
   display: flex;
   align-items: stretch;
   min-height: 80px;
-  margin: 0;
-  padding: 0;
 }
 
-/* Grey left panel with big curve on bottom-right */
+/* Dark left panel with big curve on bottom-right */
 .inv-company-panel {
   background: #6b6b6b;
   color: #fff;
   width: 46%;
   display: flex;
   align-items: center;
-  padding: 14px 50px 14px 22px;
+  padding: 14px 22px;
   gap: 14px;
   border-bottom-right-radius: 70px;
   flex-shrink: 0;
 }
 
 .inv-company-logo {
-  width: 58px;
-  height: 58px;
+  width: 54px;
+  height: 54px;
   object-fit: contain;
   flex-shrink: 0;
   border-radius: 4px;
@@ -146,7 +144,7 @@
 
 .inv-company-text p {
   margin: 1px 0;
-  font-size: 12px;
+  font-size: 11.5px;
   color: #eeeeee;
 }
 
