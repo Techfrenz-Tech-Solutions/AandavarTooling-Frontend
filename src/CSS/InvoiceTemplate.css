@@ -46,9 +46,6 @@
   width: 460px;
   height: auto;
   pointer-events: none;
-  /* Remove from flex flow entirely */
-  flex: none;
-  align-self: auto;
 }
 
 /* keep all content above watermark */
