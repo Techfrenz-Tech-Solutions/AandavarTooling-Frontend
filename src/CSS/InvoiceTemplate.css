@@ -398,6 +398,41 @@
   margin: 0 auto 4px;
 }
 
+/* Compatibility helpers for JSX class names used in InvoiceTemplate.jsx
+   These ensure there is no gap between the top bar and company header. */
+.invoice-container .top-bar {
+  margin: 0;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  height: 46px; /* match .inv-header height */
+  gap: 8px;
+}
+
+.invoice-container .company-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0; /* remove any top margin */
+  padding: 0 12px;
+  min-height: 80px; /* align with .inv-company-band */
+}
+
+.invoice-container .company-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.invoice-container .invoice-title {
+  margin: 0;
+  padding: 0;
+}
+
+.invoice-container .invoice-title h1 {
+  margin: 0;
+}
+
 .inv-sig-label {
   font-size: 9.5px;
   color: #444;
