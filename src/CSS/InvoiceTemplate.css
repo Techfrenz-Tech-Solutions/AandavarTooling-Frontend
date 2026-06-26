@@ -5,7 +5,8 @@
 /* ── A4 container ───────────────────────────────── */
 .invoice-container {
   position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
   width: min(210mm, calc(100% - 24px));
   max-width: 210mm;
   min-height: 297mm;
@@ -24,12 +25,14 @@
 .inv-header,
 .inv-company-band {
   margin: 0;
-  display: flex;
+  padding: 0;
+  flex-shrink: 0;
 }
 
-/* Explicitly kill any whitespace between header and company band */
+/* Kill any gap between header and company band */
 .inv-header + .inv-company-band {
   margin-top: 0 !important;
+  padding-top: 0 !important;
 }
 
 /* ── Watermark ──────────────────────────────────── */
@@ -57,6 +60,8 @@
 .inv-header {
   display: flex;
   height: 46px;
+  margin: 0;
+  padding: 0;
 }
 
 .inv-header-dark {
@@ -102,6 +107,8 @@
   display: flex;
   align-items: stretch;
   min-height: 40px;
+  margin: 0;
+  padding: 0;
 }
 
 /* Grey left panel with big curve on bottom-right */
