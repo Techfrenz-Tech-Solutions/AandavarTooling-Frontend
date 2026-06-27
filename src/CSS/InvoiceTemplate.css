@@ -357,17 +357,20 @@
 
 .inv-words-section .inv-words-label {
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
+/* Amount text — bold, italic, NO underline */
 .inv-words-section .inv-words-line {
-  border-bottom: 1px solid #444;
-  width: 260px;
-  margin: 4px 0 10px;
-  height: 14px;
+  border-bottom: none;
+  width: auto;
+  margin: 0 0 10px;
+  height: auto;
   font-style: italic;
-  color: #333;
+  font-weight: 700;
+  color: #222;
   font-size: 12px;
+  line-height: 1.5;
 }
 
 .inv-terms {
@@ -377,7 +380,8 @@
 
 .inv-terms .inv-terms-title {
   font-weight: 700;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
+  margin-top: 6px;
 }
 
 .inv-terms p {
