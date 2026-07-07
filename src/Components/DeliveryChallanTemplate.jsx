@@ -7,13 +7,6 @@ function DeliveryChallanTemplate({ challanData }) {
   return (
     <div className="dc-page">
 
-      {/* ── Watermark ── */}
-      <img
-        src={process.env.PUBLIC_URL + "/andavarwt.png"}
-        alt=""
-        className="dc-watermark"
-      />
-
       {/* ════════════════════════════════
           HEADER
           ════════════════════════════════ */}

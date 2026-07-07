@@ -35,20 +35,6 @@
   overflow: hidden;
 }
 
-/* ── Watermark ── */
-.dc-watermark {
-  position: absolute;
-  top: 48%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-20deg);
-  opacity: 0.07;
-  width: 520px;           /* bigger — fits the page width visually */
-  height: 520px;          /* same width/height ratio maintained */
-  object-fit: contain;
-  pointer-events: none;
-  z-index: 0;
-}
-
 .dc-page > *:not(.dc-watermark) {
   position: relative;
   z-index: 1;
@@ -65,8 +51,8 @@
 }
 
 .dc-logo {
-  width: 80px;
-  height: 80px;
+  width: 110px;
+  height: 110px;
   object-fit: contain;
   flex-shrink: 0;
 }
