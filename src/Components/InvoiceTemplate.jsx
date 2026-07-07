@@ -273,7 +273,7 @@
 import React, { useEffect, useState } from "react";
 import logo from "../Assets/AandavarLogo1.png";
 import "../CSS/InvoiceTemplate.css";
-import axios from "axios";
+import api from "../api";
 import { useParams } from "react-router-dom";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -324,8 +324,8 @@ function InvoiceTemplate(props) {
 
   const fetchInvoice = async () => {
     try {
-      const res = await axios.get(
-        `https://admin.shreeaandavartooling.in/backend/sales/invoice/${encodeURIComponent(
+      const res = await api.get(
+        `/sales/invoice/${encodeURIComponent(
           invoiceNo
         )}`
       );
