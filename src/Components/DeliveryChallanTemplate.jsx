@@ -75,105 +75,97 @@
 
 
 
-import React from "react";
 import logo from "../Assets/AandavarLogo2.png";
 import "../CSS/deliveryTemplate.css";
 
-function DeliveryChallanTemplate({ challanData }) {
-  return (
-    <div className="invoice-container">
+const MIN_ROWS = 12; // always show at least this many rows so footer stays near bottom
 
-      {/* 🔥 WATERMARK */}
+function DeliveryChallanTemplate({ challanData }) {
+  const items = challanData?.items || [];
+
+  // Pad with empty rows so the table always has MIN_ROWS rows
+  const fillerCount = Math.max(0, MIN_ROWS - items.length);
+
+  return (
+    <div className="dc-page">
+
+      {/* Watermark */}
       <img
         src={process.env.PUBLIC_URL + "/andavarwt.png"}
-        alt="Watermark"
-        className="invoice-watermark"
+        alt=""
+        className="dc-watermark"
       />
 
-      {/* 🔝 CONTENT */}
-      <div className="invoice-content">
-
-        <div className="header-wrapper">
-          <div className="company-header-wrapper">
-            
-            <div className="company-logo-container">
-              <img src={logo} alt="Logo" className="company-logo" />
-            </div>
-
-            <div className="company-info-container">
-              <h2>SHREE AANDAVAR TOOLING</h2>
-              <h4>Delivery Challan</h4>
-              <p>📍 5/520 D, Kabeer Nagar MasthanPatti Madurai - 20</p>
-              <p>✉ prabusangari690@gmail.com</p>
-              <p>GSTIN: 33BVBPP7144R1Z0</p><p>📞 9944130610</p>
-            </div>
-
-          </div>
+      {/* ── Header ── */}
+      <div className="dc-header">
+        <div className="dc-logo-wrap">
+          <img src={logo} alt="Logo" className="dc-logo" />
         </div>
-
-        {/* Customer Details */}
-        <div className="bill-details">
-          <div>
-            <h4>To:</h4>
-            <p>{challanData?.recipientName || "Customer Name"}</p>
-            <p>{challanData?.recipientAddress || "Customer Address"}</p>
-            <p>__________________________________</p>
-            <p>__________________________________</p> 
-          </div>
-
-          <div>
-            <p>Delivery challan No: {challanData?.orderNo || "NA"}</p>
-            <p>
-                  Date:{" "}
-                  {challanData?.date
-                  ? new Date(challanData.date).toLocaleDateString("en-GB")
-                  : new Date().toLocaleDateString("en-GB")}
-                  </p>
-            <p>Vehicle No:               </p>
-          </div>
+        <div className="dc-company-info">
+          <h2>SHREE AANDAVAR TOOLING</h2>
+          <h4>Delivery Challan</h4>
+          <p>📍 5/520 D, Kabeer Nagar MasthanPatti Madurai - 20</p>
+          <p>✉ prabusangari690@gmail.com &nbsp;&nbsp; 📞 9944130610</p>
+          <p>GSTIN: 33BVBPP7144R1Z0</p>
         </div>
-
-        {/* Table */}
-        <table className="invoice-table">
-          <thead>
-            <tr>
-              <th>Sl. No</th>
-              <th>Particulars</th>
-              <th>Quantity</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {challanData?.items?.length > 0 ? (
-              challanData.items.map((item, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{item.name}</td>
-                  <td>{item.quantity}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="3" style={{ textAlign: "center" }}>
-                  No Items
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-
       </div>
 
-      {/* 🔻 FOOTER */}
-      <div className="payment-wrapper">
-        <div>
-          <p>Received the goods in good condition</p>
-          <p>Party's Signature: ______________________</p>
-        </div>
+      <div className="dc-divider" />
 
-        <div>
+      {/* ── Customer + Order details ── */}
+      <div className="dc-bill-row">
+        <div className="dc-bill-left">
+          <p><b>To:</b></p>
+          <p>{challanData?.recipientName || "Customer Name"}</p>
+          <p>{challanData?.recipientAddress || "Customer Address"}</p>
+        </div>
+        <div className="dc-bill-right">
+          <p><b>Challan No:</b> {challanData?.orderNo || "NA"}</p>
+          <p>
+            <b>Date:</b>{" "}
+            {challanData?.date
+              ? new Date(challanData.date).toLocaleDateString("en-GB")
+              : new Date().toLocaleDateString("en-GB")}
+          </p>
+          <p><b>Vehicle No:</b> _______________</p>
+        </div>
+      </div>
+
+      {/* ── Items table ── */}
+      <table className="dc-table">
+        <thead>
+          <tr>
+            <th style={{ width: "8%" }}>Sl. No</th>
+            <th style={{ width: "67%" }}>Particulars</th>
+            <th style={{ width: "25%" }}>Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((item, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td style={{ textAlign: "left", paddingLeft: "8px" }}>{item.name}</td>
+              <td>{item.quantity}</td>
+            </tr>
+          ))}
+          {/* Filler rows — keep footer on same page */}
+          {Array.from({ length: fillerCount }).map((_, i) => (
+            <tr key={"f" + i} className="dc-filler-row">
+              <td>&nbsp;</td><td></td><td></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Footer — always on same page, directly after table ── */}
+      <div className="dc-footer">
+        <div className="dc-footer-left">
+          <p>Received the goods in good condition</p>
+          <p className="dc-sig-line">Party's Signature</p>
+        </div>
+        <div className="dc-footer-right">
           <p>For SHREE AANDAVAR TOOLING</p>
-          <p>Authorized Signatory</p>
+          <p className="dc-sig-line">Authorized Signatory</p>
         </div>
       </div>
 
