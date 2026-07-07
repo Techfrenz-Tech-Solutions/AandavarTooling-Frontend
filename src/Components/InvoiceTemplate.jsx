@@ -1,546 +1,167 @@
-// import React, { useEffect, useState } from "react";
-// import "../CSS/InvoiceTemplate.css";
-// import axios from "axios";
-// import { useParams } from "react-router-dom";
-
-// function InvoiceTemplate() {
-//   const { invoiceNo } = useParams();
-//   const [invoice, setInvoice] = useState(null);
-//   const [items, setItems] = useState([]);
-
-//   useEffect(() => {
-//     if (invoiceNo) {
-//       fetchInvoice();
-//     }
-//   }, [invoiceNo]);
-
-//   const fetchInvoice = async () => {
-//     try {
-//       const res = await axios.get(
-//         `https://admin.shreeaandavartooling.in/backend/sales/invoice/${encodeURIComponent(invoiceNo)}`
-//       );
-
-//       if (res.data.status === 1) {
-//         setInvoice(res.data.invoice);
-//         setItems(res.data.items);
-//       }
-//     } catch (error) {
-//       console.log("Invoice fetch error:", error);
-//     }
-//   };
-
-//   if (!invoice) return <div>Loading Invoice...</div>;
-
-//   return (
-//     <div id="invoice" className="invoice-container">
-//       <img
-//         src="/AandavarLogo2.png"
-//         alt="Watermark Logo"
-//         className="invoice-watermark"
-//       />
-
-//       <div className="top-bar">
-//         <div>📞 9944130610</div>
-//         <div>✉ prabusangari690@gmail.com</div>
-//         <div>📍 5/520 D, kabeer Nagar MasthanPatti Madurai - 20</div>
-//       </div>
-
-//       <div className="company-header">
-//         <div className="company-left">
-//           <div className="logo-text-wrapper">
-//             <img src="/AandavarLogo1.png" alt="Logo" className="company-logo" />
-//             <div className="company-info">
-//               <h2>SHREE AANDAVAR TOOLING</h2>
-//               <p>GSTIN: 33BYPPP7144R1Z0</p>
-//               <p>State: 33-Tamil Nadu</p>
-//             </div>
-//           </div>
-//         </div>
-
-//         <div className="invoice-title">
-//           <h1>Tax Invoice</h1>
-//         </div>
-//       </div>
-
-//       <div className="bill-details">
-//         <div className="bill-left">
-//           <h4>Bill To</h4>
-//           <p><b>Company Name: {invoice.Customer_Name}</b></p>
-//           <p>Address: {invoice.Customer_Address}</p>
-//           <p>Contact No: {invoice.Customer_Phone}</p>
-//           <p>GSTIN Number: {invoice.Customer_GSTIN}</p>
-//           <p>State: Tamil Nadu</p>
-//         </div>
-
-//         <div className="bill-right">
-//           <p>Invoice No: {invoice.Invoice_No}</p>
-//           <p>Date: {invoice.Invoice_Date}</p>
-//           <p>Place of Supply: Tamil Nadu</p>
-//         </div>
-//       </div>
-
-//       <table className="invoice-table">
-//         <thead>
-//           <tr>
-//             <th>#</th>
-//             <th>Item Name</th>
-//             <th>HSN/SAC</th>
-//             <th>Quantity</th>
-//             <th>Price/unit</th>
-//             <th>GST</th>
-//             <th>Amount</th>
-//           </tr>
-//         </thead>
-
-//         <tbody>
-//           {items.map((item, index) => (
-//             <tr key={index}>
-//               <td>{index + 1}</td>
-//               <td>{item.Product_Name}</td>
-//               <td>-</td>
-//               <td>{item.Quantity}</td>
-//               <td>{item.Price}</td>
-//               <td>{item.SGST + item.CGST}%</td>
-//               <td>{item.Total_Amount}</td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-
-//       <div className="payment-wrapper">
-//         <div className="payto">
-//           <h4>Pay To:</h4>
-//           <p>Bank Name: BANK OF BARODA</p>
-//           <p>Bank Account No: 75220200001446</p>
-//           <p>Bank IFSC Code: BARBOVJMAAN</p>
-//           <p>Account Holder's Name: SHREE AANDAVAR TOOLING</p>
-//         </div>
-
-//         <div className="total-box">
-//           <table>
-//             <tbody>
-//               <tr>
-//                 <td>Sub Total</td>
-//                 <td>{invoice.Subtotal}</td>
-//               </tr>
-//               <tr>
-//                 <td>GST Total</td>
-//                 <td>{invoice.CGST }</td>
-//               </tr>
-
-//                 <tr>
-//                 <td>GST Total</td>
-//                 <td>{invoice.SGST }</td>
-//               </tr>
-//               <tr>
-
-//                 <td>GST Total</td>
-//                 <td>{invoice.GST_Total}</td>
-//               </tr>
-//               <tr className="total-row">
-//                 <td>Total</td>
-//                 <td>{invoice.Total_Amount}</td>
-//               </tr>
-//             </tbody>
-//           </table>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default InvoiceTemplate;
-
-
-
-
-
-
-// // import React, { useEffect, useState } from "react";
-// // import "../CSS/InvoiceTemplate.css";
-// // import axios from "axios";
-// // import { useParams } from "react-router-dom";
-
-// // function InvoiceTemplate(props) {
-// //   const params = useParams();
-// //   const invoiceNo = props?.invoiceNo || params.invoiceNo;
-
-// //   const [invoice, setInvoice] = useState(null);
-// //   const [items, setItems] = useState([]);
-
-// //   useEffect(() => {
-// //     if (invoiceNo) {
-// //       fetchInvoice();
-// //     }
-// //   }, [invoiceNo]);
-
-// //   const fetchInvoice = async () => {
-// //     try {
-// //       const res = await axios.get(
-// //         `https://admin.shreeaandavartooling.in/backend/sales/invoice/${encodeURIComponent(invoiceNo)}`
-// //       );
-
-// //       if (res.data.status === 1) {
-// //         setInvoice(res.data.invoice);
-// //         setItems(res.data.items);
-// //       }
-// //     } catch (error) {
-// //       console.log("Invoice error:", error);
-// //     }
-// //   };
-
-// //   if (!invoice) return <div>Loading Invoice...</div>;
-
-// //   return (
-// //     <div id="invoice" className="invoice-container">
-// //       <img
-// //         src="/AandavarLogo2.png"
-// //         alt="Watermark Logo"
-// //         className="invoice-watermark"
-// //       />
-
-// //       <div className="top-bar">
-// //         <div>📞 9944130610</div>
-// //         <div>✉ prabusangari690@gmail.com</div>
-// //         <div>📍 Madurai</div>
-// //       </div>
-
-// //       <div className="company-header">
-// //         <div className="logo-text-wrapper">
-// //           <img src="/AandavarLogo1.png" alt="Logo" className="company-logo" />
-// //           <div>
-// //             <h2>SHREE AANDAVAR TOOLING</h2>
-// //             <p>GSTIN: 33BYPPP7144R1Z0</p>
-// //           </div>
-// //         </div>
-
-// //         <h1>Tax Invoice</h1>
-// //       </div>
-
-// //       <div className="bill-details">
-// //         <div>
-// //           <h4>Bill To</h4>
-// //           <p><b>{invoice.Customer_Name}</b></p>
-// //           <p>{invoice.Customer_Address}</p>
-// //           <p>{invoice.Customer_Phone}</p>
-// //           <p>{invoice.Customer_GSTIN}</p>
-// //         </div>
-
-// //         <div>
-// //           <p>Invoice No: {invoice.Invoice_No}</p>
-// //           <p>Date: {invoice.Invoice_Date}</p>
-// //         </div>
-// //       </div>
-
-// //       <table className="invoice-table">
-// //         <thead>
-// //           <tr>
-// //             <th>#</th>
-// //             <th>Item</th>
-// //             <th>Qty</th>
-// //             <th>Price</th>
-// //             <th>GST</th>
-// //             <th>Amount</th>
-// //           </tr>
-// //         </thead>
-
-// //         <tbody>
-// //           {items.map((item, index) => (
-// //             <tr key={index}>
-// //               <td>{index + 1}</td>
-// //               <td>{item.Product_Name}</td>
-// //               <td>{item.Quantity}</td>
-// //               <td>{item.Price}</td>
-// //               <td>{item.SGST + item.CGST}%</td>
-// //               <td>{item.Total_Amount}</td>
-// //             </tr>
-// //           ))}
-// //         </tbody>
-// //       </table>
-
-// //       <div className="total-box">
-// //         <p>Sub Total: {invoice.Subtotal}</p>
-// //         <p>GST Total: {invoice.GST_Total}</p>
-// //         <h3>Total: {invoice.Total_Amount}</h3>
-// //       </div>
-// //     </div>
-// //   );
-// // }
-
-// // export default InvoiceTemplate;
-
-
 import React, { useEffect, useState } from "react";
-import logo from "../Assets/AandavarLogo1.png";
-import "../CSS/InvoiceTemplate.css";
-import api from "../api";
 import { useParams } from "react-router-dom";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import api from "../api";
 
-/* NUMBER TO WORDS */
+import InvoiceHeader      from "./Invoice/InvoiceHeader";
+import CustomerDetails    from "./Invoice/CustomerDetails";
+import InvoiceTable       from "./Invoice/InvoiceTable";
+import TotalsCard         from "./Invoice/TotalsCard";
+import PaymentDetails     from "./Invoice/PaymentDetails";
+import InvoiceNote        from "./Invoice/InvoiceNote";
+import Terms              from "./Invoice/Terms";
+import Signature          from "./Invoice/Signature";
+import Acknowledgement    from "./Invoice/Acknowledgement";
+
+/* ── Number to words ── */
 function numberToWords(num) {
-  const a = [
-    "", "One", "Two", "Three", "Four", "Five", "Six",
-    "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve",
-    "Thirteen", "Fourteen", "Fifteen", "Sixteen",
-    "Seventeen", "Eighteen", "Nineteen"
-  ];
-
-  const b = [
-    "", "", "Twenty", "Thirty", "Forty", "Fifty",
-    "Sixty", "Seventy", "Eighty", "Ninety"
-  ];
-
-  const inWords = (n) => {
+  const a = ["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten",
+    "Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
+  const b = ["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+  const w = (n) => {
+    if (!n) return "";
     if (n < 20) return a[n];
-    if (n < 100) return b[Math.floor(n / 10)] + " " + a[n % 10];
-    if (n < 1000)
-      return a[Math.floor(n / 100)] + " Hundred " + inWords(n % 100);
-    if (n < 100000)
-      return inWords(Math.floor(n / 1000)) + " Thousand " + inWords(n % 1000);
-    if (n < 10000000)
-      return inWords(Math.floor(n / 100000)) + " Lakh " + inWords(n % 100000);
-    return inWords(Math.floor(n / 10000000)) + " Crore " + inWords(n % 10000000);
+    if (n < 100) return (b[Math.floor(n/10)]+" "+a[n%10]).trim();
+    if (n < 1000) return (a[Math.floor(n/100)]+" Hundred "+w(n%100)).trim();
+    if (n < 100000) return (w(Math.floor(n/1000))+" Thousand "+w(n%1000)).trim();
+    if (n < 10000000) return (w(Math.floor(n/100000))+" Lakh "+w(n%100000)).trim();
+    return (w(Math.floor(n/10000000))+" Crore "+w(n%10000000)).trim();
   };
-
   const rupees = Math.floor(num);
-  const paise = Math.round((num - rupees) * 100);
-
-  let result = inWords(rupees) + " Rupees";
-  if (paise > 0) {
-    result += " and " + inWords(paise) + " Paise";
-  }
-
-  return result + " Only";
+  const paise  = Math.round((num - rupees) * 100);
+  let res = (w(rupees) || "Zero") + " Rupees";
+  if (paise > 0) res += " and " + w(paise) + " Paise";
+  return res + " Only";
 }
 
-function InvoiceTemplate(props) {
-  const params = useParams();
-  const invoiceNo = props?.invoiceNo || params.invoiceNo;
+export default function InvoiceTemplate(props) {
+  const params    = useParams();
+  const invoiceNo = props?.invoiceNo || params?.invoiceNo;
 
-  const [invoice, setInvoice] = useState(null);
-  const [items, setItems] = useState([]);
+  const [invoice,  setInvoice]  = useState(null);
+  const [items,    setItems]    = useState([]);
+  const [loading,  setLoading]  = useState(false);
+
+  useEffect(() => {
+    if (invoiceNo) fetchInvoice();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [invoiceNo]);
 
   const fetchInvoice = async () => {
     try {
-      const res = await api.get(
-        `/sales/invoice/${encodeURIComponent(
-          invoiceNo
-        )}`
-      );
-
+      const res = await api.get(`/sales/invoice/${encodeURIComponent(invoiceNo)}`);
       if (res.data.status === 1) {
         setInvoice(res.data.invoice);
         setItems(res.data.items);
       }
-    } catch (error) {
-      console.log("Invoice fetch error:", error);
-    }
+    } catch (err) { console.error(err); }
   };
 
-  useEffect(() => {
-    if (invoiceNo) {
-      fetchInvoice();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [invoiceNo]);
-
-  /* ✅ DOWNLOAD PDF FUNCTION */
   const handleDownload = async () => {
-    const input = document.getElementById("invoice");
-
-    const canvas = await html2canvas(input, {
-      scale: 2
-    });
-
-    const imgData = canvas.toDataURL("image/png");
-
-    const pdf = new jsPDF("p", "mm", "a4");
-    const imgWidth = 210;
-
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-    pdf.save(`Invoice_${invoice.Invoice_No}.pdf`);
+    setLoading(true);
+    try {
+      const el     = document.getElementById("inv-a4");
+      const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: "#fff" });
+      const pdf    = new jsPDF("p", "mm", "a4");
+      const pdfW   = pdf.internal.pageSize.getWidth();
+      const pdfH   = pdf.internal.pageSize.getHeight();
+      const imgH   = (canvas.height * pdfW) / canvas.width;
+      const scale  = imgH > pdfH ? pdfH / imgH : 1;
+      pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, pdfW * scale, imgH * scale);
+      pdf.save(`Invoice_${invoice?.Invoice_No || "file"}.pdf`);
+    } catch (err) { console.error(err); }
+    setLoading(false);
   };
 
-  if (!invoice) return <div>Loading Invoice...</div>;
+  if (!invoice) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-gray-500 text-sm">
+        Loading Invoice…
+      </div>
+    );
+  }
 
-  const cgst = (invoice.GST_Total || 0) / 2;
-  const sgst = (invoice.GST_Total || 0) / 2;
-
-  const amountInWords = numberToWords(invoice.Total_Amount || 0);
+  const subtotal    = parseFloat(invoice.Subtotal)      || 0;
+  const gstTotal    = parseFloat(invoice.GST_Total)     || 0;
+  const sgst        = gstTotal / 2;
+  const cgst        = gstTotal / 2;
+  const total       = parseFloat(invoice.Total_Amount)  || 0;
+  const received    = parseFloat(invoice.Received)      || 0;
+  const balance     = total - received;
+  const paymentMode = invoice.Payment_Mode              || "Credit";
 
   return (
-    <div>
-
-      {/* ✅ DOWNLOAD BUTTON TOP RIGHT */}
-      <div style={{ display: "flex", justifyContent: "flex-end", margin: "10px" }}>
-        <button className="download-btn" onClick={handleDownload}>
-          Download PDF
+    <div
+      className="min-h-screen flex flex-col items-center py-6 print:bg-white print:py-0"
+      style={{ background: "#f0f0f0" }}
+    >
+      {/* ── Download button ── */}
+      <div className="mb-3 flex justify-end print:hidden" style={{ width: "794px" }}>
+        <button
+          onClick={handleDownload}
+          disabled={loading}
+          className="text-white text-sm font-bold px-5 py-2 rounded transition-colors"
+          style={{ background: loading ? "#999" : "#d71920", cursor: loading ? "not-allowed" : "pointer" }}
+        >
+          {loading ? "Generating…" : "⬇ Download PDF"}
         </button>
       </div>
 
-      <div id="invoice" className="invoice-container">
+      {/* ══════════════════════════════════════════
+          A4 PAPER
+      ══════════════════════════════════════════ */}
+      <div
+        id="inv-a4"
+        className="bg-white shadow-lg print:shadow-none overflow-hidden flex flex-col"
+        style={{ width: "794px", minHeight: "1123px", fontFamily: "Arial, Helvetica, sans-serif" }}
+      >
+        {/* 1. Header */}
+        <InvoiceHeader />
 
-        {/* Watermark */}
-        <img
-          src="/AandavarLogo2.png"
-          alt="Watermark"
-          className="invoice-watermark"
-        />
+        {/* 2. Customer details */}
+        <CustomerDetails invoice={invoice} />
 
-        {/* Top bar */}
-        <div className="top-bar">
-          <div>📞 9944130610</div>
-          <div>✉ prabusangari690@gmail.com</div>
-          <div>📍 5/520 D, Kabeer Nagar MasthanPatti Madurai - 20</div>
-        </div>
+        {/* 3. Table + Totals side by side */}
+        <div className="flex border-t border-gray-200">
+          {/* Items table + bank details left */}
+          <div className="flex-1 flex flex-col border-r border-gray-200">
+            <InvoiceTable items={items} />
 
-        {/* Header */}
-        <div className="company-header">
-          <div className="company-left">
-            <div className="logo-text-wrapper">
-              <img src={logo} alt="Logo" className="company-logo" />
-              <div className="company-info">
-                <h2>SHREE AANDAVAR TOOLING</h2>
-                <p>GSTIN: 33BVBPP7144R1Z0</p>
-                <p>State: 33 - Tamil Nadu</p>
-              </div>
+            {/* Bank details below table */}
+            <div className="border-t border-gray-200 flex-1">
+              <PaymentDetails />
             </div>
           </div>
 
-          <div className="invoice-title">
-            <h1>Tax Invoice</h1>
+          {/* Totals right */}
+          <div style={{ width: "240px", flexShrink: 0 }}>
+            <TotalsCard
+              subtotal={subtotal}
+              sgst={sgst}
+              cgst={cgst}
+              total={total}
+              received={received}
+              balance={balance}
+              paymentMode={paymentMode}
+            />
           </div>
         </div>
 
-        {/* Bill Details */}
-        <div className="bill-details">
-          <div className="bill-left">
-            <h4>Bill To</h4>
-            <p><b>{invoice.Customer_Name}</b></p>
-            <p>{invoice.Customer_Address}</p>
-            <p>Phone: {invoice.Customer_Phone}</p>
-            <p>GSTIN: {invoice.Customer_GSTIN}</p>
-          </div>
+        {/* 4. Amount in words */}
+        <InvoiceNote amountInWords={numberToWords(total)} />
 
-          <div className="bill-right">
-            <p><b>Invoice No:</b> {invoice.Invoice_No}</p>
-            <p>
-              <b>Date:</b>{" "}
-              {new Date(invoice.Invoice_Date).toLocaleDateString()}
-            </p>
-            <p><b>Place:</b> Tamil Nadu</p>
-            <p><b>Vehicle No:______________</b> </p>
-          </div>
+        {/* 5. Terms */}
+        <Terms />
+
+        {/* 6. Signature */}
+        <Signature />
+
+        {/* 7. Acknowledgement + footer */}
+        <div className="mt-auto">
+          <Acknowledgement invoice={invoice} total={total} />
         </div>
-
-        {/* Items Table */}
-        <table className="invoice-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Item Name</th>
-              <th>Quantity</th>
-              <th>Price</th>
-              <th>GST %</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {items.map((item, index) => (
-              <tr key={item.Sale_ID}>
-                <td>{index + 1}</td>
-                <td>{item.Product_Name}</td>
-                <td>{item.Quantity}</td>
-                <td>{item.Price}</td>
-                <td>{item.CGST + item.SGST}%</td>
-                <td>{item.Total_Amount}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {/* Payment + Total */}
-        <div className="payment-wrapper">
-          <div className="payto">
-            <h4>Bank Details</h4>
-            <p>Bank: BANK OF BARODA</p>
-            <p>A/C No: 75220200001446</p>
-            <p>IFSC: BARB0VJMAAN</p>
-            <p>Name: SHREE AANDAVAR TOOLING</p>
-          </div>
-
-          <div className="total-box">
-            <table>
-              <tbody>
-                <tr>
-                  <td>Sub Total</td>
-                  <td>{invoice.Subtotal}</td>
-                </tr>
-
-                <tr>
-                  <td>CGST</td>
-                  <td>{cgst.toFixed(2)}</td>
-                </tr>
-
-                <tr>
-                  <td>SGST</td>
-                  <td>{sgst.toFixed(2)}</td>
-                </tr>
-
-                <tr>
-                  <td>GST Total</td>
-                  <td>{invoice.GST_Total}</td>
-                </tr>
-
-                <tr className="total-row">
-                  <td>Total</td>
-                  <td>{invoice.Total_Amount}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="invoice-footer">
-
-          <div className="footer-left">
-
-            <div className="amount-words">
-              <b>Invoice Amount In Words</b>
-              <p>{amountInWords}</p>
-            </div>
-
-            <div className="authorized">
-              <p>___________________________</p>
-              <b>Receiver's Seal & Signature</b>
-            </div>
-
-          </div>
-
-          <div className="footer-right">
-
-            <div className="terms">
-              <p>Thank you for doing business with us.</p>
-              <p>For: SHREE AANDAVAR TOOLING</p>
-            </div>
-
-            <p>____________________</p>
-            <b>Authorized Signatory</b>
-            <p>M. PRABAHARAN</p>
-
-          </div>
-
-        </div>
-
       </div>
     </div>
   );
 }
-
-export default InvoiceTemplate;
