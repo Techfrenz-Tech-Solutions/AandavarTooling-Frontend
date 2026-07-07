@@ -1,171 +1,116 @@
-// import React from "react";
-// import logo from "../Assets/AandavarLogo1.png";
-// import "../CSS/InvoiceTemplate.css";
-
-// function DeliveryChallanTemplate({ challanData }) {
-//   return (
-//     <div className="invoice-container">
-//       {/* Header */}
-//       <div className="company-header">
-//         <img src={logo} alt="Logo" className="company-logo" />
-//         <div className="company-info">
-//           <h2>SHREE AANDAVAR TOOLING</h2>
-//           <div>📍 5/520 D, Kabeer Nagar MasthanPatti Madurai - 20</div>
-//           <div>✉ prabusangari690@gmail.com</div>
-//           <div>📞 9944130610</div>
-//         </div>
-//       </div>
-
-//       {/* Customer */}
-//       <div className="bill-details">
-//         <div>
-//           <h4>To:</h4>
-//           <p>{challanData?.recipientName}</p>
-//           <p>{challanData?.recipientAddress}</p>
-//         </div>
-//         <div>
-//           <p>Order No: {challanData?.orderNo}</p>
-//           <p>Date: {challanData?.date}</p>
-//         </div>
-//       </div>
-
-//       {/* Table */}
-//       <table className="invoice-table">
-//         <thead>
-//           <tr>
-//             <th>Sl No</th>
-//             <th>Particulars</th>
-//             <th>Quantity</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {challanData?.items?.length > 0 ? (
-//             challanData.items.map((item, index) => (
-//               <tr key={index}>
-//                 <td>{index + 1}</td>
-//                 <td>{item.name}</td>
-//                 <td>{item.quantity}</td>
-//               </tr>
-//             ))
-//           ) : (
-//             <tr>
-//               <td colSpan="3">No Items</td>
-//             </tr>
-//           )}
-//         </tbody>
-//       </table>
-
-//       {/* Footer */}
-//       <div className="payment-wrapper">
-//         <div>
-//           <p>Received the goods in good condition</p>
-//           <p>Party Signature: __________</p>
-//         </div>
-//         <div>
-//           <p>For SHREE AANDAVAR TOOLING</p>
-//           <p>Authorized Signatory</p>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default DeliveryChallanTemplate;
-
-
-
-
 import logo from "../Assets/AandavarLogo2.png";
 import "../CSS/deliveryTemplate.css";
-
-const MIN_ROWS = 12; // always show at least this many rows so footer stays near bottom
 
 function DeliveryChallanTemplate({ challanData }) {
   const items = challanData?.items || [];
 
-  // Pad with empty rows so the table always has MIN_ROWS rows
-  const fillerCount = Math.max(0, MIN_ROWS - items.length);
-
   return (
     <div className="dc-page">
 
-      {/* Watermark */}
+      {/* ── Watermark ── */}
       <img
         src={process.env.PUBLIC_URL + "/andavarwt.png"}
         alt=""
         className="dc-watermark"
       />
 
-      {/* ── Header ── */}
+      {/* ════════════════════════════════
+          HEADER
+          ════════════════════════════════ */}
       <div className="dc-header">
-        <div className="dc-logo-wrap">
-          <img src={logo} alt="Logo" className="dc-logo" />
-        </div>
+        <img src={logo} alt="Logo" className="dc-logo" />
         <div className="dc-company-info">
           <h2>SHREE AANDAVAR TOOLING</h2>
           <h4>Delivery Challan</h4>
-          <p>📍 5/520 D, Kabeer Nagar MasthanPatti Madurai - 20</p>
-          <p>✉ prabusangari690@gmail.com &nbsp;&nbsp; 📞 9944130610</p>
+          <p>📍 5/520 D, Kabeer Nagar MasthanPatti, Madurai - 20</p>
+          <p>✉ prabusangari690@gmail.com &nbsp;|&nbsp; 📞 9944130610</p>
           <p>GSTIN: 33BVBPP7144R1Z0</p>
         </div>
       </div>
 
       <div className="dc-divider" />
 
-      {/* ── Customer + Order details ── */}
-      <div className="dc-bill-row">
-        <div className="dc-bill-left">
-          <p><b>To:</b></p>
-          <p>{challanData?.recipientName || "Customer Name"}</p>
-          <p>{challanData?.recipientAddress || "Customer Address"}</p>
+      {/* ════════════════════════════════
+          CUSTOMER + CHALLAN META
+          ════════════════════════════════ */}
+      <div className="dc-meta-row">
+        <div className="dc-meta-left">
+          <div className="dc-meta-label">To</div>
+          <div className="dc-meta-value dc-meta-value--lg">
+            {challanData?.recipientName || "—"}
+          </div>
+          <div className="dc-meta-value">
+            {challanData?.recipientAddress || "—"}
+          </div>
         </div>
-        <div className="dc-bill-right">
-          <p><b>Challan No:</b> {challanData?.orderNo || "NA"}</p>
-          <p>
-            <b>Date:</b>{" "}
-            {challanData?.date
-              ? new Date(challanData.date).toLocaleDateString("en-GB")
-              : new Date().toLocaleDateString("en-GB")}
-          </p>
-          <p><b>Vehicle No:</b> _______________</p>
+
+        <div className="dc-meta-right">
+          <div className="dc-meta-field">
+            <span className="dc-field-label">Challan No</span>
+            <span className="dc-field-value">{challanData?.orderNo || "—"}</span>
+          </div>
+          <div className="dc-meta-field">
+            <span className="dc-field-label">Date</span>
+            <span className="dc-field-value">
+              {challanData?.date
+                ? new Date(challanData.date).toLocaleDateString("en-GB")
+                : new Date().toLocaleDateString("en-GB")}
+            </span>
+          </div>
+          <div className="dc-meta-field">
+            <span className="dc-field-label">Vehicle No</span>
+            <span className="dc-field-value dc-field-blank" />
+          </div>
         </div>
       </div>
 
-      {/* ── Items table ── */}
+      <div className="dc-divider dc-divider--thin" />
+
+      {/* ════════════════════════════════
+          ITEMS — each row is a data box
+          ════════════════════════════════ */}
       <table className="dc-table">
         <thead>
           <tr>
-            <th style={{ width: "8%" }}>Sl. No</th>
-            <th style={{ width: "67%" }}>Particulars</th>
-            <th style={{ width: "25%" }}>Quantity</th>
+            <th className="dc-th dc-th--sl">Sl. No</th>
+            <th className="dc-th dc-th--particulars">Particulars</th>
+            <th className="dc-th dc-th--qty">Quantity</th>
           </tr>
         </thead>
         <tbody>
-          {items.map((item, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td style={{ textAlign: "left", paddingLeft: "8px" }}>{item.name}</td>
-              <td>{item.quantity}</td>
+          {items.length > 0 ? (
+            items.map((item, index) => (
+              <tr key={index} className="dc-data-row">
+                <td className="dc-td dc-td--center">{index + 1}</td>
+                <td className="dc-td dc-td--left">{item.name}</td>
+                <td className="dc-td dc-td--center">{item.quantity}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="3" className="dc-td dc-td--empty">No items</td>
             </tr>
-          ))}
-          {/* Filler rows — keep footer on same page */}
-          {Array.from({ length: fillerCount }).map((_, i) => (
-            <tr key={"f" + i} className="dc-filler-row">
-              <td>&nbsp;</td><td></td><td></td>
-            </tr>
-          ))}
+          )}
         </tbody>
       </table>
 
-      {/* ── Footer — always on same page, directly after table ── */}
+      {/* ════════════════════════════════
+          FOOTER SIGNATURE SECTION
+          ════════════════════════════════ */}
       <div className="dc-footer">
-        <div className="dc-footer-left">
-          <p>Received the goods in good condition</p>
-          <p className="dc-sig-line">Party's Signature</p>
+        <div className="dc-footer-col">
+          <p className="dc-footer-note">Received the goods in good condition</p>
+          <div className="dc-sig-block">
+            <div className="dc-sig-line-bar" />
+            <span className="dc-sig-label">Party's Signature</span>
+          </div>
         </div>
-        <div className="dc-footer-right">
-          <p>For SHREE AANDAVAR TOOLING</p>
-          <p className="dc-sig-line">Authorized Signatory</p>
+        <div className="dc-footer-col dc-footer-col--right">
+          <p className="dc-footer-note">For SHREE AANDAVAR TOOLING</p>
+          <div className="dc-sig-block">
+            <div className="dc-sig-line-bar" />
+            <span className="dc-sig-label">Authorized Signatory</span>
+          </div>
         </div>
       </div>
 
