@@ -101,12 +101,46 @@ function InvoiceHistory() {
     if (!invoiceRef.current || !modalInvoice) return;
     setDownloading(true);
     try {
-      const canvas = await html2canvas(invoiceRef.current, { scale: 2, useCORS: true });
-      const imgData  = canvas.toDataURL("image/png");
-      const pdf      = new jsPDF("p", "mm", "a4");
-      const imgWidth = 210;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+      const canvas = await html2canvas(invoiceRef.current, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff",
+      });
+
+      const imgData   = canvas.toDataURL("image/png");
+      const pdf       = new jsPDF("p", "mm", "a4");
+      const pageW     = 210;            // A4 width mm
+      const pageH     = 297;            // A4 height mm
+      const imgW      = pageW;
+      const imgH      = (canvas.height * pageW) / canvas.width;
+
+      if (imgH <= pageH) {
+        // Fits on one page — centre vertically with top padding
+        pdf.addImage(imgData, "PNG", 0, 0, imgW, imgH);
+      } else {
+        // Content taller than A4 — split into pages
+        let yOffset = 0;
+        while (yOffset < imgH) {
+          if (yOffset > 0) pdf.addPage();
+          // Calculate the slice of the image for this page
+          const sliceH  = Math.min(pageH, imgH - yOffset);
+          const srcY    = (yOffset / imgH) * canvas.height;
+          const srcH    = (sliceH / imgH) * canvas.height;
+
+          // Create a slice canvas
+          const sliceCanvas = document.createElement("canvas");
+          sliceCanvas.width  = canvas.width;
+          sliceCanvas.height = srcH;
+          const ctx = sliceCanvas.getContext("2d");
+          ctx.drawImage(canvas, 0, srcY, canvas.width, srcH, 0, 0, canvas.width, srcH);
+
+          const sliceData = sliceCanvas.toDataURL("image/png");
+          pdf.addImage(sliceData, "PNG", 0, 0, pageW, sliceH);
+          yOffset += pageH;
+        }
+      }
+
       pdf.save(`Invoice_${modalInvoice.Invoice_No}.pdf`);
     } catch (err) {
       console.error("PDF error:", err);
