@@ -114,21 +114,23 @@
 /* Scale the A4 invoice container to fit the modal */
 .invoice-modal-body .invoice-container {
   transform-origin: top center;
-  width: 210mm;
+  width: 794px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Responsive shrink on smaller screens */
 @media (max-width: 860px) {
   .invoice-modal-body .invoice-container {
-    transform: scale(0.75);
-    margin-bottom: -130px; /* compensate for scale gap */
+    transform: scale(0.72);
+    transform-origin: top center;
+    margin-bottom: -220px;
   }
 }
 
 @media (max-width: 600px) {
   .invoice-modal-body .invoice-container {
-    transform: scale(0.55);
-    margin-bottom: -260px;
+    transform: scale(0.50);
+    transform-origin: top center;
+    margin-bottom: -400px;
   }
 }

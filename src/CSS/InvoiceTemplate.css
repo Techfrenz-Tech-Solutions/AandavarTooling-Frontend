@@ -23,8 +23,8 @@
 /* ── A4 container ── */
 .invoice-container {
   position: relative;
-  width: 210mm;
-  min-height: 297mm;
+  width: 794px;           /* 210mm at 96dpi — exact match for html2canvas */
+  min-height: 1123px;     /* 297mm at 96dpi */
   margin: 0 auto;
   background: #ffffff;
   font-family: Arial, Helvetica, sans-serif;
@@ -32,8 +32,23 @@
   color: #222;
   padding: 0;
   line-height: 1.4;
-  display: flex;
-  flex-direction: column;
+  /* DO NOT use flex here — causes watermark to push content down */
+  display: block;
+}
+
+/* ── Watermark — truly absolute, zero impact on layout ── */
+.invoice-watermark {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-10deg);
+  opacity: 0.08;
+  z-index: 0;
+  width: 420px;
+  height: auto;
+  pointer-events: none;
+  /* Ensure it never affects block flow */
+  display: block;
 }
 
 /* ── Watermark ── */
@@ -52,14 +67,24 @@
 .invoice-container > * {
   position: relative;
   z-index: 1;
+  display: block;
+}
+
+/* Header and company band are flex rows — override the block above */
+.inv-header,
+.inv-company-band,
+.inv-meta-block p,
+.inv-bill-section,
+.inv-bottom,
+.inv-sig-footer {
+  display: flex;
 }
 
 /* ══════════════════════════════════════════════════════
    TOP HEADER STRIP
    ══════════════════════════════════════════════════════ */
 .inv-header {
-  display: flex;
-  height: 36px;
+  height: 46px;
   margin: 0;
   padding: 0;
   flex-shrink: 0;
@@ -104,12 +129,10 @@
    COMPANY BAND
    ══════════════════════════════════════════════════════ */
 .inv-company-band {
-  display: flex;
   align-items: stretch;
   min-height: 90px;
   margin: 0;
   padding: 0;
-  flex-shrink: 0;
   position: relative;
 }
 
@@ -286,7 +309,6 @@
    BOTTOM — Pay To (left) + Totals (right)
    ══════════════════════════════════════════════════════ */
 .inv-bottom {
-  display: flex;
   align-items: flex-start;
   margin-top: 0;
   border-top: 1px solid #ddd;
@@ -392,7 +414,6 @@
    SIGNATURE FOOTER
    ══════════════════════════════════════════════════════ */
 .inv-sig-footer {
-  display: flex;
   justify-content: space-between;
   align-items: flex-end;
   padding: 20px 20px 18px;
