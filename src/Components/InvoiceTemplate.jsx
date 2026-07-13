@@ -66,30 +66,40 @@ function InvoiceTemplate(props) {
   // };
 
 
-  const handleDownload = async () => {
+const handleDownload = async () => {
   if (!invoice) return;
 
   setDownloading(true);
 
   try {
+    window.scrollTo(0, 0);
+
     const element = document.getElementById("invoice-print");
 
     const canvas = await html2canvas(element, {
       scale: 3,
       useCORS: true,
       backgroundColor: "#ffffff",
+
       scrollX: 0,
       scrollY: -window.scrollY,
-      windowWidth: document.documentElement.scrollWidth,
-      windowHeight: document.documentElement.scrollHeight,
+
+      x: 0,
+      y: 0,
+
+      width: element.scrollWidth,
+      height: element.scrollHeight,
+
+      windowWidth: element.scrollWidth,
+      windowHeight: element.scrollHeight,
     });
 
     const imgData = canvas.toDataURL("image/png");
 
     const pdf = new jsPDF("p", "mm", "a4");
 
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const pdfWidth = 210;
+    const pdfHeight = 297;
 
     const imgWidth = pdfWidth;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -97,14 +107,34 @@ function InvoiceTemplate(props) {
     let heightLeft = imgHeight;
     let position = 0;
 
-    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+    pdf.addImage(
+      imgData,
+      "PNG",
+      0,
+      position,
+      imgWidth,
+      imgHeight,
+      "",
+      "FAST"
+    );
 
     heightLeft -= pdfHeight;
 
     while (heightLeft > 0) {
       position = heightLeft - imgHeight;
       pdf.addPage();
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+
+      pdf.addImage(
+        imgData,
+        "PNG",
+        0,
+        position,
+        imgWidth,
+        imgHeight,
+        "",
+        "FAST"
+      );
+
       heightLeft -= pdfHeight;
     }
 
@@ -114,7 +144,7 @@ function InvoiceTemplate(props) {
   }
 
   setDownloading(false);
-};
+};  
 
 
   if (!invoice) return <div style={{ padding: 40, textAlign: "center" }}>Loading Invoice…</div>;
@@ -137,8 +167,18 @@ function InvoiceTemplate(props) {
       </div>
 
       {/* ══════════════ INVOICE ══════════════ */}
-      <div id="invoice-print" className="invoice-container">
+      {/* <div id="invoice-print" className="invoice-container"> */}
 
+<div
+  id="invoice-print"
+  className="invoice-container"
+  style={{
+    margin: 0,
+    padding: 0,
+    background: "#fff"
+  }}
+>
+  
         {/* Watermark */}
         <img src="/AandavarLogo2.png" alt="" className="invoice-watermark" />
 
