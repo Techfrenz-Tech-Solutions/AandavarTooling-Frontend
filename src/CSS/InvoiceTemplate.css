@@ -19,11 +19,12 @@
   padding: 0;
 }
 
-/* ── A4 container ── */
+/* ── A4 container — exact 297mm, content starts from very top ── */
 .invoice-container {
   position: relative;
   width: 210mm;
-  min-height: 370mm;
+  height: 297mm;
+  min-height: unset;
   margin: 0 auto;
   background: #ffffff;
   font-family: Arial, Helvetica, sans-serif;
@@ -33,6 +34,8 @@
   line-height: 1.4;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 /* ── Watermark ── */
