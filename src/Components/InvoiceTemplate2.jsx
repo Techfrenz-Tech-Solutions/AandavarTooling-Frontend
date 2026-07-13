@@ -112,32 +112,33 @@ function InvoiceTemplate2(props) {
           </div>
         </div>
 
-        {/* ── Invoice meta ── */}
-        <div className="inv-meta-block">
-          <p>
-            <span className="meta-label">Invoice No:</span>
-            <span className="meta-value">{invoice.Invoice_No}</span>
-          </p>
-          <p>
-            <span className="meta-label">Date:</span>
-            <span className="meta-value">
-              {new Date(invoice.Invoice_Date).toLocaleDateString("en-IN")}
-            </span>
-          </p>
-          <p>
-            <span className="meta-label">Place of Supply:</span>
-            <span className="meta-value">33-Tamil Nadu</span>
-          </p>
-        </div>
+        {/* ── Bill To + Invoice Meta side by side ── */}
+        <div style={{ display: "flex", alignItems: "flex-start", borderBottom: "1px solid #ddd" }}>
+          {/* Bill To — left */}
+          <div className="inv-bill-section" style={{ flex: 1 }}>
+            <div className="inv-section-title">Bill To</div>
+            <p><b>Company Name: </b><span>{invoice.Customer_Name}</span></p>
+            <p>Address: <span>{invoice.Customer_Address}</span></p>
+            <p>Contact No: <span>{invoice.Customer_Phone}</span></p>
+            <p>GSTIN Number: <span>{invoice.Customer_GSTIN}</span></p>
+            <p>State: <span>Tamil Nadu</span></p>
+          </div>
 
-        {/* ── Bill To ── */}
-        <div className="inv-bill-section">
-          <div className="inv-section-title">Bill To</div>
-          <p><b>Company Name: </b><span>{invoice.Customer_Name}</span></p>
-          <p>Address: <span>{invoice.Customer_Address}</span></p>
-          <p>Contact No: <span>{invoice.Customer_Phone}</span></p>
-          <p>GSTIN Number: <span>{invoice.Customer_GSTIN}</span></p>
-          <p>State: <span>Tamil Nadu</span></p>
+          {/* Invoice meta — right */}
+          <div style={{ minWidth: 220, padding: "10px 20px", fontSize: 12, lineHeight: 2 }}>
+            <p style={{ margin: 0, display: "flex", justifyContent: "space-between", gap: 8 }}>
+              <span style={{ fontWeight: 700, color: "#c0392b" }}>Invoice No:</span>
+              <span style={{ fontWeight: 700 }}>{invoice.Invoice_No}</span>
+            </p>
+            <p style={{ margin: 0, display: "flex", justifyContent: "space-between", gap: 8 }}>
+              <span style={{ fontWeight: 700, color: "#c0392b" }}>Date:</span>
+              <span style={{ fontWeight: 700 }}>{new Date(invoice.Invoice_Date).toLocaleDateString("en-IN")}</span>
+            </p>
+            <p style={{ margin: 0, display: "flex", justifyContent: "space-between", gap: 8 }}>
+              <span style={{ fontWeight: 700, color: "#c0392b" }}>Place of Supply:</span>
+              <span style={{ fontWeight: 700 }}>33-Tamil Nadu</span>
+            </p>
+          </div>
         </div>
 
         {/* ── Items table ── */}
