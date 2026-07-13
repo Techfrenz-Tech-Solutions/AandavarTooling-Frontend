@@ -241,75 +241,57 @@ function InvoiceHistory() {
                   {/* Watermark */}
                   <img src="/AandavarLogo2.png" alt="" className="invoice-watermark" />
 
-                  {/* ── Top header strip ── */}
-                  <div className="inv-header">
-                    <div className="inv-header-dark">
-                      <span>📞 9944130610</span>
-                    </div>
-                    <div className="inv-header-red">
-                      <span>✉ prabusangari690@gmail.com</span>
-                      <span>📍 5/520 D, Kabeer Nagar MasthanPatti, Madurai - 20</span>
-                    </div>
+                  {/* Top bar */}
+                  <div className="top-bar">
+                    <div>📞 9944130610</div>
+                    <div>✉ prabusangari690@gmail.com</div>
+                    <div>📍 5/520 D, Kabeer Nagar MasthanPatti Madurai - 20</div>
                   </div>
 
-                  {/* ── Company band ── */}
-                  <div className="inv-company-band">
-                    <div className="inv-company-panel">
-                      <img src={logo} alt="Logo" className="inv-company-logo" />
-                      <div className="inv-company-text">
-                        <h2>SHREE AANDAVAR TOOLING</h2>
-                        <p>GSTIN: 33BVBPP7144R1Z0</p>
-                        <p>State: 33-Tamil Nadu</p>
+                  {/* Company header */}
+                  <div className="company-header">
+                    <div className="company-left">
+                      <div className="logo-text-wrapper">
+                        <img src={logo} alt="Logo" className="company-logo" />
+                        <div className="company-info">
+                          <h2>SHREE AANDAVAR TOOLING</h2>
+                          <p>GSTIN: 33BVBPP7144R1Z0</p>
+                          <p>State: 33 - Tamil Nadu</p>
+                        </div>
                       </div>
                     </div>
-                    <div className="inv-title-panel">
+                    <div className="invoice-title">
                       <h1>Tax Invoice</h1>
                     </div>
                   </div>
 
-                  {/* ── Invoice meta — right side ── */}
-                  {/* merged into Bill To row below */}
-
-                  {/* ── Bill To + Invoice Meta side by side ── */}
-                  <div style={{ display: "flex", alignItems: "flex-start", borderBottom: "1px solid #ddd" }}>
-                    {/* Bill To — left */}
-                    <div className="inv-bill-section" style={{ flex: 1 }}>
-                      <div className="inv-section-title">Bill To</div>
-                      <p><b>Company Name: </b><span className="underline">{modalInvoice.Customer_Name}</span></p>
-                      <p>Address: <span className="underline">{modalInvoice.Customer_Address}</span></p>
-                      <p>Contact No: <span className="underline">{modalInvoice.Customer_Phone}</span></p>
-                      <p>GSTIN Number: <span className="underline">{modalInvoice.Customer_GSTIN}</span></p>
-                      <p>State: <span className="underline">Tamil Nadu</span></p>
+                  {/* Bill details */}
+                  <div className="bill-details">
+                    <div className="bill-left">
+                      <h4>Bill To</h4>
+                      <p><b>{modalInvoice.Customer_Name}</b></p>
+                      <p>{modalInvoice.Customer_Address}</p>
+                      <p>Phone: {modalInvoice.Customer_Phone}</p>
+                      <p>GSTIN: {modalInvoice.Customer_GSTIN}</p>
                     </div>
-
-                    {/* Invoice meta — right */}
-                    <div style={{ minWidth: 220, padding: "10px 20px", fontSize: 12, lineHeight: 2 }}>
-                      <p style={{ margin: 0, display: "flex", justifyContent: "space-between", gap: 8 }}>
-                        <span style={{ fontWeight: 700, color: "#c0392b" }}>Invoice No:</span>
-                        <span style={{ fontWeight: 700 }}>{modalInvoice.Invoice_No}</span>
-                      </p>
-                      <p style={{ margin: 0, display: "flex", justifyContent: "space-between", gap: 8 }}>
-                        <span style={{ fontWeight: 700, color: "#c0392b" }}>Date:</span>
-                        <span style={{ fontWeight: 700 }}>{new Date(modalInvoice.Invoice_Date).toLocaleDateString("en-IN")}</span>
-                      </p>
-                      <p style={{ margin: 0, display: "flex", justifyContent: "space-between", gap: 8 }}>
-                        <span style={{ fontWeight: 700, color: "#c0392b" }}>Place of Supply:</span>
-                        <span style={{ fontWeight: 700 }}>33-Tamil Nadu</span>
-                      </p>
+                    <div className="bill-right">
+                      <p><b>Invoice No:</b> {modalInvoice.Invoice_No}</p>
+                      <p><b>Date:</b> {new Date(modalInvoice.Invoice_Date).toLocaleDateString()}</p>
+                      <p><b>Place:</b> Tamil Nadu</p>
+                      <p><b>Vehicle No: ______________</b></p>
                     </div>
                   </div>
 
-                  {/* ── Items table ── */}
+                  {/* Items table */}
                   <table className="invoice-table">
                     <thead>
                       <tr>
-                        <th style={{width:"5%"}}>#</th>
-                        <th style={{width:"30%"}}>Item Name</th>
-                        <th style={{width:"12%"}}>HSN/SAC</th>
-                        <th style={{width:"11%"}}>Quantity</th>
-                        <th style={{width:"13%"}}>Price/unit</th>
-                        <th style={{width:"12%"}}>GST</th>
-                        <th style={{width:"13%"}}>Amount</th>
+                        <th>#</th>
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>GST %</th>
+                        <th>Total</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -317,72 +299,62 @@ function InvoiceHistory() {
                         <tr key={item.Sale_ID || index}>
                           <td>{index + 1}</td>
                           <td>{item.Product_Name}</td>
-                          <td>{item.HSN || "-"}</td>
                           <td>{item.Quantity}</td>
                           <td>{item.Price}</td>
-                          <td>{((item.CGST || 0) + (item.SGST || 0))}%</td>
+                          <td>{(item.CGST || 0) + (item.SGST || 0)}%</td>
                           <td>{item.Total_Amount}</td>
-                        </tr>
-                      ))}
-                      {modalItems.length < 3 && Array.from({length: 3 - modalItems.length}).map((_, i) => (
-                        <tr key={"f"+i} className="filler-row">
-                          <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
 
-                  {/* ── Pay To + Totals ── */}
-                  <div className="inv-bottom">
-                    <div className="inv-payto">
-                      <div className="inv-section-title">Pay To:</div>
-                      <p>Bank Name: <span className="underline">BANK OF BARODA</span></p>
-                      <p>Bank Account No: <span className="underline">75220200001446</span></p>
-                      <p>Bank IFSC Code: <span className="underline">BARB0VJMAAN</span></p>
-                      <p>Account Holder's Name: SHREE AANDAVAR TOOLING</p>
+                  {/* Payment + totals */}
+                  <div className="payment-wrapper">
+                    <div className="payto">
+                      <h4>Bank Details</h4>
+                      <p>Bank: BANK OF BARODA</p>
+                      <p>A/C No: 75220200001446</p>
+                      <p>IFSC: BARB0VJMAAN</p>
+                      <p>Name: SHREE AANDAVAR TOOLING</p>
                     </div>
-                    <div className="inv-totals">
+                    <div className="total-box">
                       <table>
                         <tbody>
                           <tr><td>Sub Total</td><td>{modalInvoice.Subtotal}</td></tr>
-                          <tr><td>SGST</td><td>{sgst.toFixed(2)}</td></tr>
                           <tr><td>CGST</td><td>{cgst.toFixed(2)}</td></tr>
-                          <tr className="inv-total-final"><td>Total</td><td>{modalInvoice.Total_Amount}</td></tr>
-                          <tr><td>Received</td><td></td></tr>
-                          <tr><td>Balance</td><td>{modalInvoice.Total_Amount}</td></tr>
-                          <tr><td>Payment Mode</td><td></td></tr>
+                          <tr><td>SGST</td><td>{sgst.toFixed(2)}</td></tr>
+                          <tr><td>GST Total</td><td>{modalInvoice.GST_Total}</td></tr>
+                          <tr className="total-row"><td>Total</td><td>{modalInvoice.Total_Amount}</td></tr>
                         </tbody>
                       </table>
                     </div>
                   </div>
 
-                  {/* ── Amount in words ── */}
-                  <div className="inv-words-section">
-                    <div className="inv-words-label">Invoice Amount In Words</div>
-                    <div className="inv-words-line">{amountInWords}</div>
-                  </div>
-
-                  {/* ── Terms ── */}
-                  <div className="inv-terms">
-                    <div className="inv-terms-title">Terms And Conditions</div>
-                    <p>Thank you for doing business with us.</p>
-                    <p>For: SHREE AANDAVAR TOOLING</p>
-                  </div>
-
-                  {/* ── Signature footer ── */}
-                  <div className="inv-sig-footer">
-                    <div className="inv-sig-left">
-                      <div className="inv-sig-line-full" />
-                      <p>Authorized Signatory</p>
-                      <p>M. PRABAHARAN</p>
+                  {/* Footer */}
+                  <div className="invoice-footer">
+                    <div className="footer-left">
+                      <div className="amount-words">
+                        <b>Invoice Amount In Words</b>
+                        <p>{amountInWords}</p>
+                      </div>
+                      <div className="authorized">
+                        <p>___________________________</p>
+                        <b>Receiver's Seal &amp; Signature</b>
+                      </div>
                     </div>
-                    <div className="inv-sig-right">
-                      <div className="inv-sig-line-full" />
-                      <p>Receiver's Seal &amp; Sign</p>
+                    <div className="footer-right">
+                      <div className="terms">
+                        <p>Thank you for doing business with us.</p>
+                        <p>For: SHREE AANDAVAR TOOLING</p>
+                      </div>
+                      <p>____________________</p>
+                      <b>Authorized Signatory</b>
+                      <p>M. PRABAHARAN</p>
                     </div>
                   </div>
 
                 </div>
+                /* ── end invoice-container ── */
               )}
             </div>
           </div>
