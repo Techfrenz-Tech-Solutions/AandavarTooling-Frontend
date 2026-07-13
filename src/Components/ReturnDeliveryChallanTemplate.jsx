@@ -61,6 +61,7 @@ function ReturnDeliveryChallanTemplate({ challanData }) {
       <div className="dc-divider dc-divider--thin" />
 
       {/* ── ITEMS TABLE ── */}
+      <div className="dc-table-wrap">
       <table className="dc-table">
         <thead>
           <tr>
@@ -85,6 +86,7 @@ function ReturnDeliveryChallanTemplate({ challanData }) {
           )}
         </tbody>
       </table>
+      </div>
 
       {/* ── FOOTER SIGNATURE ── */}
       <div className="dc-footer">

@@ -189,6 +189,11 @@
 /* ══════════════════════════════════════════════════════
    ITEMS TABLE
    ══════════════════════════════════════════════════════ */
+/* ── Table wrapper grows to fill space, pushing footer down ── */
+.dc-table-wrap {
+  flex: 1;
+}
+
 .dc-table {
   width: 100%;
   border-collapse: collapse;
@@ -239,9 +244,10 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-top: 28px;
+  margin-top: auto;        /* pushes footer to bottom of A4 page */
   padding-top: 16px;
-  border-top: 1px solid #bbb;
+  padding-bottom: 8px;
+  border-top: 2px solid #c0392b;
   flex-shrink: 0;
 }
 
