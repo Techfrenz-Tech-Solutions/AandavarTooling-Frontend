@@ -1,50 +1,45 @@
 /* ══════════════════════════════════════════
-   Invoice Preview Modal  — full A4 display
+   Invoice Preview Modal
    ══════════════════════════════════════════ */
 
 /* Overlay — full screen dark backdrop */
 .invoice-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.72);
+  background: rgba(0, 0, 0, 0.65);
   z-index: 1000;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 0;
+  padding: 24px 16px;
   overflow-y: auto;
 }
 
-/* Modal card — wide enough for A4 + breathing room */
+/* Modal card */
 .invoice-modal {
-  background: #e8e8e8;
+  background: #f5f6fa;
+  border-radius: 10px;
   width: 100%;
-  max-width: 870px;
-  min-height: 100vh;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+  max-width: 900px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
-  border-radius: 0;
-  margin: 0 auto;
+  overflow: hidden;
 }
 
 /* ── Header bar ── */
 .invoice-modal-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 20px;
-  background: #1e2430;
+  padding: 14px 20px;
+  background: #2c3e50;
   color: #fff;
   gap: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 .invoice-modal-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   letter-spacing: 0.3px;
 }
@@ -57,7 +52,7 @@
 
 /* Download button */
 .download-btn {
-  background: #c0392b;
+  background: #e11d2e;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -68,13 +63,20 @@
   transition: background 0.2s;
   white-space: nowrap;
 }
-.download-btn:hover:not(:disabled) { background: #96281b; }
-.download-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.download-btn:hover:not(:disabled) {
+  background: #b5111f;
+}
+
+.download-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 /* Close ✕ button */
 .modal-close-btn {
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.4);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   color: #fff;
   border-radius: 6px;
   width: 32px;
@@ -87,41 +89,41 @@
   transition: background 0.2s;
   flex-shrink: 0;
 }
-.modal-close-btn:hover { background: rgba(255,255,255,0.15); }
 
-/* ── Body — shows full A4 invoice, no height clipping ── */
+.modal-close-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Body (scrollable) ── */
 .invoice-modal-body {
-  flex: 1;
-  padding: 24px 0;
+  padding: 0;
+  overflow-y: auto;
+  max-height: calc(100vh - 120px);
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow: visible;
+  justify-content: center;
 }
 
 /* Loading state */
 .modal-loading {
-  padding: 60px;
+  padding: 48px;
   text-align: center;
   font-size: 15px;
   color: #666;
 }
 
-/* ── Invoice container — full A4, no clipping ── */
+/* Scale the A4 invoice container to fit the modal */
 .invoice-modal-body .invoice-container {
-  width: 210mm;           /* exact A4 width */
-  min-height: 297mm;      /* exact A4 height — content fills full page */
-  box-shadow: 0 4px 24px rgba(0,0,0,0.22);
-  transform: none;
-  margin: 0 auto;
+  transform-origin: top center;
+  width: 794px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Responsive — scale down on smaller screens */
+/* Responsive shrink on smaller screens */
 @media (max-width: 860px) {
   .invoice-modal-body .invoice-container {
-    transform: scale(0.75);
+    transform: scale(0.72);
     transform-origin: top center;
-    margin-bottom: calc((297mm * 0.75) - 297mm);
+    margin-bottom: -220px;
   }
 }
 
@@ -129,6 +131,6 @@
   .invoice-modal-body .invoice-container {
     transform: scale(0.50);
     transform-origin: top center;
-    margin-bottom: calc((297mm * 0.50) - 297mm);
+    margin-bottom: -400px;
   }
 }

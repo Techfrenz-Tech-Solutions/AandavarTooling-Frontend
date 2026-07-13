@@ -216,9 +216,6 @@ function InvoiceTemplate(props) {
           <p>For: SHREE AANDAVAR TOOLING</p>
         </div>
 
-        {/* spacer — pushes signature to bottom of A4 */}
-        <div style={{ flex: 1 }} />
-
         {/* ── Signature footer ── */}
         <div className="inv-sig-footer">
           <div className="inv-sig-left">
