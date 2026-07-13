@@ -63,7 +63,7 @@
   flex-shrink: 0;
 }
 .inv-header-dark {
-  background: #1e2430;
+  background: #c0392b;
   color: #fff;
   display: flex;
   align-items: center;
@@ -107,7 +107,7 @@
   flex-shrink: 0;
 }
 .inv-company-panel {
-  background: #1e2430;
+  background: #c0392b;
   color: #fff;
   width: 52%;
   display: flex;
