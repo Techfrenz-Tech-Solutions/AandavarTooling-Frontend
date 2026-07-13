@@ -19,11 +19,11 @@
   padding: 0;
 }
 
-/* ── A4 container ── */
+/* ── A4 container — exact A4, no extra height ── */
 .invoice-container {
   position: relative;
   width: 210mm;
-  min-height: 370mm;
+  height: 297mm;          /* exact A4 — no min, no overflow */
   margin: 0 auto;
   background: #ffffff;
   font-family: Arial, Helvetica, sans-serif;
@@ -33,6 +33,8 @@
   line-height: 1.4;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 /* ── Watermark ── */
@@ -290,15 +292,16 @@
 .inv-terms p { margin: 0; }
 
 /* ══════════════════════════════════════════════════════
-   SIGNATURE FOOTER
+   SIGNATURE FOOTER — pinned to bottom of A4
    ══════════════════════════════════════════════════════ */
 .inv-sig-footer {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 20px 20px 18px;
-  margin-top: auto;
+  padding: 14px 20px 16px;
+  margin-top: auto;       /* pushes to bottom within exact 297mm height */
   border-top: 1px solid #bbb;
+  flex-shrink: 0;
 }
 .inv-sig-left,
 .inv-sig-right {
