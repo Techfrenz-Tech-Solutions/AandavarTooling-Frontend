@@ -1,3 +1,4 @@
+import React from "react";
 import logo from "../Assets/AandavarLogo2.png";
 import "../CSS/deliveryTemplate.css";
 
@@ -7,9 +8,7 @@ function DeliveryChallanTemplate({ challanData }) {
   return (
     <div className="dc-page">
 
-      {/* ════════════════════════════════
-          HEADER
-          ════════════════════════════════ */}
+      {/* ── HEADER ── */}
       <div className="dc-header">
         <img src={logo} alt="Logo" className="dc-logo" />
         <div className="dc-company-info">
@@ -23,9 +22,7 @@ function DeliveryChallanTemplate({ challanData }) {
 
       <div className="dc-divider" />
 
-      {/* ════════════════════════════════
-          CUSTOMER + CHALLAN META
-          ════════════════════════════════ */}
+      {/* ── CUSTOMER + CHALLAN META ── */}
       <div className="dc-meta-row">
         <div className="dc-meta-left">
           <div className="dc-meta-label">To</div>
@@ -59,9 +56,7 @@ function DeliveryChallanTemplate({ challanData }) {
 
       <div className="dc-divider dc-divider--thin" />
 
-      {/* ════════════════════════════════
-          ITEMS — each row is a data box
-          ════════════════════════════════ */}
+      {/* ── ITEMS TABLE ── */}
       <table className="dc-table">
         <thead>
           <tr>
@@ -87,9 +82,7 @@ function DeliveryChallanTemplate({ challanData }) {
         </tbody>
       </table>
 
-      {/* ════════════════════════════════
-          FOOTER SIGNATURE SECTION
-          ════════════════════════════════ */}
+      {/* ── FOOTER SIGNATURE ── */}
       <div className="dc-footer">
         <div className="dc-footer-col">
           <p className="dc-footer-note">Received the goods in good condition</p>
