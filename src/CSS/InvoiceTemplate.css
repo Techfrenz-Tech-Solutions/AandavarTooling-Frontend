@@ -115,7 +115,7 @@
 
 /* Grey left panel — curved bottom-right */
 .inv-company-panel {
-  background: #e40b0b;
+  background: #808080;
   color: #fff;
   width: 52%;
   display: flex;
@@ -169,13 +169,12 @@
 }
 
 .inv-title-panel h1 {
-  font-size: 28px;
-  font-weight: 800;
-  color: #000000;
-  letter-spacing: 1px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+  letter-spacing: 0.3px;
   line-height: 1;
   margin: 0;
-  text-transform: uppercase;
 }
 
 /* ══════════════════════════════════════════════════════
@@ -183,35 +182,32 @@
    ══════════════════════════════════════════════════════ */
 .inv-meta-block {
   text-align: right;
-  padding: 10px 20px 12px;
-  font-size: 13px;
-  line-height: 2.2;
+  padding: 8px 20px 10px;
+  font-size: 12px;
+  line-height: 1.8;
 }
 
 .inv-meta-block p {
   margin: 0;
   display: flex;
   justify-content: flex-end;
-  align-items: baseline;
   gap: 0;
 }
 
 .inv-meta-block .meta-label {
-  color: #c0392b;
-  font-weight: 700;
+  color: #555;
   white-space: nowrap;
   min-width: 110px;
   text-align: right;
-  padding-right: 10px;
 }
 
 .inv-meta-block .meta-value {
-  min-width: 130px;
+  min-width: 120px;
   text-align: left;
-  font-weight: 700;
-  color: #000000;
-  white-space: nowrap;
-  border-bottom: none;
+  padding-left: 8px;
+  font-weight: 600;
+  color: #111;
+  /* NO underline */
   border-bottom: none;
 }
 
@@ -357,20 +353,17 @@
 
 .inv-words-section .inv-words-label {
   font-weight: 700;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
-/* Amount text — bold, italic, NO underline */
 .inv-words-section .inv-words-line {
-  border-bottom: none;
-  width: auto;
-  margin: 0 0 10px;
-  height: auto;
+  border-bottom: 1px solid #444;
+  width: 260px;
+  margin: 4px 0 10px;
+  height: 14px;
   font-style: italic;
-  font-weight: 700;
-  color: #222;
+  color: #333;
   font-size: 12px;
-  line-height: 1.5;
 }
 
 .inv-terms {
@@ -380,8 +373,7 @@
 
 .inv-terms .inv-terms-title {
   font-weight: 700;
-  margin-bottom: 4px;
-  margin-top: 6px;
+  margin-bottom: 2px;
 }
 
 .inv-terms p {
