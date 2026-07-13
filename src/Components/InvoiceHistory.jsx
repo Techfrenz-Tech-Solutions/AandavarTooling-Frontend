@@ -101,18 +101,12 @@ function InvoiceHistory() {
     if (!invoiceRef.current || !modalInvoice) return;
     setDownloading(true);
     try {
-      const canvas = await html2canvas(invoiceRef.current, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#ffffff",
-        width: 794,
-        height: 1123,
-        windowWidth: 794,
-        windowHeight: 1123,
-      });
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      pdf.addImage(imgData, "PNG", 0, 0, 210, 297);
+      const canvas = await html2canvas(invoiceRef.current, { scale: 2, useCORS: true });
+      const imgData  = canvas.toDataURL("image/png");
+      const pdf      = new jsPDF("p", "mm", "a4");
+      const imgWidth = 210;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
       pdf.save(`Invoice_${modalInvoice.Invoice_No}.pdf`);
     } catch (err) {
       console.error("PDF error:", err);
