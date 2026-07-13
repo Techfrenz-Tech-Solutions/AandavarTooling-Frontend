@@ -1,5 +1,6 @@
 import React from "react";
 import logo from "../Assets/AandavarLogo2.png";
+import watermark from "../Assets/AandavarLogo2.png";
 import "../CSS/deliveryTemplate.css";
 
 function ReturnDeliveryChallanTemplate({ challanData }) {
@@ -7,6 +8,9 @@ function ReturnDeliveryChallanTemplate({ challanData }) {
 
   return (
     <div className="dc-page">
+
+      {/* ── WATERMARK ── */}
+      <img src={watermark} alt="" className="dc-watermark" />
 
       {/* ── HEADER ── */}
       <div className="dc-header">
