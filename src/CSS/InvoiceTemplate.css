@@ -21,11 +21,10 @@
 }
 
 /* ── A4 container ── */
-/* 794px = 210mm at 96dpi — matches html2canvas pixel output exactly */
 .invoice-container {
   position: relative;
-  width: 794px;
-  min-height: 1123px;      /* 297mm at 96dpi */
+  width: 210mm;
+  min-height: 297mm;
   margin: 0 auto;
   background: #ffffff;
   font-family: Arial, Helvetica, sans-serif;
@@ -67,7 +66,7 @@
 }
 
 .inv-header-dark {
-  background: #c0392b;
+  background: #0e0201;
   color: #fff;
   display: flex;
   align-items: center;
@@ -81,7 +80,7 @@
 }
 
 .inv-header-red {
-  background: #d44235;
+  background: #0a0100;
   color: #fff;
   display: flex;
   align-items: center;
@@ -116,7 +115,7 @@
 
 /* Grey left panel — curved bottom-right */
 .inv-company-panel {
-  background: #6b6b6b;
+  background: #e40b0b;
   color: #fff;
   width: 52%;
   display: flex;
