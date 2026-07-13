@@ -11,14 +11,14 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 24px 16px;
+  padding: 0;              /* no top padding — modal starts at very top */
   overflow-y: auto;
 }
 
 /* Modal card */
 .invoice-modal {
   background: #f5f6fa;
-  border-radius: 10px;
+  border-radius: 0;        /* flush top edge */
   width: 100%;
   max-width: 900px;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
@@ -32,10 +32,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 20px;
+  padding: 0 20px;
+  height: 52px;
   background: #2c3e50;
   color: #fff;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .invoice-modal-title {
@@ -98,9 +100,11 @@
 .invoice-modal-body {
   padding: 0;
   overflow-y: auto;
-  max-height: calc(100vh - 120px);
+  max-height: calc(100vh - 52px);  /* 52px = header height */
   display: flex;
   justify-content: center;
+  align-items: flex-start;         /* content starts from very top */
+  background: #d0d0d0;
 }
 
 /* Loading state */
@@ -111,19 +115,23 @@
   color: #666;
 }
 
-/* Scale the A4 invoice container to fit the modal */
+/* A4 invoice — exact pixel dimensions, flush from top */
 .invoice-modal-body .invoice-container {
   transform-origin: top center;
-  width: 794px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  width: 794px !important;
+  height: 1123px !important;       /* 297mm at 96dpi */
+  min-height: unset !important;
+  flex-shrink: 0;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
+  margin: 0;                       /* no gap above the sheet */
 }
 
-/* Responsive shrink on smaller screens */
+/* Responsive shrink */
 @media (max-width: 860px) {
   .invoice-modal-body .invoice-container {
-    transform: scale(0.72);
+    transform: scale(0.76);
     transform-origin: top center;
-    margin-bottom: -220px;
+    margin-bottom: calc(1123px * (0.76 - 1));
   }
 }
 
@@ -131,6 +139,6 @@
   .invoice-modal-body .invoice-container {
     transform: scale(0.50);
     transform-origin: top center;
-    margin-bottom: -400px;
+    margin-bottom: calc(1123px * (0.50 - 1));
   }
 }
