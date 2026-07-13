@@ -63,7 +63,7 @@
   flex-shrink: 0;
 }
 .inv-header-dark {
-  background: #c0392b;
+  background: #130301;
   color: #fff;
   display: flex;
   align-items: center;
@@ -76,7 +76,7 @@
   white-space: nowrap;
 }
 .inv-header-red {
-  background: #c0392b;
+  background: #130301;
   color: #fff;
   display: flex;
   align-items: center;
