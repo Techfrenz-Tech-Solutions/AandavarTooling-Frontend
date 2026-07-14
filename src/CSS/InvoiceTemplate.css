@@ -371,3 +371,174 @@
 .download-btn:hover {
   background-color: #1a252f;
 }
+
+
+/* ══════════════════════════════════════════════════════
+   ACKNOWLEDGEMENT SECTION
+   Appended after the invoice footer — same page
+   ══════════════════════════════════════════════════════ */
+
+.ack-section {
+  margin-top: 18px;
+  width: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  color: #222;
+}
+
+/* ── Scissors cut line ── */
+.ack-cut-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0;
+}
+
+.ack-scissors {
+  font-size: 14px;
+  color: #555;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.ack-cut-dash {
+  flex: 1;
+  border-top: 1.5px dashed #aaa;
+}
+
+/* ── Header band ── */
+.ack-header-band {
+  display: flex;
+  align-items: stretch;
+  height: 48px;
+}
+
+.ack-header-dark {
+  background: #2b2b2b;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  width: 62%;
+  border-bottom-right-radius: 50px;
+  flex-shrink: 0;
+}
+
+.ack-title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #fff;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.ack-header-red {
+  background: #c0392b;
+  flex: 1;
+}
+
+/* ── Body ── */
+.ack-body {
+  padding: 12px 16px 10px;
+  position: relative;
+}
+
+/* Company info — top right */
+.ack-company {
+  text-align: right;
+  margin-bottom: 10px;
+}
+
+.ack-company-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 2px;
+}
+
+.ack-company p {
+  margin: 1px 0;
+  font-size: 10px;
+  color: #555;
+}
+
+/* Two-column row */
+.ack-columns {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-top: 4px;
+}
+
+.ack-col-left {
+  width: 34%;
+  line-height: 1.7;
+}
+
+.ack-col-right {
+  width: 34%;
+  line-height: 1.7;
+}
+
+.ack-col-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #c0392b;
+  margin-bottom: 3px;
+}
+
+.ack-customer-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #111;
+}
+
+.ack-col-left p,
+.ack-col-right p {
+  margin: 0;
+  font-size: 11px;
+  color: #333;
+}
+
+/* Receiver seal — right aligned */
+.ack-seal {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding-bottom: 4px;
+}
+
+.ack-seal-line {
+  width: 160px;
+  border-top: 1px solid #555;
+  margin-bottom: 4px;
+}
+
+.ack-seal p {
+  font-size: 10px;
+  color: #555;
+  margin: 0;
+  text-align: right;
+}
+
+/* ── Bottom band — mirror of header (red left + dark right) ── */
+.ack-footer-band {
+  display: flex;
+  align-items: stretch;
+  height: 20px;
+  margin-top: 8px;
+}
+
+.ack-footer-red {
+  background: #c0392b;
+  width: 38%;
+}
+
+.ack-footer-dark {
+  background: #2b2b2b;
+  flex: 1;
+  border-top-left-radius: 50px;
+}

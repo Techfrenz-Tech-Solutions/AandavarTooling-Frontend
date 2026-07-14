@@ -353,6 +353,72 @@ function InvoiceHistory() {
                     </div>
                   </div>
 
+                  {/* ── Acknowledgement section ── */}
+                  <div className="ack-section">
+
+                    {/* Scissors cut line */}
+                    <div className="ack-cut-line">
+                      <span className="ack-scissors">✂</span>
+                      <div className="ack-cut-dash" />
+                    </div>
+
+                    {/* Header band — dark left + red right */}
+                    <div className="ack-header-band">
+                      <div className="ack-header-dark">
+                        <h2 className="ack-title">ACKNOWLEDGEMENT</h2>
+                      </div>
+                      <div className="ack-header-red" />
+                    </div>
+
+                    {/* Body */}
+                    <div className="ack-body">
+
+                      {/* Company info — top right */}
+                      <div className="ack-company">
+                        <p className="ack-company-name">SHREE AANDAVAR TOOLING</p>
+                        <p>GSTIN: 33BVBPP7144R1Z0</p>
+                        <p>STATE: 33-TAMIL NADU</p>
+                      </div>
+
+                      {/* Two columns — Invoice To (left) | Invoice Details (right) */}
+                      <div className="ack-columns">
+
+                        {/* Left — Invoice To (same as Bill To) */}
+                        <div className="ack-col-left">
+                          <p className="ack-col-label">Invoice To:</p>
+                          <p className="ack-customer-name">{modalInvoice.Customer_Name}</p>
+                          <p>{modalInvoice.Customer_Address}</p>
+                          {modalInvoice.Customer_Phone && (
+                            <p>{modalInvoice.Customer_Phone}</p>
+                          )}
+                        </div>
+
+                        {/* Right — Invoice Details */}
+                        <div className="ack-col-right">
+                          <p className="ack-col-label">Invoice Details:</p>
+                          <p>Invoice No. : {modalInvoice.Invoice_No}</p>
+                          <p>Invoice Date : {new Date(modalInvoice.Invoice_Date).toLocaleDateString("en-IN")}</p>
+                          <p>Invoice Amount : {modalInvoice.Total_Amount}</p>
+                        </div>
+
+                        {/* Receiver seal — far right */}
+                        <div className="ack-seal">
+                          <div className="ack-seal-line" />
+                          <p>Receiver's Seal &amp; Sign</p>
+                        </div>
+
+                      </div>
+                    </div>
+
+                    {/* Bottom band — mirror of header (red left + dark right) */}
+                    <div className="ack-footer-band">
+                      <div className="ack-footer-red" />
+                      <div className="ack-footer-dark" />
+                    </div>
+
+                  </div>
+                  {/* ── end acknowledgement ── */}
+
                 </div>
                 /* ── end invoice-container ── */
               )}
