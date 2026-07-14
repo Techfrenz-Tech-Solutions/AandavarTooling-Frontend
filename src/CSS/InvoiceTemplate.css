@@ -116,7 +116,8 @@
 
 .invoice-title h1 {
   font-size: 20px;
-  margin: 0;
+  margin-right: 44px;
+  margin-bottom: 15px;
 }
 
 /* ============================= */
@@ -138,7 +139,7 @@
 }
 
 .bill-right {
-  text-align: right;
+  text-align: left;
 }
 
 .bill-right p {
