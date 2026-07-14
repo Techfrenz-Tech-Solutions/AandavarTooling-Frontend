@@ -133,11 +133,17 @@ function DeliveryHistory() {
   const downloadPDF = () => {
     if (!printRef.current) return alert("Nothing to download");
     const opt = {
-      margin: 0,
+      margin: [8, 0, 8, 0],         // top, right, bottom, left in mm
       filename: `Challan_${selectedChallan?.orderNo || "file"}.pdf`,
       image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-      jsPDF: { unit: "px", format: [794, 1123], orientation: "portrait" },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        letterRendering: true,
+        scrollX: 0,
+        scrollY: 0,
+      },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
     };
     html2pdf().set(opt).from(printRef.current).save();
   };

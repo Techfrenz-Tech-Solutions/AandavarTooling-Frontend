@@ -1,6 +1,5 @@
 /* ══════════════════════════════════════════════════════
-   DELIVERY CHALLAN TEMPLATE
-   A4 exact fit — screen + print/PDF
+   DELIVERY CHALLAN TEMPLATE — Professional A4
    ══════════════════════════════════════════════════════ */
 
 /* ── Reset ── */
@@ -12,32 +11,28 @@
   margin-block-end: 0;
 }
 
-.dc-page h2, .dc-page h4, .dc-page p, .dc-page span {
+.dc-page h1,.dc-page h2,.dc-page h3,.dc-page h4,.dc-page p,.dc-page span {
   margin: 0;
   padding: 0;
 }
 
-/* ── A4 page ── */
-/* 794px = 210mm at 96dpi — matches html2pdf's rendering width exactly */
+/* ── A4 page container ──
+   Width fixed to 794px (210mm @ 96dpi).
+   Height is AUTO — grows with content, never forces blank space.
+   html2pdf captures whatever height the content produces.
+   ─────────────────────────────────────────────────── */
 .dc-page {
   position: relative;
   width: 794px;
-  min-height: 1123px;       /* 297mm at 96dpi */
+  height: auto;             /* ← key: content drives height */
   margin: 0 auto;
   background: #fff;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 13px;
   color: #222;
-  padding: 36px 45px 36px;  /* ~10mm padding */
+  padding: 40px 48px 48px; /* top | sides | bottom */
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.dc-page > *:not(.dc-watermark) {
-  position: relative;
-  z-index: 1;
+  display: block;           /* plain block — no flex weirdness */
 }
 
 /* ── Watermark ── */
@@ -45,13 +40,19 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(-10deg);
-  width: 480px;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  width: 440px;
   height: auto;
-  opacity: 0.07;
+  opacity: 0.06;
   z-index: 0;
   pointer-events: none;
   user-select: none;
+}
+
+/* All direct children sit above watermark */
+.dc-page > *:not(.dc-watermark) {
+  position: relative;
+  z-index: 1;
 }
 
 /* ══════════════════════════════════════════════════════
@@ -61,12 +62,13 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  padding-bottom: 10px;
+  margin-bottom: 0;
+  padding-bottom: 12px;
 }
 
 .dc-logo {
-  width: 110px;
-  height: 110px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -77,127 +79,134 @@
 }
 
 .dc-company-info h2 {
-  font-size: 22px;
+  font-size: 21px;
   font-weight: 800;
-  letter-spacing: 0.5px;
   color: #111;
-  margin-bottom: 2px;
+  letter-spacing: 0.5px;
+  margin-bottom: 3px;
 }
 
 .dc-company-info h4 {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: #c0392b;
-  margin-bottom: 6px;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
 }
 
 .dc-company-info p {
-  font-size: 12px;
+  font-size: 11.5px;
   color: #555;
-  line-height: 1.6;
+  line-height: 1.55;
 }
 
 /* ── Dividers ── */
 .dc-divider {
   border: none;
-  border-top: 2.5px solid #c0392b;
-  margin: 8px 0;
-  flex-shrink: 0;
+  border-top: 2px solid #c0392b;
+  margin: 10px 0;
 }
 
 .dc-divider--thin {
+  border: none;
   border-top: 1px solid #ccc;
-  margin: 8px 0;
+  margin: 10px 0;
 }
 
 /* ══════════════════════════════════════════════════════
-   META ROW — customer (left) + challan details (right)
+   META ROW — To (left) | Challan details (right)
    ══════════════════════════════════════════════════════ */
 .dc-meta-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 10px 0;
-  gap: 24px;
+  padding: 8px 0 10px;
+  gap: 20px;
 }
 
+/* Left — customer */
 .dc-meta-left {
   width: 55%;
+  line-height: 1.6;
 }
 
 .dc-meta-label {
-  font-size: 11px;
+  display: inline-block;
+  font-size: 10px;
   font-weight: 700;
   color: #c0392b;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 5px;
+  letter-spacing: 1.2px;
   border-bottom: 1px solid #f0c0bc;
-  padding-bottom: 3px;
-  display: inline-block;
+  padding-bottom: 2px;
+  margin-bottom: 5px;
 }
 
 .dc-meta-value {
-  font-size: 13px;
+  font-size: 12.5px;
   color: #222;
-  line-height: 1.6;
 }
 
 .dc-meta-value--lg {
   font-size: 14px;
   font-weight: 700;
+  color: #111;
 }
 
+/* Right — challan no / date / vehicle */
 .dc-meta-right {
   width: 40%;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
+  align-items: flex-end;
 }
 
 .dc-meta-field {
   display: flex;
   align-items: baseline;
+  gap: 0;
+  width: 100%;
+  justify-content: flex-end;
 }
 
 .dc-field-label {
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
   color: #555;
-  min-width: 90px;
-  text-align: right;
-  padding-right: 12px;
   white-space: nowrap;
+  padding-right: 10px;
+  text-align: right;
+  min-width: 85px;
 }
 
 .dc-field-value {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
   color: #111;
-  flex: 1;
+  min-width: 120px;
 }
 
 .dc-field-blank {
   display: inline-block;
-  border-bottom: 1px solid #555;
+  border-bottom: 1px solid #666;
   min-width: 110px;
-  height: 16px;
+  height: 15px;
+  vertical-align: bottom;
 }
 
 /* ══════════════════════════════════════════════════════
    ITEMS TABLE
    ══════════════════════════════════════════════════════ */
-/* ── Table wrapper grows to fill space, pushing footer down ── */
 .dc-table-wrap {
-  flex: 1;
+  margin-top: 4px;
 }
 
 .dc-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 4px;
+  font-size: 12.5px;
 }
 
 .dc-th--sl          { width: 8%;  }
@@ -209,10 +218,10 @@
   color: #fff;
   padding: 9px 8px;
   border: 1px solid #a93226;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
   text-align: center;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.2px;
 }
 
 .dc-data-row { background: #fff; }
@@ -220,8 +229,8 @@
 
 .dc-td {
   border: 1px solid #ddd;
-  padding: 9px 8px;
-  font-size: 13px;
+  padding: 8px 8px;
+  font-size: 12.5px;
   color: #222;
   vertical-align: middle;
 }
@@ -233,28 +242,26 @@
   text-align: center;
   color: #aaa;
   font-style: italic;
-  padding: 18px;
+  padding: 16px;
   border: 1px solid #ddd;
 }
 
 /* ══════════════════════════════════════════════════════
-   FOOTER
+   FOOTER — always directly below table, no forced gaps
    ══════════════════════════════════════════════════════ */
 .dc-footer {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-top: auto;        /* pushes footer to bottom of A4 page */
+  margin-top: 32px;
   padding-top: 16px;
-  padding-bottom: 8px;
-  border-top: 2px solid #c0392b;
-  flex-shrink: 0;
+  border-top: 1px solid #bbb;
 }
 
 .dc-footer-col {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 22px;
   width: 45%;
 }
 
@@ -281,43 +288,29 @@
 }
 
 .dc-sig-line-bar {
-  width: 200px;
+  width: 190px;
   border-top: 1px solid #333;
 }
 
 .dc-sig-label {
-  font-size: 12px;
+  font-size: 11.5px;
   color: #444;
 }
 
-/* ══════════════════════════════════════════════════════
-   PRINT
-   ══════════════════════════════════════════════════════ */
+/* ── Print ── */
 @media print {
   body.dc-printing * { visibility: hidden; }
-
   body.dc-printing .dc-print-area,
   body.dc-printing .dc-print-area * { visibility: visible; }
-
   body.dc-printing .dc-print-area {
     position: fixed;
     top: 0; left: 0;
     width: 100%;
-    box-sizing: border-box;
   }
-
   @page { size: A4 portrait; margin: 0; }
-
-  .dc-page {
-    width: 100%;
-    min-height: 100vh;
-    padding: 10mm 12mm;
-    font-size: 11pt;
-  }
 }
 
-.dc-page,
-.dc-page * {
+.dc-page, .dc-page * {
   page-break-inside: avoid !important;
   break-inside: avoid !important;
 }
