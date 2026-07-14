@@ -461,6 +461,7 @@
   margin: 1px 0;
   font-size: 10px;
   color: #555;
+  line-height: 1.5;
 }
 
 /* Two-column row */
@@ -508,7 +509,7 @@
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-end;
-  padding-bottom: 4px;
+  padding-top: 25px;
 }
 
 .ack-seal-line {
@@ -535,6 +536,7 @@
 .ack-footer-red {
   background: #c0392b;
   width: 38%;
+  height: 38%;
 }
 
 .ack-footer-dark {
