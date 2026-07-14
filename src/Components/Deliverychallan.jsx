@@ -66,7 +66,7 @@ function DeliveryChallan() {
     }
   };
 
-  // 🔥 NEW PDF (Template based, UI unchanged)
+  // 🔥 NEW PDF (Template based, watermark composited on canvas)
   const generatePDF = async () => {
     if (!challanNo || productsList.length === 0) {
       alert("Add products first");
@@ -74,19 +74,44 @@ function DeliveryChallan() {
     }
 
     try {
+      // Capture template without watermark img
       const canvas = await html2canvas(challanRef.current, {
         scale: 2,
         useCORS: true,
+        allowTaint: false,
+        backgroundColor: "#ffffff",
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: challanRef.current.scrollWidth,
+        windowHeight: challanRef.current.scrollHeight,
       });
 
-      const imgData = canvas.toDataURL("image/png");
+      // Composite watermark onto canvas
+      const wmImg = new Image();
+      wmImg.crossOrigin = "anonymous";
+      wmImg.src = `${window.location.origin}/andavarwt.png`;
+      await new Promise((resolve) => { wmImg.onload = resolve; wmImg.onerror = resolve; });
 
+      if (wmImg.complete && wmImg.naturalWidth > 0) {
+        const ctx = canvas.getContext("2d");
+        const wmW = canvas.width * 0.55;
+        const wmH = (wmImg.naturalHeight / wmImg.naturalWidth) * wmW;
+        const wmX = (canvas.width  - wmW) / 2;
+        const wmY = (canvas.height - wmH) / 2;
+        ctx.save();
+        ctx.globalAlpha = 0.07;
+        ctx.translate(wmX + wmW / 2, wmY + wmH / 2);
+        ctx.rotate((-15 * Math.PI) / 180);
+        ctx.drawImage(wmImg, -wmW / 2, -wmH / 2, wmW, wmH);
+        ctx.restore();
+      }
+
+      const imgData = canvas.toDataURL("image/jpeg", 0.98);
       const pdf = new jsPDF("p", "mm", "a4");
-
-      const imgWidth = 210;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+      const pageW = 210;
+      const pageH = 297;
+      const imgH  = (canvas.height * pageW) / canvas.width;
+      pdf.addImage(imgData, "JPEG", 0, 0, pageW, imgH <= pageH ? imgH : pageH);
       pdf.save(`DeliveryChallan_${challanNo}.pdf`);
     } catch (err) {
       console.error(err);

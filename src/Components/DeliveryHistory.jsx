@@ -3,7 +3,8 @@ import api from "../api";
 import Sidebar from "../Components/Sidebar";
 import Topbar from "../Components/Topbar";
 import DeliveryChallanTemplate from "./DeliveryChallanTemplate";
-import html2pdf from "html2pdf.js";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 import "../CSS/Deliverychallan.css";
 
@@ -130,22 +131,62 @@ function DeliveryHistory() {
   };
 
   /* ================= DOWNLOAD PDF ================= */
-  const downloadPDF = () => {
+  const downloadPDF = async () => {
     if (!printRef.current) return alert("Nothing to download");
-    const opt = {
-      margin: [8, 0, 8, 0],         // top, right, bottom, left in mm
-      filename: `Challan_${selectedChallan?.orderNo || "file"}.pdf`,
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: {
+
+    try {
+      // 1. Capture the template DOM (no watermark img — clean single-page capture)
+      const canvas = await html2canvas(printRef.current, {
         scale: 2,
         useCORS: true,
-        letterRendering: true,
+        allowTaint: false,
+        backgroundColor: "#ffffff",
         scrollX: 0,
         scrollY: 0,
-      },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-    };
-    html2pdf().set(opt).from(printRef.current).save();
+        windowWidth: printRef.current.scrollWidth,
+        windowHeight: printRef.current.scrollHeight,
+      });
+
+      // 2. Draw watermark centered on the captured canvas
+      const wmImg = new Image();
+      wmImg.crossOrigin = "anonymous";
+      wmImg.src = `${window.location.origin}/andavarwt.png`;
+      await new Promise((resolve) => { wmImg.onload = resolve; wmImg.onerror = resolve; });
+
+      if (wmImg.complete && wmImg.naturalWidth > 0) {
+        const ctx = canvas.getContext("2d");
+        const wmW = canvas.width * 0.55;           // 55% of page width
+        const wmH = (wmImg.naturalHeight / wmImg.naturalWidth) * wmW;
+        const wmX = (canvas.width  - wmW) / 2;
+        const wmY = (canvas.height - wmH) / 2;
+
+        ctx.save();
+        ctx.globalAlpha = 0.07;                    // transparent watermark
+        ctx.translate(wmX + wmW / 2, wmY + wmH / 2);
+        ctx.rotate((-15 * Math.PI) / 180);         // -15deg rotation
+        ctx.drawImage(wmImg, -wmW / 2, -wmH / 2, wmW, wmH);
+        ctx.restore();
+      }
+
+      // 3. Generate PDF — single page, content + watermark composited
+      const imgData  = canvas.toDataURL("image/jpeg", 0.98);
+      const pdf      = new jsPDF("p", "mm", "a4");
+      const pageW    = 210;
+      const pageH    = 297;
+      const imgH     = (canvas.height * pageW) / canvas.width;
+
+      // Fit to one page — scale down if content is taller than A4
+      if (imgH <= pageH) {
+        pdf.addImage(imgData, "JPEG", 0, 0, pageW, imgH);
+      } else {
+        pdf.addImage(imgData, "JPEG", 0, 0, pageW, pageH);
+      }
+
+      pdf.save(`Challan_${selectedChallan?.orderNo || "file"}.pdf`);
+    } catch (err) {
+      console.error("PDF error:", err);
+      alert("Failed to generate PDF. Please try again.");
+    }
   };
 
   /* ================= PRINT ================= */

@@ -13,14 +13,6 @@ function DeliveryChallanTemplate({ challanData }) {
   return (
     <div className="dc-page">
 
-      {/* Watermark — uses PUBLIC_URL so webpack doesn't try to bundle it */}
-      <img
-        src={`${process.env.PUBLIC_URL}/andavarwt.png`}
-        alt=""
-        className="dc-watermark"
-        aria-hidden="true"
-      />
-
       {/* ══ HEADER ══ */}
       <div className="dc-header">
         <img src={logo} alt="Shree Aandavar Tooling" className="dc-logo" />
