@@ -135,7 +135,10 @@ function DeliveryHistory() {
     if (!printRef.current) return alert("Nothing to download");
 
     try {
-      // 1. Capture the template DOM (no watermark img — clean single-page capture)
+      // Hide the preview watermark so html2canvas doesn't capture it
+      printRef.current.classList.add("dc-capturing");
+
+      // Capture clean template (no watermark — no extra page)
       const canvas = await html2canvas(printRef.current, {
         scale: 2,
         useCORS: true,
@@ -147,43 +150,44 @@ function DeliveryHistory() {
         windowHeight: printRef.current.scrollHeight,
       });
 
-      // 2. Draw watermark centered on the captured canvas
+      // Restore watermark visibility
+      printRef.current.classList.remove("dc-capturing");
+
+      // Composite watermark centered on the canvas
       const wmImg = new Image();
       wmImg.crossOrigin = "anonymous";
       wmImg.src = `${window.location.origin}/andavarwt.png`;
-      await new Promise((resolve) => { wmImg.onload = resolve; wmImg.onerror = resolve; });
+      await new Promise((res) => { wmImg.onload = res; wmImg.onerror = res; });
 
       if (wmImg.complete && wmImg.naturalWidth > 0) {
         const ctx = canvas.getContext("2d");
-        const wmW = canvas.width * 0.55;           // 55% of page width
+        // Size: 55% of canvas width, maintain aspect ratio
+        const wmW = canvas.width * 0.55;
         const wmH = (wmImg.naturalHeight / wmImg.naturalWidth) * wmW;
-        const wmX = (canvas.width  - wmW) / 2;
-        const wmY = (canvas.height - wmH) / 2;
+        // Center of the canvas
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
 
         ctx.save();
-        ctx.globalAlpha = 0.07;                    // transparent watermark
-        ctx.translate(wmX + wmW / 2, wmY + wmH / 2);
-        ctx.rotate((-15 * Math.PI) / 180);         // -15deg rotation
+        ctx.globalAlpha = 0.07;
+        ctx.translate(cx, cy);
+        ctx.rotate((-15 * Math.PI) / 180);
         ctx.drawImage(wmImg, -wmW / 2, -wmH / 2, wmW, wmH);
         ctx.restore();
       }
 
-      // 3. Generate PDF — single page, content + watermark composited
-      const imgData  = canvas.toDataURL("image/jpeg", 0.98);
-      const pdf      = new jsPDF("p", "mm", "a4");
-      const pageW    = 210;
-      const pageH    = 297;
-      const imgH     = (canvas.height * pageW) / canvas.width;
+      // Single-page PDF
+      const imgData = canvas.toDataURL("image/jpeg", 0.98);
+      const pdf     = new jsPDF("p", "mm", "a4");
+      const pageW   = 210;
+      const pageH   = 297;
+      const imgH    = (canvas.height * pageW) / canvas.width;
 
-      // Fit to one page — scale down if content is taller than A4
-      if (imgH <= pageH) {
-        pdf.addImage(imgData, "JPEG", 0, 0, pageW, imgH);
-      } else {
-        pdf.addImage(imgData, "JPEG", 0, 0, pageW, pageH);
-      }
-
+      pdf.addImage(imgData, "JPEG", 0, 0, pageW, imgH <= pageH ? imgH : pageH);
       pdf.save(`Challan_${selectedChallan?.orderNo || "file"}.pdf`);
+
     } catch (err) {
+      printRef.current?.classList.remove("dc-capturing");
       console.error("PDF error:", err);
       alert("Failed to generate PDF. Please try again.");
     }

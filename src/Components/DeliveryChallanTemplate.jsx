@@ -13,7 +13,13 @@ function DeliveryChallanTemplate({ challanData }) {
   return (
     <div className="dc-page">
 
-      {/* ══ HEADER ══ */}
+      {/* Watermark — visible in preview, hidden during PDF capture via .dc-capturing class */}
+      <img
+        src={`${process.env.PUBLIC_URL}/andavarwt.png`}
+        alt=""
+        className="dc-watermark dc-watermark-preview"
+        aria-hidden="true"
+      />
       <div className="dc-header">
         <img src={logo} alt="Shree Aandavar Tooling" className="dc-logo" />
         <div className="dc-company-info">

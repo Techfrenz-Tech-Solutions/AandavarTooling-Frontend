@@ -74,7 +74,9 @@ function DeliveryChallan() {
     }
 
     try {
-      // Capture template without watermark img
+      // Hide preview watermark before capture
+      challanRef.current.classList.add("dc-capturing");
+
       const canvas = await html2canvas(challanRef.current, {
         scale: 2,
         useCORS: true,
@@ -86,34 +88,39 @@ function DeliveryChallan() {
         windowHeight: challanRef.current.scrollHeight,
       });
 
-      // Composite watermark onto canvas
+      // Restore preview watermark
+      challanRef.current.classList.remove("dc-capturing");
+
+      // Composite watermark centered on canvas
       const wmImg = new Image();
       wmImg.crossOrigin = "anonymous";
       wmImg.src = `${window.location.origin}/andavarwt.png`;
-      await new Promise((resolve) => { wmImg.onload = resolve; wmImg.onerror = resolve; });
+      await new Promise((res) => { wmImg.onload = res; wmImg.onerror = res; });
 
       if (wmImg.complete && wmImg.naturalWidth > 0) {
         const ctx = canvas.getContext("2d");
         const wmW = canvas.width * 0.55;
         const wmH = (wmImg.naturalHeight / wmImg.naturalWidth) * wmW;
-        const wmX = (canvas.width  - wmW) / 2;
-        const wmY = (canvas.height - wmH) / 2;
+        const cx  = canvas.width / 2;
+        const cy  = canvas.height / 2;
         ctx.save();
         ctx.globalAlpha = 0.07;
-        ctx.translate(wmX + wmW / 2, wmY + wmH / 2);
+        ctx.translate(cx, cy);
         ctx.rotate((-15 * Math.PI) / 180);
         ctx.drawImage(wmImg, -wmW / 2, -wmH / 2, wmW, wmH);
         ctx.restore();
       }
 
       const imgData = canvas.toDataURL("image/jpeg", 0.98);
-      const pdf = new jsPDF("p", "mm", "a4");
+      const pdf  = new jsPDF("p", "mm", "a4");
       const pageW = 210;
       const pageH = 297;
       const imgH  = (canvas.height * pageW) / canvas.width;
       pdf.addImage(imgData, "JPEG", 0, 0, pageW, imgH <= pageH ? imgH : pageH);
       pdf.save(`DeliveryChallan_${challanNo}.pdf`);
+
     } catch (err) {
+      challanRef.current?.classList.remove("dc-capturing");
       console.error(err);
       alert("PDF failed");
     }
