@@ -66,7 +66,7 @@ function DeliveryChallan() {
     }
   };
 
-  // 🔥 NEW PDF (Template based, watermark composited on canvas)
+  // 🔥 PDF — watermark matches preview size exactly
   const generatePDF = async () => {
     if (!challanNo || productsList.length === 0) {
       alert("Add products first");
@@ -74,11 +74,21 @@ function DeliveryChallan() {
     }
 
     try {
+      // Read rendered watermark size before hiding
+      const wmEl = challanRef.current.querySelector(".dc-watermark-preview");
+      let wmRect = null;
+      let containerRect = null;
+      if (wmEl) {
+        wmRect        = wmEl.getBoundingClientRect();
+        containerRect = challanRef.current.getBoundingClientRect();
+      }
+
       // Hide preview watermark before capture
       challanRef.current.classList.add("dc-capturing");
 
+      const scale = 2;
       const canvas = await html2canvas(challanRef.current, {
-        scale: 2,
+        scale,
         useCORS: true,
         allowTaint: false,
         backgroundColor: "#ffffff",
@@ -91,7 +101,7 @@ function DeliveryChallan() {
       // Restore preview watermark
       challanRef.current.classList.remove("dc-capturing");
 
-      // Composite watermark centered on canvas
+      // Composite at exact DOM size × scale
       const wmImg = new Image();
       wmImg.crossOrigin = "anonymous";
       wmImg.src = `${window.location.origin}/andavarwt.png`;
@@ -99,10 +109,15 @@ function DeliveryChallan() {
 
       if (wmImg.complete && wmImg.naturalWidth > 0) {
         const ctx = canvas.getContext("2d");
-        const wmW = canvas.width * 0.55;
-        const wmH = (wmImg.naturalHeight / wmImg.naturalWidth) * wmW;
-        const cx  = canvas.width / 2;
-        const cy  = canvas.height / 2;
+        const wmW = wmRect ? wmRect.width  * scale : canvas.width  * 0.55;
+        const wmH = wmRect ? wmRect.height * scale : (wmImg.naturalHeight / wmImg.naturalWidth) * wmW;
+        const cx  = wmRect && containerRect
+          ? (wmRect.left - containerRect.left + wmRect.width  / 2) * scale
+          : canvas.width  / 2;
+        const cy  = wmRect && containerRect
+          ? (wmRect.top  - containerRect.top  + wmRect.height / 2) * scale
+          : canvas.height / 2;
+
         ctx.save();
         ctx.globalAlpha = 0.07;
         ctx.translate(cx, cy);

@@ -135,12 +135,21 @@ function DeliveryHistory() {
     if (!printRef.current) return alert("Nothing to download");
 
     try {
-      // Hide the preview watermark so html2canvas doesn't capture it
+      // Read the watermark's actual rendered size & position BEFORE hiding it
+      const wmEl = printRef.current.querySelector(".dc-watermark-preview");
+      let wmRect = null;
+      let containerRect = null;
+      if (wmEl) {
+        wmRect       = wmEl.getBoundingClientRect();
+        containerRect = printRef.current.getBoundingClientRect();
+      }
+
+      // Hide preview watermark so html2canvas doesn't capture it (avoids 2nd page)
       printRef.current.classList.add("dc-capturing");
 
-      // Capture clean template (no watermark — no extra page)
+      const scale = 2; // must match html2canvas scale below
       const canvas = await html2canvas(printRef.current, {
-        scale: 2,
+        scale,
         useCORS: true,
         allowTaint: false,
         backgroundColor: "#ffffff",
@@ -150,10 +159,10 @@ function DeliveryHistory() {
         windowHeight: printRef.current.scrollHeight,
       });
 
-      // Restore watermark visibility
+      // Restore watermark in preview
       printRef.current.classList.remove("dc-capturing");
 
-      // Composite watermark centered on the canvas
+      // Composite watermark at EXACT same size/position as the CSS preview
       const wmImg = new Image();
       wmImg.crossOrigin = "anonymous";
       wmImg.src = `${window.location.origin}/andavarwt.png`;
@@ -161,12 +170,18 @@ function DeliveryHistory() {
 
       if (wmImg.complete && wmImg.naturalWidth > 0) {
         const ctx = canvas.getContext("2d");
-        // Size: 55% of canvas width, maintain aspect ratio
-        const wmW = canvas.width * 0.55;
-        const wmH = (wmImg.naturalHeight / wmImg.naturalWidth) * wmW;
-        // Center of the canvas
-        const cx = canvas.width / 2;
-        const cy = canvas.height / 2;
+
+        // Use DOM-measured size × scale to match preview exactly
+        const wmW = wmRect ? wmRect.width  * scale : canvas.width  * 0.55;
+        const wmH = wmRect ? wmRect.height * scale : (wmImg.naturalHeight / wmImg.naturalWidth) * wmW;
+
+        // Center: use DOM-measured center × scale
+        const cx = wmRect && containerRect
+          ? (wmRect.left - containerRect.left + wmRect.width  / 2) * scale
+          : canvas.width  / 2;
+        const cy = wmRect && containerRect
+          ? (wmRect.top  - containerRect.top  + wmRect.height / 2) * scale
+          : canvas.height / 2;
 
         ctx.save();
         ctx.globalAlpha = 0.07;
@@ -182,7 +197,6 @@ function DeliveryHistory() {
       const pageW   = 210;
       const pageH   = 297;
       const imgH    = (canvas.height * pageW) / canvas.width;
-
       pdf.addImage(imgData, "JPEG", 0, 0, pageW, imgH <= pageH ? imgH : pageH);
       pdf.save(`Challan_${selectedChallan?.orderNo || "file"}.pdf`);
 
