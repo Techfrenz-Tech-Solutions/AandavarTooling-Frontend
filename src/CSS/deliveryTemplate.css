@@ -16,68 +16,39 @@
   padding: 0;
 }
 
-/* ── A4 page container ──
-   Width fixed to 794px (210mm @ 96dpi).
-   Height is AUTO — grows with content, never forces blank space.
-   html2pdf captures whatever height the content produces.
-   Watermark via background-image — never affects layout or page count.
-   ─────────────────────────────────────────────────── */
+/* ── A4 page container ── */
 .dc-page {
   position: relative;
   width: 794px;
   height: auto;
   margin: 0 auto;
   background-color: #fff;
-  background-image: url("/andavarwt.png");
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: 55%;       /* covers enough of the page to look like a watermark */
   font-family: Arial, Helvetica, sans-serif;
   font-size: 13px;
   color: #222;
   padding: 40px 48px 48px;
   box-sizing: border-box;
   display: block;
-  opacity: 1;                 /* container stays fully opaque */
 }
 
-/* Watermark transparency is handled by a pseudo-element so content stays dark */
-.dc-page::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("/andavarwt.png");
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: 55%;
-  opacity: 0.07;              /* only the watermark is transparent */
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* Reset background on the container itself — let ::before handle it */
-.dc-page {
-  background-image: none;
-}
-
-/* ── Watermark ── */
-.dc-watermark {
-  position: absolute;
-  top: 80%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-15deg);
-  width: 440px;
-  height: auto;
-  opacity: 0.06;
-  z-index: 0;
-  pointer-events: none;
-  user-select: none;
-}
-
-/* All direct children sit above watermark pseudo-element */
+/* All direct children sit above watermark */
 .dc-page > * {
   position: relative;
   z-index: 1;
+}
+
+/* ── Watermark img (rendered via JSX, positioned absolutely) ── */
+.dc-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  width: 460px;
+  height: auto;
+  opacity: 0.07;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
 }
 
 /* ══════════════════════════════════════════════════════
@@ -87,7 +58,6 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  margin-bottom: 0;
   padding-bottom: 12px;
 }
 
@@ -150,7 +120,6 @@
   gap: 20px;
 }
 
-/* Left — customer */
 .dc-meta-left {
   width: 55%;
   line-height: 1.6;
@@ -179,7 +148,6 @@
   color: #111;
 }
 
-/* Right — challan no / date / vehicle */
 .dc-meta-right {
   width: 40%;
   display: flex;
@@ -191,7 +159,6 @@
 .dc-meta-field {
   display: flex;
   align-items: baseline;
-  gap: 0;
   width: 100%;
   justify-content: flex-end;
 }
@@ -246,7 +213,6 @@
   font-size: 12.5px;
   font-weight: 600;
   text-align: center;
-  letter-spacing: 0.2px;
 }
 
 .dc-data-row { background: #fff; }
@@ -254,7 +220,7 @@
 
 .dc-td {
   border: 1px solid #ddd;
-  padding: 8px 8px;
+  padding: 8px;
   font-size: 12.5px;
   color: #222;
   vertical-align: middle;
@@ -272,7 +238,7 @@
 }
 
 /* ══════════════════════════════════════════════════════
-   FOOTER — always directly below table, no forced gaps
+   FOOTER
    ══════════════════════════════════════════════════════ */
 .dc-footer {
   display: flex;
