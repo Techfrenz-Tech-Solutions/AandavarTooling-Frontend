@@ -55,6 +55,20 @@
   z-index: 1;
 }
 
+/* ── Watermark ── */
+.dc-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  width: 500px;
+  height: auto;
+  opacity: 0.07;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
 /* ══════════════════════════════════════════════════════
    HEADER
    ══════════════════════════════════════════════════════ */
