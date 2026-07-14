@@ -13,13 +13,6 @@ function DeliveryChallanTemplate({ challanData }) {
   return (
     <div className="dc-page">
 
-      {/* ══ WATERMARK ══ */}
-      <img
-        src={process.env.PUBLIC_URL + "/andavarwt.png"}
-        alt=""
-        className="dc-watermark"
-      />
-
       {/* ══ HEADER ══ */}
       <div className="dc-header">
         <img src={logo} alt="Shree Aandavar Tooling" className="dc-logo" />

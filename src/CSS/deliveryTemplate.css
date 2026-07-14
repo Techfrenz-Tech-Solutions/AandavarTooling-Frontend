@@ -20,19 +20,44 @@
    Width fixed to 794px (210mm @ 96dpi).
    Height is AUTO — grows with content, never forces blank space.
    html2pdf captures whatever height the content produces.
+   Watermark via background-image — never affects layout or page count.
    ─────────────────────────────────────────────────── */
 .dc-page {
   position: relative;
   width: 794px;
-  height: auto;             /* ← key: content drives height */
+  height: auto;
   margin: 0 auto;
-  background: #fff;
+  background-color: #fff;
+  background-image: url("/andavarwt.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 55%;       /* covers enough of the page to look like a watermark */
   font-family: Arial, Helvetica, sans-serif;
   font-size: 13px;
   color: #222;
-  padding: 40px 48px 48px; /* top | sides | bottom */
+  padding: 40px 48px 48px;
   box-sizing: border-box;
-  display: block;           /* plain block — no flex weirdness */
+  display: block;
+  opacity: 1;                 /* container stays fully opaque */
+}
+
+/* Watermark transparency is handled by a pseudo-element so content stays dark */
+.dc-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/andavarwt.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 55%;
+  opacity: 0.07;              /* only the watermark is transparent */
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Reset background on the container itself — let ::before handle it */
+.dc-page {
+  background-image: none;
 }
 
 /* ── Watermark ── */
@@ -49,24 +74,10 @@
   user-select: none;
 }
 
-/* All direct children sit above watermark */
-.dc-page > *:not(.dc-watermark) {
+/* All direct children sit above watermark pseudo-element */
+.dc-page > * {
   position: relative;
   z-index: 1;
-}
-
-/* ── Watermark ── */
-.dc-watermark {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-15deg);
-  width: 500px;
-  height: auto;
-  opacity: 0.07;
-  z-index: 0;
-  pointer-events: none;
-  user-select: none;
 }
 
 /* ══════════════════════════════════════════════════════
