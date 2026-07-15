@@ -210,11 +210,44 @@ function DeliveryHistory() {
   /* ================= PRINT ================= */
   const handlePrint = () => {
     if (!printRef.current) return;
-    printRef.current.classList.add("dc-print-area");
-    document.body.classList.add("dc-printing");
-    window.print();
-    printRef.current.classList.remove("dc-print-area");
-    document.body.classList.remove("dc-printing");
+
+    // Open a clean isolated window with only the challan template
+    const printWindow = window.open("", "_blank", "width=900,height=700");
+    if (!printWindow) return alert("Pop-up blocked. Please allow pop-ups and try again.");
+
+    // Collect all stylesheet links from the current document
+    const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'))
+      .map((el) => el.outerHTML)
+      .join("\n");
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <title>Delivery Challan - ${selectedChallan?.orderNo || ""}</title>
+          ${styles}
+          <style>
+            @page { size: A4 portrait; margin: 0; }
+            body { margin: 0; padding: 0; background: #fff; }
+            /* Ensure only the challan fits one page */
+            .dc-page { page-break-after: avoid; break-after: avoid; }
+          </style>
+        </head>
+        <body>
+          ${printRef.current.innerHTML}
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+
+    // Wait for resources (images, fonts) to load before printing
+    printWindow.onload = () => {
+      printWindow.focus();
+      printWindow.print();
+      printWindow.close();
+    };
   };
 
   /* ================= SEARCH ================= */
