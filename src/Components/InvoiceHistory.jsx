@@ -241,26 +241,34 @@ function InvoiceHistory() {
                   {/* Watermark */}
                   <img src="/AandavarLogo2.png" alt="" className="invoice-watermark" />
 
-                  {/* Top bar */}
-                  <div className="top-bar">
-                    <div>📞 9944130610</div>
-                    <div>✉ prabusangari690@gmail.com</div>
-                    <div>📍 5/520 D, Kabeer Nagar MasthanPatti Madurai - 20</div>
+                  {/* ── TOP HEADER STRIP — logo box + red contact bar ── */}
+                  <div className="inv2-header">
+                    <div className="inv2-logo-box">
+                      <img src={logo} alt="Logo" className="inv2-logo" />
+                    </div>
+                    <div className="inv2-contact-bar">
+                      <span className="inv2-contact-item">
+                        <span className="inv2-icon">📞</span> 9944130610
+                      </span>
+                      <span className="inv2-separator">|</span>
+                      <span className="inv2-contact-item">
+                        <span className="inv2-icon">✉</span> prabusangari690@gmail.com
+                      </span>
+                      <span className="inv2-separator">|</span>
+                      <span className="inv2-contact-item">
+                        <span className="inv2-icon">📍</span> 5/520 D, Kabeer Nagar MasthanPatti, Madurai - 20
+                      </span>
+                    </div>
                   </div>
 
-                  {/* Company header */}
-                  <div className="company-header">
-                    <div className="company-left">
-                      <div className="logo-text-wrapper">
-                        <img src={logo} alt="Logo" className="company-logo" />
-                        <div className="company-info">
-                          <h2>SHREE AANDAVAR TOOLING</h2>
-                          <p>GSTIN: 33BVBPP7144R1Z0</p>
-                          <p>State: 33 - Tamil Nadu</p>
-                        </div>
-                      </div>
+                  {/* ── COMPANY BAND — dark left panel + Tax Invoice right ── */}
+                  <div className="inv2-company-band">
+                    <div className="inv2-company-panel">
+                      <h2>SHREE AANDAVAR TOOLING</h2>
+                      <p>GSTIN: 33BVBPP7144R1Z0</p>
+                      <p>State: 33-Tamil Nadu</p>
                     </div>
-                    <div className="invoice-title">
+                    <div className="inv2-title-panel">
                       <h1>Tax Invoice</h1>
                     </div>
                   </div>
