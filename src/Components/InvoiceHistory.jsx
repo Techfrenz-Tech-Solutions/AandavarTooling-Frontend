@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import api from "../api";
 import axios from "axios";
-import logo from "../Assets/AandavarLogo1.png";
+import logo from "../Assets/Aandavar_logo_2.png";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import "../CSS/SalesPage.css";
