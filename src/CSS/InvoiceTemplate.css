@@ -690,3 +690,57 @@
   margin-left: -2px;
   padding: 0 24px 0 16px;
 }
+
+/* ══════════════════════════════════════════════════════
+   inv2-header CURVE FIX — red full width, dark box
+   curves at bottom-left corner (concave into red)
+   ══════════════════════════════════════════════════════ */
+
+/* Full-width red header background */
+.inv2-header {
+  background: #e11d2e;
+  height: 68px;
+  display: flex;
+  align-items: stretch;
+  margin: 0;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+/* Dark logo box: bottom-left curves outward to reveal red beneath */
+.inv2-logo-box {
+  background: #1e1e1e;
+  width: 95px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 0 0 50px 0; /* only bottom-right curves — NO bottom-left */
+  margin-left: 0;
+  margin-bottom: 0;
+  z-index: 1;
+  position: relative;
+}
+
+/* Red bar: no extra background needed — header is already red */
+.inv2-contact-bar {
+  background: transparent;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 0 24px;
+  gap: 8px;
+  margin-left: 0;
+}
+
+/* ── FINAL FIX: dark box curves at bottom-LEFT to reveal red ── */
+.inv2-logo-box {
+  border-radius: 0 0 0 45px !important;  /* bottom-left curve only */
+}
+
+.inv2-contact-bar {
+  background: transparent !important;
+  margin-left: 0 !important;
+}
