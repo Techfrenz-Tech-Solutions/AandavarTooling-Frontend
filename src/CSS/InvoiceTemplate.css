@@ -21,14 +21,15 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-30deg);
-  opacity: 0.12;
+  opacity: 0.1;
+  /* very light */
   z-index: 0;
-  width: 420px;
+  /* behind content */
+  width: 500px;
+  /* adjust size */
   height: auto;
   pointer-events: none;
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 12px;
+  /* so it doesn’t block clicks */
 }
 
 /* ============================= */
@@ -572,7 +573,7 @@
 
 /* Red contact bar — rest of the width */
 .inv2-contact-bar {
-  background: #c0392b;
+  background: #e11d2e;
   flex: 1;
   display: flex;
   align-items: center;
@@ -667,3 +668,11 @@
   flex-direction: column;
 }
 
+/* ── Watermark white background override ── */
+.invoice-watermark {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 12px;
+  opacity: 0.12;
+  width: 420px;
+}
