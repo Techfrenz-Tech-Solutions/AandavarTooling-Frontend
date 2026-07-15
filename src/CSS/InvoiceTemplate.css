@@ -545,42 +545,35 @@
    NEW HEADER DESIGN  —  matches reference image
    ══════════════════════════════════════════════════════ */
 
-/* ── Top strip: dark curved left + red contact bar ── */
+/* ── Top strip: dark logo box + red contact bar ── */
 .inv2-header {
   display: flex;
   align-items: stretch;
   height: 64px;
   margin: 0;
   flex-shrink: 0;
-  background: #c0392b;
-  overflow: visible;        /* allow dark panel to extend below */
-  position: relative;
 }
 
-/* Dark curved shape — extends below the red strip with large bottom-right curve */
+/* Square dark box holding the logo — far left */
 .inv2-logo-box {
   background: #1e1e1e;
-  width: 110px;
+  width: 80px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px;
-  border-bottom-right-radius: 50px 40px;  /* wide horizontal, shallow vertical curve */
-  position: relative;
-  z-index: 2;
-  /* Gold/yellow accent line at bottom */
-  border-bottom: 3px solid #f0c040;
+  padding: 6px;
 }
 
 .inv2-logo {
-  width: 46px;
-  height: 46px;
+  width: 62px;
+  height: 62px;
   object-fit: contain;
 }
 
-/* Red contact bar */
+/* Red contact bar — rest of the width */
 .inv2-contact-bar {
+  background: #c0392b;
   flex: 1;
   display: flex;
   align-items: center;
@@ -592,7 +585,7 @@
 .inv2-contact-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   color: #fff;
   font-size: 12px;
   font-weight: 500;
@@ -600,16 +593,13 @@
 }
 
 .inv2-icon {
-  font-size: 14px;
-  opacity: 0.9;
+  font-size: 13px;
 }
 
-/* Thin vertical white separator line */
 .inv2-separator {
-  width: 1px;
-  height: 28px;
-  background: rgba(255, 255, 255, 0.35);
-  flex-shrink: 0;
+  color: rgba(255,255,255,0.45);
+  font-size: 18px;
+  line-height: 1;
 }
 
 /* ── Company band: dark left panel + Tax Invoice right ── */

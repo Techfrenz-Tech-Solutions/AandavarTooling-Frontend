@@ -241,7 +241,7 @@ function InvoiceHistory() {
                   {/* Watermark */}
                   <img src="/AandavarLogo2.png" alt="" className="invoice-watermark" />
 
-                  {/* ── TOP HEADER STRIP — dark curved left + red contact bar ── */}
+                  {/* ── TOP HEADER STRIP — logo box + red contact bar ── */}
                   <div className="inv2-header">
                     <div className="inv2-logo-box">
                       <img src={logo} alt="Logo" className="inv2-logo" />
@@ -250,11 +250,11 @@ function InvoiceHistory() {
                       <span className="inv2-contact-item">
                         <span className="inv2-icon">📞</span> 9944130610
                       </span>
-                      <span className="inv2-separator" />
+                      <span className="inv2-separator">|</span>
                       <span className="inv2-contact-item">
                         <span className="inv2-icon">✉</span> prabusangari690@gmail.com
                       </span>
-                      <span className="inv2-separator" />
+                      <span className="inv2-separator">|</span>
                       <span className="inv2-contact-item">
                         <span className="inv2-icon">📍</span> 5/520 D, Kabeer Nagar MasthanPatti, Madurai - 20
                       </span>
