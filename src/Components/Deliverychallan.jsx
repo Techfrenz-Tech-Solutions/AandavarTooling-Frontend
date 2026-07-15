@@ -109,7 +109,7 @@ function DeliveryChallan() {
 
       if (wmImg.complete && wmImg.naturalWidth > 0) {
         const ctx = canvas.getContext("2d");
-        const wmW = wmRect ? wmRect.width  * scale : canvas.width  * 0.55;
+        const wmW = wmRect ? wmRect.width  * scale : canvas.width  * 0.35;
         const wmH = wmRect ? wmRect.height * scale : (wmImg.naturalHeight / wmImg.naturalWidth) * wmW;
         const cx  = wmRect && containerRect
           ? (wmRect.left - containerRect.left + wmRect.width  / 2) * scale

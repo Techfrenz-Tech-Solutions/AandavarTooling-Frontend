@@ -172,7 +172,7 @@ function DeliveryHistory() {
         const ctx = canvas.getContext("2d");
 
         // Use DOM-measured size × scale to match preview exactly
-        const wmW = wmRect ? wmRect.width  * scale : canvas.width  * 0.55;
+        const wmW = wmRect ? wmRect.width  * scale : canvas.width  * 0.35;
         const wmH = wmRect ? wmRect.height * scale : (wmImg.naturalHeight / wmImg.naturalWidth) * wmW;
 
         // Center: use DOM-measured center × scale
