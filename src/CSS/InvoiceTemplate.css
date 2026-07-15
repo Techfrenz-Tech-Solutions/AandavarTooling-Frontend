@@ -554,15 +554,18 @@
   flex-shrink: 0;
 }
 
-/* Square dark box holding the logo — far left */
+/* Square dark box holding the logo — far left, curved bottom-right into red strip */
 .inv2-logo-box {
   background: #1e1e1e;
-  width: 80px;
+  width: 90px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px;
+  padding: 6px 10px;
+  border-bottom-right-radius: 40px;
+  position: relative;
+  z-index: 1;
 }
 
 .inv2-logo {
@@ -675,4 +678,15 @@
   padding: 12px;
   opacity: 0.12;
   width: 420px;
+}
+
+/* ── inv2-header curve fix — override ── */
+.inv2-header {
+  height: 68px;
+  overflow: hidden;
+}
+
+.inv2-contact-bar {
+  margin-left: -2px;
+  padding: 0 24px 0 16px;
 }
