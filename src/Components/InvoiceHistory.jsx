@@ -273,6 +273,9 @@ function InvoiceHistory() {
                     </div>
                   </div>
 
+                  {/* ── Content body with padding ── */}
+                  <div className="inv2-body">
+
                   {/* Bill details */}
                   <div className="bill-details">
                     <div className="bill-left">
@@ -359,7 +362,8 @@ function InvoiceHistory() {
                       <b>Authorized Signatory</b>
                       <p>M. PRABAHARAN</p>
                     </div>
-                  </div>
+                  </div>{/* invoice-footer */}
+                  </div>{/* inv2-body */}
 
                   {/* ── Acknowledgement section ── */}
                   <div className="ack-section">

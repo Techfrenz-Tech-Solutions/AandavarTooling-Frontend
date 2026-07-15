@@ -9,15 +9,10 @@
   background: #ffffff;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
-  padding: 6mm;
+  padding: 0;
   box-sizing: border-box;
-  overflow: hidden;
-}
-
-/* InvoiceTemplate.css */
-
-/* Watermark styling */
-.invoice-container {
+  display: flex;
+  flex-direction: column;
   position: relative;
 }
 
@@ -375,11 +370,12 @@
 
 /* ══════════════════════════════════════════════════════
    ACKNOWLEDGEMENT SECTION
-   Appended after the invoice footer — same page
+   Appended after the invoice footer — pinned to page bottom
    ══════════════════════════════════════════════════════ */
 
 .ack-section {
-  margin-top: 18px;
+  margin-top: auto;
+  padding-top: 12px;
   width: 100%;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11px;
@@ -553,14 +549,15 @@
 .inv2-header {
   display: flex;
   align-items: stretch;
-  height: 56px;
+  height: 64px;
   margin: 0;
+  flex-shrink: 0;
 }
 
 /* Square dark box holding the logo — far left */
 .inv2-logo-box {
   background: #1e1e1e;
-  width: 72px;
+  width: 80px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -569,8 +566,8 @@
 }
 
 .inv2-logo {
-  width: 56px;
-  height: 56px;
+  width: 62px;
+  height: 62px;
   object-fit: contain;
 }
 
@@ -590,18 +587,18 @@
   align-items: center;
   gap: 6px;
   color: #fff;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
 }
 
 .inv2-icon {
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .inv2-separator {
-  color: rgba(255,255,255,0.4);
-  font-size: 16px;
+  color: rgba(255,255,255,0.45);
+  font-size: 18px;
   line-height: 1;
 }
 
@@ -609,8 +606,9 @@
 .inv2-company-band {
   display: flex;
   align-items: stretch;
-  min-height: 80px;
+  min-height: 85px;
   margin: 0;
+  flex-shrink: 0;
 }
 
 /* Dark left panel — no logo, just text, large bottom-right curve */
@@ -660,11 +658,12 @@
 }
 
 /* ── Acknowledgement — pinned to page bottom ── */
-.ack-section {
-  margin-top: auto;   /* push to bottom when container is tall */
-  padding-top: 12px;
-  width: 100%;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 11px;
-  color: #222;
+/* (defined above near top of acknowledgement section) */
+
+/* ── Content body — padding for sections below header ── */
+.inv2-body {
+  padding: 8px 14px 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
