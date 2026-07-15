@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import logo from "../Assets/AandavarLogo1.png";
+import logo from "../Assets/Aandavar_logo_2.jpg";
 import "../CSS/InvoiceTemplate.css";
 import api from "../api";
 import { useParams } from "react-router-dom";
