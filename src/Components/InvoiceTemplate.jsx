@@ -89,7 +89,7 @@ function InvoiceTemplate(props) {
       <div id="invoice-print" className="invoice-container">
 
         {/* Watermark */}
-        <img src="/AandavarLogo1.png" alt="" className="invoice-watermark" />
+        <img src="/AandavarLogo2.png" alt="" className="invoice-watermark" />
 
         {/* ── Top header strip ── */}
         <div className="inv-header">
