@@ -136,12 +136,22 @@ function DeliveryHistory() {
 
     try {
       // Read the watermark's actual rendered size & position BEFORE hiding it
+      // Use offsetWidth/offsetHeight — gives pre-transform size (actual image size)
+      // getBoundingClientRect includes rotation which distorts the measurement
       const wmEl = printRef.current.querySelector(".dc-watermark-preview");
       let wmRect = null;
       let containerRect = null;
       if (wmEl) {
-        wmRect       = wmEl.getBoundingClientRect();
-        containerRect = printRef.current.getBoundingClientRect();
+        const containerW = printRef.current.offsetWidth;
+        const containerH = printRef.current.offsetHeight;
+        const wmW_css    = wmEl.offsetWidth;
+        const wmH_css    = wmEl.offsetHeight;
+        // Center position from CSS: top:50%, left:50%, translate(-50%,-50%)
+        wmRect        = { width: wmW_css, height: wmH_css };
+        containerRect = { width: containerW, height: containerH, left: 0, top: 0 };
+        // Store center as half of container
+        wmRect.centerX = containerW / 2;
+        wmRect.centerY = containerH / 2;
       }
 
       // Hide preview watermark so html2canvas doesn't capture it (avoids 2nd page)
@@ -175,13 +185,9 @@ function DeliveryHistory() {
         const wmW = wmRect ? wmRect.width  * scale : canvas.width  * 0.35;
         const wmH = wmRect ? wmRect.height * scale : (wmImg.naturalHeight / wmImg.naturalWidth) * wmW;
 
-        // Center: use DOM-measured center × scale
-        const cx = wmRect && containerRect
-          ? (wmRect.left - containerRect.left + wmRect.width  / 2) * scale
-          : canvas.width  / 2;
-        const cy = wmRect && containerRect
-          ? (wmRect.top  - containerRect.top  + wmRect.height / 2) * scale
-          : canvas.height / 2;
+        // Center: always use canvas center (CSS uses top:50% left:50% translate(-50%,-50%))
+        const cx = wmRect ? wmRect.centerX * scale : canvas.width  / 2;
+        const cy = wmRect ? wmRect.centerY * scale : canvas.height / 2;
 
         ctx.save();
         ctx.globalAlpha = 0.07;

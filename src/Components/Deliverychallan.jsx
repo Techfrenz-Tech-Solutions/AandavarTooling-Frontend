@@ -74,13 +74,15 @@ function DeliveryChallan() {
     }
 
     try {
-      // Read rendered watermark size before hiding
+      // Read rendered watermark size using offsetWidth (pre-transform, actual image size)
       const wmEl = challanRef.current.querySelector(".dc-watermark-preview");
       let wmRect = null;
       let containerRect = null;
       if (wmEl) {
-        wmRect        = wmEl.getBoundingClientRect();
-        containerRect = challanRef.current.getBoundingClientRect();
+        const containerW = challanRef.current.offsetWidth;
+        const containerH = challanRef.current.offsetHeight;
+        wmRect        = { width: wmEl.offsetWidth, height: wmEl.offsetHeight, centerX: containerW / 2, centerY: containerH / 2 };
+        containerRect = { width: containerW, height: containerH };
       }
 
       // Hide preview watermark before capture
@@ -111,12 +113,8 @@ function DeliveryChallan() {
         const ctx = canvas.getContext("2d");
         const wmW = wmRect ? wmRect.width  * scale : canvas.width  * 0.35;
         const wmH = wmRect ? wmRect.height * scale : (wmImg.naturalHeight / wmImg.naturalWidth) * wmW;
-        const cx  = wmRect && containerRect
-          ? (wmRect.left - containerRect.left + wmRect.width  / 2) * scale
-          : canvas.width  / 2;
-        const cy  = wmRect && containerRect
-          ? (wmRect.top  - containerRect.top  + wmRect.height / 2) * scale
-          : canvas.height / 2;
+        const cx  = wmRect ? wmRect.centerX * scale : canvas.width  / 2;
+        const cy  = wmRect ? wmRect.centerY * scale : canvas.height / 2;
 
         ctx.save();
         ctx.globalAlpha = 0.07;
