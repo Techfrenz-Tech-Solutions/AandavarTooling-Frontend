@@ -264,6 +264,19 @@ const Sidebar = ({ collapsed }) => {
         </div>
      
 
+      {/* ===== SUPPLIER TRANSACTION ===== */}
+      <div className="menu-section">
+        {!collapsed && <div className="menu-title">SUPPLIER TRANSACTION</div>}
+
+        <div
+          className={`menu-item ${isActive("/dashboard/SupplierDC") ? "active" : ""}`}
+          onClick={() => navigate("/dashboard/SupplierDC")}
+        >
+          <i className="fa fa-truck"></i>
+          {!collapsed && <span>Supplier DC</span>}
+        </div>
+      </div>
+
       {/* ===== FOOTER ===== */}
       <div className="sidebar-footer">
   <div
