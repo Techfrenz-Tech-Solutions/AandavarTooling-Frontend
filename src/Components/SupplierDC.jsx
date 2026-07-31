@@ -16,18 +16,18 @@ const EMPTY = {
 };
 
 function SupplierDC() {
-  const [form,       setForm]       = useState(EMPTY);
-  const [entries,    setEntries]    = useState([]);
-  const [saving,     setSaving]     = useState(false);
-  const [loading,    setLoading]    = useState(false);
+  const [form,     setForm]     = useState(EMPTY);
+  const [entries,  setEntries]  = useState([]);
+  const [saving,   setSaving]   = useState(false);
+  const [loading,  setLoading]  = useState(false);
 
-  /* ── inline edit state ── */
-  const [editId,     setEditId]     = useState(null);   // S_No being edited
-  const [editForm,   setEditForm]   = useState({});
+  /* inline edit — only the row id and whichever cells the user touches */
+  const [editId,   setEditId]   = useState(null);
+  const [editForm, setEditForm] = useState({});
 
-  /* ── fetch all on mount ── */
   useEffect(() => { fetchAll(); }, []);
 
+  /* ── GET /supplierdc/getSupplierDCs ── */
   const fetchAll = async () => {
     setLoading(true);
     try {
@@ -40,21 +40,11 @@ function SupplierDC() {
     }
   };
 
-  /* ── helpers ── */
   const handleChange = (e) =>
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
 
   const handleEditChange = (e) =>
     setEditForm((p) => ({ ...p, [e.target.name]: e.target.value }));
-
-  const validate = (obj) => {
-    const required = [
-      "item_name", "uom", "name", "qty",
-      "supplier_name", "supplier_dc_no",
-      "supplier_dc_date", "dc_entry_date",
-    ];
-    return required.every((k) => String(obj[k] ?? "").trim() !== "");
-  };
 
   const fmtDate = (d) => {
     if (!d) return "-";
@@ -63,10 +53,12 @@ function SupplierDC() {
     return `${day}-${m}-${y}`;
   };
 
-  /* ── CREATE ── */
+  /* ── POST /supplierdc/createSupplierDC ── */
   const handleAdd = async () => {
-    if (!validate(form)) {
-      alert("Please fill all fields before adding.");
+    /* no mandatory validation — just skip totally empty submits */
+    const hasAny = Object.values(form).some((v) => String(v).trim() !== "");
+    if (!hasAny) {
+      alert("Please fill at least one field.");
       return;
     }
     setSaving(true);
@@ -86,35 +78,29 @@ function SupplierDC() {
     }
   };
 
-  /* ── START EDIT ── */
+  /* ── start inline edit — populate only the values from this row ── */
   const startEdit = (row) => {
-    setEditId(row.S_No);
+    setEditId(row.id);
     setEditForm({
-      S_No:             row.S_No,
-      item_name:        row.item_name        || "",
-      uom:              row.uom              || "",
-      name:             row.name             || "",
-      qty:              row.qty              || "",
-      supplier_name:    row.supplier_name    || "",
-      supplier_dc_no:   row.supplier_dc_no   || "",
-      supplier_dc_date: (row.supplier_dc_date || "").split("T")[0],
-      dc_entry_date:    (row.dc_entry_date    || "").split("T")[0],
+      id:               row.id,
+      item_name:        row.item_name        ?? "",
+      uom:              row.uom              ?? "",
+      name:             row.name             ?? "",
+      qty:              row.qty              ?? "",
+      supplier_name:    row.supplier_name    ?? "",
+      supplier_dc_no:   row.supplier_dc_no   ?? "",
+      supplier_dc_date: (row.supplier_dc_date ?? "").split("T")[0],
+      dc_entry_date:    (row.dc_entry_date    ?? "").split("T")[0],
     });
   };
 
-  const cancelEdit = () => {
-    setEditId(null);
-    setEditForm({});
-  };
+  const cancelEdit = () => { setEditId(null); setEditForm({}); };
 
-  /* ── UPDATE ── */
+  /* ── POST /supplierdc/updateSupplierDC  — send only changed fields + id ── */
   const handleUpdate = async () => {
-    if (!validate(editForm)) {
-      alert("Please fill all fields before updating.");
-      return;
-    }
     setSaving(true);
     try {
+      /* send full editForm; backend ignores blank fields if needed */
       const res = await api.post("/supplierdc/updateSupplierDC", editForm);
       if (res.data.status === 1) {
         await fetchAll();
@@ -130,13 +116,13 @@ function SupplierDC() {
     }
   };
 
-  /* ── DELETE ── */
-  const handleDelete = async (S_No) => {
+  /* ── POST /supplierdc/deleteSupplierDC  — send { id } ── */
+  const handleDelete = async (id) => {
     if (!window.confirm("Delete this entry?")) return;
     try {
-      const res = await api.post("/supplierdc/deleteSupplierDC", { S_No });
+      const res = await api.post("/supplierdc/deleteSupplierDC", { id });
       if (res.data.status === 1) {
-        setEntries((p) => p.filter((r) => r.S_No !== S_No));
+        setEntries((p) => p.filter((r) => r.id !== id));
       } else {
         alert(res.data.message || "Delete failed.");
       }
@@ -151,61 +137,60 @@ function SupplierDC() {
       <Sidebar />
       <Topbar />
 
-      {/* ── Page header ── */}
       <div className="sdc-header">
         <h1>Supplier DC</h1>
         <p>Supplier Transaction — Delivery Challan Entry</p>
       </div>
 
-      {/* ══════════════ FORM CARD ══════════════ */}
+      {/* ══════ FORM CARD ══════ */}
       <div className="sdc-card">
         <h2 className="sdc-card-title">New Entry</h2>
 
         <div className="sdc-grid">
           <div className="sdc-field">
-            <label>Item Name <span className="sdc-req">*</span></label>
+            <label>Item Name</label>
             <input name="item_name" value={form.item_name}
               onChange={handleChange} placeholder="Enter item name" />
           </div>
 
           <div className="sdc-field">
-            <label>UOM <span className="sdc-req">*</span></label>
+            <label>UOM</label>
             <input name="uom" value={form.uom}
               onChange={handleChange} placeholder="e.g. Nos, Kg, Mtr" />
           </div>
 
           <div className="sdc-field">
-            <label>Name <span className="sdc-req">*</span></label>
+            <label>Name</label>
             <input name="name" value={form.name}
               onChange={handleChange} placeholder="Enter name" />
           </div>
 
           <div className="sdc-field">
-            <label>Qty <span className="sdc-req">*</span></label>
+            <label>Qty</label>
             <input name="qty" type="number" min="0" value={form.qty}
               onChange={handleChange} placeholder="Enter quantity" />
           </div>
 
           <div className="sdc-field">
-            <label>Supplier Name <span className="sdc-req">*</span></label>
+            <label>Supplier Name</label>
             <input name="supplier_name" value={form.supplier_name}
               onChange={handleChange} placeholder="Enter supplier name" />
           </div>
 
           <div className="sdc-field">
-            <label>Supplier DC No <span className="sdc-req">*</span></label>
+            <label>Supplier DC No</label>
             <input name="supplier_dc_no" value={form.supplier_dc_no}
               onChange={handleChange} placeholder="Enter DC number" />
           </div>
 
           <div className="sdc-field">
-            <label>Supplier DC Date <span className="sdc-req">*</span></label>
+            <label>Supplier DC Date</label>
             <input name="supplier_dc_date" type="date"
               value={form.supplier_dc_date} onChange={handleChange} />
           </div>
 
           <div className="sdc-field">
-            <label>DC Entry Date <span className="sdc-req">*</span></label>
+            <label>DC Entry Date</label>
             <input name="dc_entry_date" type="date"
               value={form.dc_entry_date} onChange={handleChange} />
           </div>
@@ -223,7 +208,7 @@ function SupplierDC() {
         </div>
       </div>
 
-      {/* ══════════════ GRID CARD ══════════════ */}
+      {/* ══════ GRID CARD ══════ */}
       <div className="sdc-card">
         <div className="sdc-card-title-row">
           <h2 className="sdc-card-title">
@@ -255,9 +240,7 @@ function SupplierDC() {
             </thead>
             <tbody>
               {loading ? (
-                <tr>
-                  <td colSpan={10} className="sdc-empty">Loading…</td>
-                </tr>
+                <tr><td colSpan={10} className="sdc-empty">Loading…</td></tr>
               ) : entries.length === 0 ? (
                 <tr>
                   <td colSpan={10} className="sdc-empty">
@@ -266,28 +249,52 @@ function SupplierDC() {
                 </tr>
               ) : (
                 entries.map((row, i) =>
-                  editId === row.S_No ? (
-                    /* ── Inline edit row ── */
-                    <tr key={row.S_No} className="sdc-edit-row">
+                  editId === row.id ? (
+                    /* ── inline edit row — edit any cell you want ── */
+                    <tr key={row.id} className="sdc-edit-row">
                       <td>{i + 1}</td>
-                      <td><input className="sdc-inline" name="item_name"
-                        value={editForm.item_name} onChange={handleEditChange} /></td>
-                      <td><input className="sdc-inline" name="uom"
-                        value={editForm.uom} onChange={handleEditChange} /></td>
-                      <td><input className="sdc-inline" name="name"
-                        value={editForm.name} onChange={handleEditChange} /></td>
-                      <td><input className="sdc-inline sdc-inline--sm" name="qty"
-                        type="number" value={editForm.qty} onChange={handleEditChange} /></td>
-                      <td><input className="sdc-inline" name="supplier_name"
-                        value={editForm.supplier_name} onChange={handleEditChange} /></td>
-                      <td><input className="sdc-inline" name="supplier_dc_no"
-                        value={editForm.supplier_dc_no} onChange={handleEditChange} /></td>
-                      <td><input className="sdc-inline sdc-inline--date"
-                        name="supplier_dc_date" type="date"
-                        value={editForm.supplier_dc_date} onChange={handleEditChange} /></td>
-                      <td><input className="sdc-inline sdc-inline--date"
-                        name="dc_entry_date" type="date"
-                        value={editForm.dc_entry_date} onChange={handleEditChange} /></td>
+                      <td>
+                        <input className="sdc-inline" name="item_name"
+                          value={editForm.item_name} onChange={handleEditChange}
+                          placeholder="Item name" />
+                      </td>
+                      <td>
+                        <input className="sdc-inline sdc-inline--sm" name="uom"
+                          value={editForm.uom} onChange={handleEditChange}
+                          placeholder="UOM" />
+                      </td>
+                      <td>
+                        <input className="sdc-inline" name="name"
+                          value={editForm.name} onChange={handleEditChange}
+                          placeholder="Name" />
+                      </td>
+                      <td>
+                        <input className="sdc-inline sdc-inline--sm" name="qty"
+                          type="number" value={editForm.qty}
+                          onChange={handleEditChange} placeholder="Qty" />
+                      </td>
+                      <td>
+                        <input className="sdc-inline" name="supplier_name"
+                          value={editForm.supplier_name} onChange={handleEditChange}
+                          placeholder="Supplier name" />
+                      </td>
+                      <td>
+                        <input className="sdc-inline" name="supplier_dc_no"
+                          value={editForm.supplier_dc_no} onChange={handleEditChange}
+                          placeholder="DC No" />
+                      </td>
+                      <td>
+                        <input className="sdc-inline sdc-inline--date"
+                          name="supplier_dc_date" type="date"
+                          value={editForm.supplier_dc_date}
+                          onChange={handleEditChange} />
+                      </td>
+                      <td>
+                        <input className="sdc-inline sdc-inline--date"
+                          name="dc_entry_date" type="date"
+                          value={editForm.dc_entry_date}
+                          onChange={handleEditChange} />
+                      </td>
                       <td className="sdc-action-cell">
                         <button className="sdc-save-btn"
                           onClick={handleUpdate} disabled={saving}>
@@ -299,15 +306,15 @@ function SupplierDC() {
                       </td>
                     </tr>
                   ) : (
-                    /* ── Normal row ── */
-                    <tr key={row.S_No}>
+                    /* ── normal display row ── */
+                    <tr key={row.id}>
                       <td>{i + 1}</td>
-                      <td>{row.item_name}</td>
-                      <td>{row.uom}</td>
-                      <td>{row.name}</td>
-                      <td>{row.qty}</td>
-                      <td>{row.supplier_name}</td>
-                      <td>{row.supplier_dc_no}</td>
+                      <td>{row.item_name || "-"}</td>
+                      <td>{row.uom || "-"}</td>
+                      <td>{row.name || "-"}</td>
+                      <td>{row.qty ?? "-"}</td>
+                      <td>{row.supplier_name || "-"}</td>
+                      <td>{row.supplier_dc_no || "-"}</td>
                       <td>{fmtDate(row.supplier_dc_date)}</td>
                       <td>{fmtDate(row.dc_entry_date)}</td>
                       <td className="sdc-action-cell">
@@ -316,7 +323,7 @@ function SupplierDC() {
                           Edit
                         </button>
                         <button className="sdc-del-btn"
-                          onClick={() => handleDelete(row.S_No)}>
+                          onClick={() => handleDelete(row.id)}>
                           Delete
                         </button>
                       </td>
