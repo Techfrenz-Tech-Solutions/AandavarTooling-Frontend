@@ -244,3 +244,50 @@
 @media (max-width: 900px) {
   .wo-page { padding: 90px 16px 40px 16px; }
 }
+
+/* ── Status badge ── */
+.wo-status {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.wo-status--pending  { background: #fef3c7; color: #92400e; }
+.wo-status--partial  { background: #dbeafe; color: #1e40af; }
+.wo-status--done     { background: #d1fae5; color: #065f46; }
+
+/* ── Required star ── */
+.wo-req { color: #c0392b; margin-left: 2px; }
+
+/* ── Select in form ── */
+.wo-field select {
+  padding: 9px 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #222;
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.18s;
+  font-family: inherit;
+}
+.wo-field select:focus {
+  border-color: #c0392b;
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.1);
+}
+
+/* ── Select in inline edit ── */
+.wo-inline--select {
+  min-width: 130px;
+  padding: 5px 7px;
+  border: 1px solid #c0392b;
+  border-radius: 4px;
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+  font-family: inherit;
+  background: #fff;
+}
