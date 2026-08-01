@@ -30,6 +30,7 @@ import InvoiceTemplate2 from "./Components/InvoiceTemplate2.jsx";
 import InstrumentMaster from "./Components/Instrument";
 import Page from "./Components/Page";
 import SupplierDC from "./Components/SupplierDC";
+import WorkOrderEntry from "./Components/WorkOrderEntry";
 
 function App() {
   // Mark this tab as "live" after React mounts.
@@ -85,6 +86,9 @@ function App() {
 
             {/* Supplier Transaction */}
             <Route path="SupplierDC" element={<SupplierDC />} />
+
+            {/* Work Order */}
+            <Route path="WorkOrderEntry" element={<WorkOrderEntry />} />
 
             {/* Invoice templates — two separate printable routes */}
             <Route path="invoice/:invoiceNo" element={<InvoiceTemplate />} />

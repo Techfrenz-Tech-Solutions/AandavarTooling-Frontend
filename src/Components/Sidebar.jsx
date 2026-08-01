@@ -275,6 +275,14 @@ const Sidebar = ({ collapsed }) => {
           <i className="fa fa-truck"></i>
           {!collapsed && <span>Supplier DC</span>}
         </div>
+
+        <div
+          className={`menu-item ${isActive("/dashboard/WorkOrderEntry") ? "active" : ""}`}
+          onClick={() => navigate("/dashboard/WorkOrderEntry")}
+        >
+          <i className="fa fa-clipboard-list"></i>
+          {!collapsed && <span>Work Order</span>}
+        </div>
       </div>
 
       {/* ===== FOOTER ===== */}
