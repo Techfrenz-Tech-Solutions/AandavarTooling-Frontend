@@ -31,7 +31,7 @@ function ProductDC() {
   const fetchAll = async () => {
     setLoading(true);
     try {
-      const res = await api.get("/productdc/getProductDCs");
+      const res = await api.get("/customerdc/getCustomerDCs");
       if (res.data.status === 1) setEntries(res.data.data || []);
     } catch (err) {
       console.error("Fetch error:", err);
@@ -63,7 +63,7 @@ function ProductDC() {
     }
     setSaving(true);
     try {
-      const res = await api.post("/productdc/createProductDC", form);
+      const res = await api.post("/customerdc/createCustomerDC", form);
       if (res.data.status === 1) {
         await fetchAll();
         setForm(EMPTY);
@@ -101,7 +101,7 @@ function ProductDC() {
     setSaving(true);
     try {
       /* send full editForm; backend ignores blank fields if needed */
-      const res = await api.post("/productdc/updateProductDC", editForm);
+      const res = await api.post("/customerdc/updateCustomerDC", editForm);
       if (res.data.status === 1) {
         await fetchAll();
         cancelEdit();
@@ -120,7 +120,7 @@ function ProductDC() {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this entry?")) return;
     try {
-      const res = await api.post("/productdc/deleteProductDC", { id });
+      const res = await api.post("/customerdc/deleteCustomerDC", { id });
       if (res.data.status === 1) {
         setEntries((p) => p.filter((r) => r.id !== id));
       } else {
