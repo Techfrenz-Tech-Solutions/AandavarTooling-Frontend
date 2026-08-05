@@ -9,9 +9,9 @@ const EMPTY = {
   uom:              "",
   name:             "",
   qty:              "",
-  supplier_name:    "",
-  supplier_dc_no:   "",
-  supplier_dc_date: "",
+  Customer_name:    "",
+  Customer_dc_no:   "",
+  Customer_dc_date: "",
   dc_entry_date:    "",
 };
 
@@ -87,9 +87,9 @@ function ProductDC() {
       uom:              row.uom              ?? "",
       name:             row.name             ?? "",
       qty:              row.qty              ?? "",
-      supplier_name:    row.supplier_name    ?? "",
-      supplier_dc_no:   row.supplier_dc_no   ?? "",
-      supplier_dc_date: (row.supplier_dc_date ?? "").split("T")[0],
+      Customer_name:    row.Customer_name    ?? "",
+      Customer_dc_no:   row.Customer_dc_no   ?? "",
+      Customer_dc_date: (row.Customer_dc_date ?? "").split("T")[0],
       dc_entry_date:    (row.dc_entry_date    ?? "").split("T")[0],
     });
   };
@@ -139,7 +139,7 @@ function ProductDC() {
 
       <div className="pdc-header">
         <h1>Product DC</h1>
-        <p>Supplier Transaction — Product Delivery Challan Entry</p>
+        <p>Customer Transaction — Product Delivery Challan Entry</p>
       </div>
 
       {/* ══════ FORM CARD ══════ */}
@@ -172,21 +172,21 @@ function ProductDC() {
           </div>
 
           <div className="pdc-field">
-            <label>Supplier Name</label>
-            <input name="supplier_name" value={form.supplier_name}
-              onChange={handleChange} placeholder="Enter supplier name" />
+            <label>Customer Name</label>
+            <input name="Customer_name" value={form.Customer_name}
+              onChange={handleChange} placeholder="Enter Customer name" />
           </div>
 
           <div className="pdc-field">
-            <label>Supplier DC No</label>
-            <input name="supplier_dc_no" value={form.supplier_dc_no}
+            <label>Customer DC No</label>
+            <input name="Customer_dc_no" value={form.Customer_dc_no}
               onChange={handleChange} placeholder="Enter DC number" />
           </div>
 
           <div className="pdc-field">
-            <label>Supplier DC Date</label>
-            <input name="supplier_dc_date" type="date"
-              value={form.supplier_dc_date} onChange={handleChange} />
+            <label>Customer DC Date</label>
+            <input name="Customer_dc_date" type="date"
+              value={form.Customer_dc_date} onChange={handleChange} />
           </div>
 
           <div className="pdc-field">
@@ -231,9 +231,9 @@ function ProductDC() {
                 <th>UOM</th>
                 <th>Name</th>
                 <th>Qty</th>
-                <th>Supplier Name</th>
-                <th>Supplier DC No</th>
-                <th>Supplier DC Date</th>
+                <th>Customer Name</th>
+                <th>Customer DC No</th>
+                <th>Customer DC Date</th>
                 <th>DC Entry Date</th>
                 <th>Actions</th>
               </tr>
@@ -274,19 +274,19 @@ function ProductDC() {
                           onChange={handleEditChange} placeholder="Qty" />
                       </td>
                       <td>
-                        <input className="pdc-inline" name="supplier_name"
-                          value={editForm.supplier_name} onChange={handleEditChange}
-                          placeholder="Supplier name" />
+                        <input className="pdc-inline" name="Customer_name"
+                          value={editForm.Customer_name} onChange={handleEditChange}
+                          placeholder="Customer name" />
                       </td>
                       <td>
-                        <input className="pdc-inline" name="supplier_dc_no"
-                          value={editForm.supplier_dc_no} onChange={handleEditChange}
+                        <input className="pdc-inline" name="Customer_dc_no"
+                          value={editForm.Customer_dc_no} onChange={handleEditChange}
                           placeholder="DC No" />
                       </td>
                       <td>
                         <input className="pdc-inline pdc-inline--date"
-                          name="supplier_dc_date" type="date"
-                          value={editForm.supplier_dc_date}
+                          name="Customer_dc_date" type="date"
+                          value={editForm.Customer_dc_date}
                           onChange={handleEditChange} />
                       </td>
                       <td>
@@ -313,9 +313,9 @@ function ProductDC() {
                       <td>{row.uom || "-"}</td>
                       <td>{row.name || "-"}</td>
                       <td>{row.qty ?? "-"}</td>
-                      <td>{row.supplier_name || "-"}</td>
-                      <td>{row.supplier_dc_no || "-"}</td>
-                      <td>{fmtDate(row.supplier_dc_date)}</td>
+                      <td>{row.Customer_name || "-"}</td>
+                      <td>{row.Customer_dc_no || "-"}</td>
+                      <td>{fmtDate(row.Customer_dc_date)}</td>
                       <td>{fmtDate(row.dc_entry_date)}</td>
                       <td className="pdc-action-cell">
                         <button className="pdc-edit-btn"
