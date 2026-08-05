@@ -32,6 +32,7 @@ import Page from "./Components/Page";
 import SupplierDC from "./Components/SupplierDC";
 import WorkOrderEntry from "./Components/WorkOrderEntry";
 import ProductDC from "./Components/ProductDC";
+import SupplierInvoice from "./Components/SupplierInvoice";
 
 function App() {
   // Mark this tab as "live" after React mounts.
@@ -88,6 +89,7 @@ function App() {
             {/* Supplier Transaction */}
             <Route path="SupplierDC" element={<SupplierDC />} />
             <Route path="ProductDC" element={<ProductDC />} />
+            <Route path="SupplierInvoice" element={<SupplierInvoice />} />
 
             {/* Work Order */}
             <Route path="WorkOrderEntry" element={<WorkOrderEntry />} />

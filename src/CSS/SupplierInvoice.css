@@ -1,0 +1,180 @@
+/* ══════════════════════════════════════════
+   Supplier Invoice Page
+   ══════════════════════════════════════════ */
+
+.si-page {
+  padding: 90px 40px 40px 260px;
+  background: #f0f2f5;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+  box-sizing: border-box;
+}
+
+.si-header { margin-bottom: 24px; }
+.si-header h1 { font-size: 26px; font-weight: 700; color: #1e2430; margin: 0 0 4px; }
+.si-header p  { font-size: 13px; color: #666; margin: 0; }
+
+/* ── Card ── */
+.si-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  padding: 24px 28px;
+  margin-bottom: 24px;
+}
+
+.si-card-title {
+  font-size: 16px; font-weight: 700; color: #1e2430;
+  margin: 0 0 20px;
+  display: flex; align-items: center; gap: 10px;
+}
+
+.si-card-title-row {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.si-card-title-row .si-card-title { margin-bottom: 0; }
+
+.si-count {
+  background: #c0392b; color: #fff;
+  font-size: 12px; font-weight: 700;
+  border-radius: 12px; padding: 2px 8px;
+}
+
+/* ── Form grid — 3 cols ── */
+.si-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px 20px;
+}
+@media (max-width: 1000px) { .si-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px)  { .si-grid { grid-template-columns: 1fr; } .si-page { padding: 90px 16px 40px 16px; } }
+
+/* ── Field ── */
+.si-field { display: flex; flex-direction: column; gap: 5px; }
+.si-field label { font-size: 12px; font-weight: 600; color: #444; }
+
+.si-field input,
+.si-field select {
+  padding: 9px 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  font-size: 13px; color: #222;
+  background: #fff; outline: none;
+  transition: border-color 0.18s;
+  font-family: inherit;
+}
+.si-field input:focus,
+.si-field select:focus {
+  border-color: #c0392b;
+  box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
+}
+.si-field input[type="date"] { cursor: pointer; }
+.si-field select { cursor: pointer; }
+
+/* ── Filter row ── */
+.si-filter-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 16px 20px;
+  align-items: flex-end;
+}
+.si-field--btn { display: flex; align-items: flex-end; }
+@media (max-width: 700px) { .si-filter-row { grid-template-columns: 1fr; } }
+
+/* ── Actions ── */
+.si-actions { display: flex; gap: 12px; margin-top: 20px; }
+
+.si-btn {
+  padding: 10px 24px; border: none; border-radius: 6px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: background 0.18s, opacity 0.18s;
+}
+.si-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.si-btn--add     { background: #c0392b; color: #fff; }
+.si-btn--add:hover:not(:disabled) { background: #96281b; }
+
+.si-btn--clear   { background: #f0f2f5; color: #444; border: 1px solid #d0d5dd; }
+.si-btn--clear:hover:not(:disabled) { background: #e4e7ec; }
+
+.si-btn--refresh { background: #f0f2f5; color: #1e2430; border: 1px solid #d0d5dd;
+                   padding: 7px 16px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.si-btn--refresh:hover { background: #e4e7ec; }
+
+/* ── Table ── */
+.si-table-wrap { overflow-x: auto; }
+
+.si-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 13px; min-width: 800px;
+}
+.si-table th {
+  background: #1e2430; color: #fff;
+  padding: 10px 12px; text-align: left;
+  font-weight: 600; white-space: nowrap; font-size: 12px;
+}
+.si-table td {
+  padding: 10px 12px; border-bottom: 1px solid #f0f0f0;
+  color: #333; vertical-align: middle;
+}
+.si-table tbody tr:hover { background: #fafafa; }
+.si-table tbody tr:last-child td { border-bottom: none; }
+
+.si-empty { text-align: center; padding: 40px !important; color: #999; font-style: italic; }
+
+/* ── Status badge ── */
+.si-badge {
+  display: inline-block; padding: 3px 12px;
+  border-radius: 12px; font-size: 12px; font-weight: 600; white-space: nowrap;
+}
+.si-badge--pending { background: #fef3c7; color: #92400e; }
+.si-badge--done    { background: #d1fae5; color: #065f46; }
+
+/* ── Action cell ── */
+.si-action-cell { display: flex; gap: 6px; align-items: center; }
+
+/* ── Inline edit ── */
+.si-edit-row td { background: #fff9f9; }
+
+.si-inline {
+  width: 100%; padding: 5px 8px;
+  border: 1px solid #c0392b; border-radius: 4px;
+  font-size: 12px; outline: none;
+  min-width: 90px; box-sizing: border-box;
+  font-family: inherit;
+}
+.si-inline--sm     { min-width: 80px; max-width: 100px; }
+.si-inline--date   { min-width: 120px; }
+.si-inline--select { min-width: 100px; cursor: pointer; background: #fff; }
+
+/* ── Buttons ── */
+.si-edit-btn {
+  background: #eff6ff; color: #1d4ed8; border: none;
+  border-radius: 5px; padding: 5px 12px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.si-edit-btn:hover { background: #dbeafe; }
+
+.si-save-btn {
+  background: #d1fae5; color: #065f46; border: none;
+  border-radius: 5px; padding: 5px 12px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.si-save-btn:hover:not(:disabled) { background: #a7f3d0; }
+.si-save-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.si-cancel-btn {
+  background: #f3f4f6; color: #374151; border: none;
+  border-radius: 5px; padding: 5px 12px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.si-cancel-btn:hover { background: #e5e7eb; }
+
+.si-del-btn {
+  background: #fee2e2; color: #c0392b; border: none;
+  border-radius: 5px; padding: 5px 12px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.si-del-btn:hover { background: #fecaca; }

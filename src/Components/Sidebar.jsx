@@ -291,6 +291,14 @@ const Sidebar = ({ collapsed }) => {
           <i className="fa fa-file-alt"></i>
           {!collapsed && <span>Product DC</span>}
         </div>
+
+        <div
+          className={`menu-item ${isActive("/dashboard/SupplierInvoice") ? "active" : ""}`}
+          onClick={() => navigate("/dashboard/SupplierInvoice")}
+        >
+          <i className="fa fa-file-invoice"></i>
+          {!collapsed && <span>Supplier Invoice</span>}
+        </div>
       </div>
 
       {/* ===== FOOTER ===== */}
