@@ -91,7 +91,7 @@ function App() {
             <Route path="ProductDC" element={<ProductDC />} />
             <Route path="SupplierInvoice" element={<SupplierInvoice />} />
 
-            {/* Work Order */}
+            {/* Aandavar Worker */}
             <Route path="WorkOrderEntry" element={<WorkOrderEntry />} />
 
             {/* Invoice templates — two separate printable routes */}

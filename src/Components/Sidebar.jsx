@@ -35,9 +35,12 @@ const INVENTORY_ITEMS = [
 
 const SUPPLIER_ITEMS = [
   { path: "/dashboard/SupplierDC",      icon: "fa fa-truck",         label: "Supplier DC"      },
-  { path: "/dashboard/WorkOrderEntry",  icon: "fa fa-clipboard-list",label: "Work Order"        },
   { path: "/dashboard/ProductDC",       icon: "fa fa-file-alt",      label: "Product DC"        },
   { path: "/dashboard/SupplierInvoice", icon: "fa fa-file-invoice",  label: "Supplier Invoice"  },
+];
+
+const WORKER_ITEMS = [
+  { path: "/dashboard/WorkOrderEntry",  icon: "fa fa-clipboard-list", label: "Work Order" },
 ];
 
 /* ── Reusable dropdown section ── */
@@ -111,6 +114,7 @@ const Sidebar = ({ collapsed }) => {
   const [openTransactions,setOpenTransactions]= useState(() => inGroup(TRANSACTION_ITEMS));
   const [openInventory,   setOpenInventory]   = useState(() => inGroup(INVENTORY_ITEMS));
   const [openSupplier,    setOpenSupplier]    = useState(() => inGroup(SUPPLIER_ITEMS));
+  const [openWorker,      setOpenWorker]      = useState(() => inGroup(WORKER_ITEMS));
 
   return (
     <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
@@ -176,6 +180,16 @@ const Sidebar = ({ collapsed }) => {
         collapsed={collapsed}
         isOpen={openSupplier}
         onToggle={() => setOpenSupplier((o) => !o)}
+      />
+
+      {/* ── Aandavar Worker ── */}
+      <DropSection
+        label="Aandavar Worker"
+        icon="fa fa-hard-hat"
+        items={WORKER_ITEMS}
+        collapsed={collapsed}
+        isOpen={openWorker}
+        onToggle={() => setOpenWorker((o) => !o)}
       />
 
       {/* ── Footer / Logout ── */}
