@@ -283,3 +283,21 @@
   white-space: nowrap;
 }
 .sdc-cancel-btn:hover { background: #e5e7eb; }
+
+/* ── Filter row ── */
+.sdc-filter-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 16px 20px;
+  align-items: flex-end;
+}
+.sdc-field--btn {
+  display: flex;
+  align-items: flex-end;
+}
+@media (max-width: 900px) {
+  .sdc-filter-row { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .sdc-filter-row { grid-template-columns: 1fr; }
+}
