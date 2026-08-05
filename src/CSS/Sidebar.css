@@ -180,3 +180,53 @@ body.dark-theme .sidebar {
 .sidebar.collapsed .menu-item span {
   display: none;
 }
+
+/* ================= DROPDOWN MENU ================= */
+
+/* Parent trigger — chevron on right */
+.menu-item--parent {
+  justify-content: flex-start;
+  position: relative;
+}
+
+.menu-chevron {
+  margin-left: auto;
+  font-size: 10px;
+  opacity: 0.8;
+  transition: transform 0.2s;
+}
+
+/* Dropdown container */
+.menu-dropdown {
+  overflow: hidden;
+  animation: slideDown 0.18s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* Child items — indented */
+.menu-item--child {
+  padding-left: 36px !important;
+  font-size: 12.5px;
+  margin: 1px 8px;
+}
+
+.menu-item--child i {
+  font-size: 11px;
+  width: 16px;
+}
+
+/* Child active */
+.menu-item--child.active {
+  background: #ffd700;
+  color: #8b0000;
+  font-weight: 600;
+}
+
+/* Child hover */
+.menu-item--child:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
