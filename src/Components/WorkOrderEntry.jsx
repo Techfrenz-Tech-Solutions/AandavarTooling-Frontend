@@ -36,11 +36,11 @@ function WorkOrderEntry() {
 
   useEffect(() => { fetchAll(); }, []);
 
-  /* ── GET /workorder/getWorkOrders ── */
+  /* ── GET /newworkorder/getNewWorkOrders ── */
   const fetchAll = async () => {
     setLoading(true);
     try {
-      const res = await api.get("/workorder/getWorkOrders");
+      const res = await api.get("/newworkorder/getNewWorkOrders");
       if (res.data.status === 1) setEntries(res.data.data || []);
     } catch (err) {
       console.error("Fetch error:", err);
@@ -62,7 +62,7 @@ function WorkOrderEntry() {
     return `${day}-${m}-${y}`;
   };
 
-  /* ── POST /workorder/createWorkOrder ── */
+  /* ── POST /newworkorder/createNewWorkOrder ── */
   const handleAdd = async () => {
     /* required: wo_no, wo_date, item_name, item_qty, worker_name */
     const req = ["wo_no", "wo_date", "item_name", "item_qty", "worker_name"];
@@ -73,7 +73,7 @@ function WorkOrderEntry() {
     }
     setSaving(true);
     try {
-      const res = await api.post("/workorder/createWorkOrder", form);
+      const res = await api.post("/newworkorder/createNewWorkOrder", form);
       if (res.data.status === 1) {
         await fetchAll();
         setForm(EMPTY);
@@ -109,11 +109,11 @@ function WorkOrderEntry() {
 
   const cancelEdit = () => { setEditId(null); setEditForm({}); };
 
-  /* ── POST /workorder/updateWorkOrder ── */
+  /* ── POST /newworkorder/updateNewWorkOrder ── */
   const handleUpdate = async () => {
     setSaving(true);
     try {
-      const res = await api.post("/workorder/updateWorkOrder", editForm);
+      const res = await api.post("/newworkorder/updateNewWorkOrder", editForm);
       if (res.data.status === 1) {
         await fetchAll();
         cancelEdit();
@@ -128,11 +128,11 @@ function WorkOrderEntry() {
     }
   };
 
-  /* ── POST /workorder/deleteWorkOrder  — uses wo_id ── */
+  /* ── POST /newworkorder/deleteNewWorkOrder  — uses wo_id ── */
   const handleDelete = async (wo_id) => {
     if (!window.confirm("Delete this work order?")) return;
     try {
-      const res = await api.post("/workorder/deleteWorkOrder", { wo_id });
+      const res = await api.post("/newworkorder/deleteNewWorkOrder", { wo_id });
       if (res.data.status === 1) {
         setEntries((p) => p.filter((r) => r.wo_id !== wo_id));
       } else {
