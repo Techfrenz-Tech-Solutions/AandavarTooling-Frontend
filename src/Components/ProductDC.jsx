@@ -4,14 +4,15 @@ import Topbar from "./Topbar";
 import api from "../api";
 import "../CSS/ProductDC.css";
 
+/* field names match customer_delivery_challan table exactly */
 const EMPTY = {
   item_name:        "",
   uom:              "",
   name:             "",
   qty:              "",
-  Customer_name:    "",
-  Customer_dc_no:   "",
-  Customer_dc_date: "",
+  customer_name:    "",
+  customer_dc_no:   "",
+  customer_dc_date: "",
   dc_entry_date:    "",
 };
 
@@ -21,13 +22,12 @@ function ProductDC() {
   const [saving,   setSaving]   = useState(false);
   const [loading,  setLoading]  = useState(false);
 
-  /* inline edit — only the row id and whichever cells the user touches */
   const [editId,   setEditId]   = useState(null);
   const [editForm, setEditForm] = useState({});
 
   useEffect(() => { fetchAll(); }, []);
 
-  /* ── GET /productdc/getProductDCs ── */
+  /* ── GET /customerdc/getCustomerDCs ── */
   const fetchAll = async () => {
     setLoading(true);
     try {
@@ -40,11 +40,8 @@ function ProductDC() {
     }
   };
 
-  const handleChange = (e) =>
-    setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
-
-  const handleEditChange = (e) =>
-    setEditForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+  const handleChange     = (e) => setForm(     (p) => ({ ...p, [e.target.name]: e.target.value }));
+  const handleEditChange = (e) => setEditForm( (p) => ({ ...p, [e.target.name]: e.target.value }));
 
   const fmtDate = (d) => {
     if (!d) return "-";
@@ -53,14 +50,10 @@ function ProductDC() {
     return `${day}-${m}-${y}`;
   };
 
-  /* ── POST /productdc/createProductDC ── */
+  /* ── POST /customerdc/createCustomerDC ── */
   const handleAdd = async () => {
-    /* no mandatory validation — just skip totally empty submits */
     const hasAny = Object.values(form).some((v) => String(v).trim() !== "");
-    if (!hasAny) {
-      alert("Please fill at least one field.");
-      return;
-    }
+    if (!hasAny) { alert("Please fill at least one field."); return; }
     setSaving(true);
     try {
       const res = await api.post("/customerdc/createCustomerDC", form);
@@ -78,7 +71,7 @@ function ProductDC() {
     }
   };
 
-  /* ── start inline edit — populate only the values from this row ── */
+  /* ── start inline edit ── */
   const startEdit = (row) => {
     setEditId(row.id);
     setEditForm({
@@ -87,20 +80,19 @@ function ProductDC() {
       uom:              row.uom              ?? "",
       name:             row.name             ?? "",
       qty:              row.qty              ?? "",
-      Customer_name:    row.Customer_name    ?? "",
-      Customer_dc_no:   row.Customer_dc_no   ?? "",
-      Customer_dc_date: (row.Customer_dc_date ?? "").split("T")[0],
+      customer_name:    row.customer_name    ?? "",
+      customer_dc_no:   row.customer_dc_no   ?? "",
+      customer_dc_date: (row.customer_dc_date ?? "").split("T")[0],
       dc_entry_date:    (row.dc_entry_date    ?? "").split("T")[0],
     });
   };
 
   const cancelEdit = () => { setEditId(null); setEditForm({}); };
 
-  /* ── POST /productdc/updateProductDC  — send only changed fields + id ── */
+  /* ── POST /customerdc/updateCustomerDC ── */
   const handleUpdate = async () => {
     setSaving(true);
     try {
-      /* send full editForm; backend ignores blank fields if needed */
       const res = await api.post("/customerdc/updateCustomerDC", editForm);
       if (res.data.status === 1) {
         await fetchAll();
@@ -116,7 +108,7 @@ function ProductDC() {
     }
   };
 
-  /* ── POST /productdc/deleteProductDC  — send { id } ── */
+  /* ── POST /customerdc/deleteCustomerDC ── */
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this entry?")) return;
     try {
@@ -139,7 +131,7 @@ function ProductDC() {
 
       <div className="pdc-header">
         <h1>Product DC</h1>
-        <p>Customer Transaction — Product Delivery Challan Entry</p>
+        <p>Customer Transaction — Customer Delivery Challan Entry</p>
       </div>
 
       {/* ══════ FORM CARD ══════ */}
@@ -147,6 +139,7 @@ function ProductDC() {
         <h2 className="pdc-card-title">New Entry</h2>
 
         <div className="pdc-grid">
+
           <div className="pdc-field">
             <label>Item Name</label>
             <input name="item_name" value={form.item_name}
@@ -167,26 +160,27 @@ function ProductDC() {
 
           <div className="pdc-field">
             <label>Qty</label>
-            <input name="qty" type="number" min="0" value={form.qty}
-              onChange={handleChange} placeholder="Enter quantity" />
+            <input name="qty" type="number" min="0" step="0.01"
+              value={form.qty} onChange={handleChange}
+              placeholder="Enter quantity" />
           </div>
 
           <div className="pdc-field">
             <label>Customer Name</label>
-            <input name="Customer_name" value={form.Customer_name}
-              onChange={handleChange} placeholder="Enter Customer name" />
+            <input name="customer_name" value={form.customer_name}
+              onChange={handleChange} placeholder="Enter customer name" />
           </div>
 
           <div className="pdc-field">
             <label>Customer DC No</label>
-            <input name="Customer_dc_no" value={form.Customer_dc_no}
+            <input name="customer_dc_no" value={form.customer_dc_no}
               onChange={handleChange} placeholder="Enter DC number" />
           </div>
 
           <div className="pdc-field">
             <label>Customer DC Date</label>
-            <input name="Customer_dc_date" type="date"
-              value={form.Customer_dc_date} onChange={handleChange} />
+            <input name="customer_dc_date" type="date"
+              value={form.customer_dc_date} onChange={handleChange} />
           </div>
 
           <div className="pdc-field">
@@ -194,6 +188,7 @@ function ProductDC() {
             <input name="dc_entry_date" type="date"
               value={form.dc_entry_date} onChange={handleChange} />
           </div>
+
         </div>
 
         <div className="pdc-actions">
@@ -250,7 +245,7 @@ function ProductDC() {
               ) : (
                 entries.map((row, i) =>
                   editId === row.id ? (
-                    /* ── inline edit row — edit any cell you want ── */
+                    /* ── inline edit row ── */
                     <tr key={row.id} className="pdc-edit-row">
                       <td>{i + 1}</td>
                       <td>
@@ -274,19 +269,19 @@ function ProductDC() {
                           onChange={handleEditChange} placeholder="Qty" />
                       </td>
                       <td>
-                        <input className="pdc-inline" name="Customer_name"
-                          value={editForm.Customer_name} onChange={handleEditChange}
+                        <input className="pdc-inline" name="customer_name"
+                          value={editForm.customer_name} onChange={handleEditChange}
                           placeholder="Customer name" />
                       </td>
                       <td>
-                        <input className="pdc-inline" name="Customer_dc_no"
-                          value={editForm.Customer_dc_no} onChange={handleEditChange}
+                        <input className="pdc-inline" name="customer_dc_no"
+                          value={editForm.customer_dc_no} onChange={handleEditChange}
                           placeholder="DC No" />
                       </td>
                       <td>
                         <input className="pdc-inline pdc-inline--date"
-                          name="Customer_dc_date" type="date"
-                          value={editForm.Customer_dc_date}
+                          name="customer_dc_date" type="date"
+                          value={editForm.customer_dc_date}
                           onChange={handleEditChange} />
                       </td>
                       <td>
@@ -306,26 +301,22 @@ function ProductDC() {
                       </td>
                     </tr>
                   ) : (
-                    /* ── normal display row ── */
+                    /* ── display row ── */
                     <tr key={row.id}>
                       <td>{i + 1}</td>
-                      <td>{row.item_name || "-"}</td>
-                      <td>{row.uom || "-"}</td>
-                      <td>{row.name || "-"}</td>
-                      <td>{row.qty ?? "-"}</td>
-                      <td>{row.Customer_name || "-"}</td>
-                      <td>{row.Customer_dc_no || "-"}</td>
-                      <td>{fmtDate(row.Customer_dc_date)}</td>
+                      <td>{row.item_name     || "-"}</td>
+                      <td>{row.uom           || "-"}</td>
+                      <td>{row.name          || "-"}</td>
+                      <td>{row.qty           ?? "-"}</td>
+                      <td>{row.customer_name  || "-"}</td>
+                      <td>{row.customer_dc_no || "-"}</td>
+                      <td>{fmtDate(row.customer_dc_date)}</td>
                       <td>{fmtDate(row.dc_entry_date)}</td>
                       <td className="pdc-action-cell">
                         <button className="pdc-edit-btn"
-                          onClick={() => startEdit(row)}>
-                          Edit
-                        </button>
+                          onClick={() => startEdit(row)}>Edit</button>
                         <button className="pdc-del-btn"
-                          onClick={() => handleDelete(row.id)}>
-                          Delete
-                        </button>
+                          onClick={() => handleDelete(row.id)}>Delete</button>
                       </td>
                     </tr>
                   )
