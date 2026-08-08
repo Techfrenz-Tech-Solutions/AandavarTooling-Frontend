@@ -1,202 +1,251 @@
+/* ══════════════════════════════════════════
+   Dashboard Page
+   ══════════════════════════════════════════ */
+
 .dashboard-page {
-  padding: 25px;
-  margin-top: 60px;     /* ✅ CRITICAL FIX */
-  background: #f4efe6;
+  padding: 28px 32px 40px;
+  margin-top: 60px;
+  margin-left: 250px;
+  background: #f4f6f9;
   min-height: 100vh;
   font-family: "Segoe UI", sans-serif;
+  box-sizing: border-box;
   transition: margin-left 0.3s ease;
 }
 
-/* ===== HEADER ===== */
+/* ── Header ── */
+.dashboard-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
 .dashboard-header h1 {
-  margin: 0;
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
-  color: #5a1e00;
+  color: #1e2430;
+  margin: 0 0 4px;
 }
 
 .dashboard-header p {
-  margin-top: 5px;
-  color: #7a5c48;
+  color: #666;
+  font-size: 13px;
+  margin: 0;
 }
 
 .company {
-  color: #a33c00;
-  font-weight: 500;
+  color: #d60000;
+  font-weight: 600;
 }
 
-/* ===== STATS CARDS ===== */
+.db-refresh-btn {
+  background: #fff;
+  border: 1px solid #d0d5dd;
+  border-radius: 7px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e2430;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.18s;
+  white-space: nowrap;
+}
+.db-refresh-btn:hover { background: #f0f2f5; }
+
+/* ── Loading ── */
+.db-loading {
+  text-align: center;
+  padding: 60px;
+  font-size: 15px;
+  color: #888;
+}
+
+/* ── Stat cards grid ── */
 .stats-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
 }
 
+@media (max-width: 1200px) { .stats-container { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 800px)  { .stats-container { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px)  { .stats-container { grid-template-columns: 1fr; } }
+
+/* ── Stat card ── */
 .stat-card {
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 18px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: transform 0.18s, box-shadow 0.18s;
   position: relative;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e6d5c3;
-  transition: 0.3s ease;
 }
-
 .stat-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
 }
 
 .stat-icon {
-  width: 45px;
-  height: 45px;
+  width: 48px;
+  height: 48px;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 15px;
-  color: #fff;
-  font-size: 18px;
+  font-size: 20px;
+  flex-shrink: 0;
 }
 
-.stat-card h2 {
-  margin: 0;
+.stat-info { flex: 1; }
+.stat-info h2 {
   font-size: 26px;
-  color: #3a1500;
+  font-weight: 800;
+  margin: 0 0 2px;
+  line-height: 1;
 }
-
-.stat-card p {
-  margin-top: 6px;
-  color: #7a5c48;
-}
-
-/* CARD COLORS */
-.red .stat-icon { background: #d60000; }
-.orange .stat-icon { background: #c25b00; }
-.green .stat-icon { background: #2f7d32; }
-.yellow .stat-icon { background: #e6a700; }
-
-/* ===== MAIN GRID ===== */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 20px;
-  margin-top: 25px;
-}
-
-/* ===== GENERIC CARD ===== */
-.card {
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 20px;
-  border: 1px solid #e6d5c3;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
-}
-
-.large-card {
-  margin-bottom: 20px;
-}
-
-.card h3 {
-  margin-top: 0;
-  color: #5a1e00;
-  margin-bottom: 15px;
-}
-
-/* ===== STOCK ALERT ===== */
-.healthy {
-  background: #f1f8f2;
-  padding: 15px;
-  border-radius: 10px;
-  color: #2f7d32;
+.stat-info p {
+  font-size: 12px;
+  color: #666;
+  margin: 0;
   font-weight: 500;
 }
 
-/* ===== TRANSACTIONS ===== */
-.transaction {
+.stat-arrow {
+  font-size: 11px;
+  opacity: 0.4;
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* ── Bottom grid ── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 22px;
+}
+@media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } }
+
+/* ── Generic card ── */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 22px 24px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+.card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e2430;
+  margin: 0 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card h3 i { color: #d60000; }
+
+/* ── Quick actions grid ── */
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+@media (max-width: 700px) { .quick-actions-grid { grid-template-columns: 1fr 1fr; } }
+
+.outline-btn {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e0e4ea;
+  background: #f8f9fb;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1e2430;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: background 0.18s, border-color 0.18s;
+}
+.outline-btn:hover {
+  background: #f0f2f5;
+  border-color: #c0392b;
+  color: #c0392b;
+}
+.outline-btn i { font-size: 13px; }
+
+/* ── Stock formula ── */
+.formula-box {
+  background: #f8f9fb;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.formula-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.transaction:last-child {
-  border-bottom: none;
-}
-
-.transaction p {
-  margin: 3px 0 0 0;
+  padding: 5px 0;
   font-size: 13px;
-  color: #888;
+  color: #444;
+  border-bottom: 1px dashed #e8e8e8;
+}
+.formula-row:last-child { border-bottom: none; }
+
+.formula-label { font-weight: 500; }
+.formula-op {
+  font-size: 16px;
+  font-weight: 700;
+  color: #d60000;
 }
 
-.positive {
-  color: #2f7d32;
-  font-weight: 600;
-}
-
-.negative {
-  color: #c62828;
-  font-weight: 600;
-}
-
-/* ===== QUICK ACTIONS ===== */
-.primary-btn {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  background: #d60000;
-  color: white;
-  font-weight: 600;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-
-.primary-btn:hover {
-  background: #b80000;
-}
-
-.outline-btn {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #d6bfa8;
-  background: #f9f4ed;
-  margin-bottom: 10px;
-  cursor: pointer;
-  font-weight: 500;
-  text-align: left;
-}
-
-.outline-btn:hover {
-  background: #f1e7db;
-}
-
-/* ===== STOCK FORMULA ===== */
-.formula-box {
-  background: #f6efe6;
-  padding: 15px;
-  border-radius: 10px;
-  margin-top: 10px;
+.formula-result .formula-label {
+  font-weight: 700;
+  color: #1e2430;
   font-size: 14px;
-  color: #5a1e00;
 }
 
+/* ── Stock summary ── */
+.stock-summary {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 14px;
+}
+
+.stock-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  font-size: 13px;
+  color: #555;
+  border-bottom: 1px solid #f5f5f5;
+}
+.stock-row:last-child { border-bottom: none; }
+
+.stock-val {
+  font-weight: 700;
+  font-size: 15px;
+  color: #1e2430;
+}
+
+/* ── Main area layout ── */
 .main-area {
   margin-left: 250px;
-  width: 100%;
-  transition: 0.3s ease;
+  width: calc(100% - 250px);
+  transition: margin-left 0.3s ease, width 0.3s ease;
 }
-
 .sidebar.collapsed ~ .main-area {
   margin-left: 70px;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 900px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
+  width: calc(100% - 70px);
 }

@@ -6,146 +6,192 @@ import "../CSS/Page.css";
 const Page = () => {
   const navigate = useNavigate();
 
-  /* ================= STATE ================= */
-  const [dashboardData, setDashboardData] = useState({
-    totalProducts: 0,
-    totalMachines: 0,
-    totalWorkers: 0,
-    totalStock: 0,
-  });
+  const [data,    setData]    = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  /* ================= FETCH DASHBOARD ================= */
+  /* ── Fetch dashboard stats ── */
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const res = await api.get(
-          "/dashboard/dashboards"
-        );
-
-        // Adjust mapping based on API response
-        if (res.status === 200 && res.data) {
-          const data = res.data.data || res.data;
-
-          setDashboardData({
-            totalProducts: data.total_products || 0,
-            totalMachines: data.total_machines || 0,
-            totalWorkers: data.total_workers || 0,
-            totalStock: data.total_stock || 0,
-          });
-        }
+        const res = await api.get("/dashboard/dashboards");
+        if (res.data.status === 1) setData(res.data.data);
       } catch (err) {
         console.error("Dashboard API Error:", err);
+      } finally {
+        setLoading(false);
       }
     };
-
     fetchDashboard();
   }, []);
 
+  const fmt = (v) =>
+    v == null ? "—" : Number(v) % 1 === 0 ? Number(v) : parseFloat(v).toFixed(2);
+
+  /* ── Stat card config — matches API fields exactly ── */
+  const CARDS = [
+    {
+      key:   "total_products",
+      label: "Total Products",
+      icon:  "fa fa-box",
+      color: "#d60000",
+      bg:    "#fff5f5",
+      nav:   "/dashboard/products",
+    },
+    {
+      key:   "total_tools",
+      label: "Total Tools",
+      icon:  "fa fa-wrench",
+      color: "#b45309",
+      bg:    "#fffbeb",
+      nav:   "/dashboard/ToolMaster",
+    },
+    {
+      key:   "total_machines",
+      label: "Total Machines",
+      icon:  "fa fa-cogs",
+      color: "#1d4ed8",
+      bg:    "#eff6ff",
+      nav:   "/dashboard/machines",
+    },
+    {
+      key:   "total_tool_stock",
+      label: "Tool Stock",
+      icon:  "fa fa-layer-group",
+      color: "#0f766e",
+      bg:    "#f0fdfa",
+      nav:   "/dashboard/Toolstack",
+    },
+    {
+      key:   "total_current_stock",
+      label: "Current Stock",
+      icon:  "fa fa-warehouse",
+      color: "#7c3aed",
+      bg:    "#faf5ff",
+      nav:   "/dashboard/CurrentStock",
+    },
+  ];
+
   return (
     <div className="dashboard-page">
-      
-      {/* ===== HEADER ===== */}
+
+      {/* ── Header ── */}
       <div className="dashboard-header">
-        <h1>Dashboard</h1>
-        <p>
-          Real-time inventory overview —{" "}
-          <span className="company">SHREE AANDAVAR TOOLING</span>
-        </p>
+        <div>
+          <h1>Dashboard</h1>
+          <p>
+            Real-time overview —{" "}
+            <span className="company">SHREE AANDAVAR TOOLING</span>
+          </p>
+        </div>
+        <button
+          className="db-refresh-btn"
+          onClick={() => window.location.reload()}
+          title="Refresh"
+        >
+          <i className="fa fa-sync-alt"></i> Refresh
+        </button>
       </div>
 
-      {/* ===== STATS CARDS ===== */}
-      <div className="stats-container">
-        <div className="stat-card red">
-          <div className="stat-icon"><i className="fa fa-box"></i></div>
-          <h2>{dashboardData.totalProducts}</h2>
-          <p>Total Products</p>
+      {/* ── Stat Cards ── */}
+      {loading ? (
+        <div className="db-loading">Loading dashboard…</div>
+      ) : (
+        <div className="stats-container">
+          {CARDS.map((card) => (
+            <div
+              key={card.key}
+              className="stat-card"
+              style={{ borderTop: `4px solid ${card.color}` }}
+              onClick={() => navigate(card.nav)}
+            >
+              <div
+                className="stat-icon"
+                style={{ background: card.bg, color: card.color }}
+              >
+                <i className={card.icon}></i>
+              </div>
+              <div className="stat-info">
+                <h2 style={{ color: card.color }}>
+                  {data ? fmt(data[card.key]) : "—"}
+                </h2>
+                <p>{card.label}</p>
+              </div>
+              <i className="fa fa-chevron-right stat-arrow" style={{ color: card.color }}></i>
+            </div>
+          ))}
         </div>
+      )}
 
-        <div className="stat-card orange">
-          <div className="stat-icon"><i className="fa fa-cogs"></i></div>
-          <h2>{dashboardData.totalMachines}</h2>
-          <p>Total Machines</p>
-        </div>
-
-        <div className="stat-card green">
-          <div className="stat-icon"><i className="fa fa-users"></i></div>
-          <h2>{dashboardData.totalWorkers}</h2>
-          <p>Total Workers</p>
-        </div>
-
-        <div className="stat-card yellow">
-          <div className="stat-icon"><i className="fa fa-warehouse"></i></div>
-          <h2>{dashboardData.totalStock}</h2>
-          <p>Total Stock Qty</p>
-        </div>
-      </div>
-
-      {/* ===== MAIN CONTENT GRID ===== */}
+      {/* ── Bottom grid ── */}
       <div className="dashboard-grid">
 
-        {/* LEFT SIDE */}
-        <div className="left-section">
+        {/* Quick Actions */}
+        <div className="card">
+          <h3><i className="fa fa-bolt"></i> Quick Actions</h3>
+          <div className="quick-actions-grid">
+            {[
+              { icon: "fa fa-arrow-right", label: "Line Out",       nav: "/dashboard/lineout"        },
+              { icon: "fa fa-undo",        label: "Line Return",     nav: "/dashboard/returns"        },
+              { icon: "fa fa-box",         label: "Current Stock",   nav: "/dashboard/CurrentStock"   },
+              { icon: "fa fa-chart-bar",   label: "Reports",         nav: "/dashboard/Reports"        },
+              { icon: "fa fa-truck",       label: "Delivery Challan",nav: "/dashboard/DeliveryChallan"},
+              { icon: "fa fa-history",     label: "Invoice History", nav: "/dashboard/InvoiceHistory" },
+            ].map((a) => (
+              <button
+                key={a.nav}
+                className="outline-btn"
+                onClick={() => navigate(a.nav)}
+              >
+                <i className={a.icon}></i> {a.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
-          {/* STOCK ALERTS */}
-          <div className="card large-card">
-            <h3><i className="fa fa-exclamation-triangle"></i> Stock Alerts</h3>
-            <div className="healthy">
-              <i className="fa fa-check-circle"></i> All stock levels are healthy
+        {/* Stock formula */}
+        <div className="card">
+          <h3><i className="fa fa-info-circle"></i> Stock Formula</h3>
+          <p style={{ color: "#666", fontSize: 13, marginBottom: 12 }}>
+            Current stock is calculated as:
+          </p>
+          <div className="formula-box">
+            <div className="formula-row">
+              <span className="formula-label">Opening Stock</span>
+              <span className="formula-op">+</span>
+            </div>
+            <div className="formula-row">
+              <span className="formula-label">Inward Entry</span>
+              <span className="formula-op">+</span>
+            </div>
+            <div className="formula-row">
+              <span className="formula-label">Line Returns</span>
+              <span className="formula-op">−</span>
+            </div>
+            <div className="formula-row">
+              <span className="formula-label">Line Out</span>
+              <span className="formula-op">=</span>
+            </div>
+            <div className="formula-row formula-result">
+              <span className="formula-label">Current Stock</span>
+            </div>
+          </div>
+
+          <div className="stock-summary">
+            <div className="stock-row">
+              <span>Tool Stock</span>
+              <span className="stock-val">
+                {data ? fmt(data.total_tool_stock) : "—"}
+              </span>
+            </div>
+            <div className="stock-row">
+              <span>Current Stock</span>
+              <span className="stock-val">
+                {data ? fmt(data.total_current_stock) : "—"}
+              </span>
             </div>
           </div>
         </div>
 
-        {/* RIGHT SIDE */}
-        <div className="right-section">
-
-          {/* QUICK ACTIONS */}
-          <div className="card">
-            <h3>Quick Actions</h3>
-
-            <button
-              className="outline-btn"
-              onClick={() => navigate("/dashboard/feedout")}
-            >
-              <i className="fa fa-arrow-right"></i> Issue Material
-            </button>
-
-            <button
-              className="outline-btn"
-              onClick={() => navigate("/dashboard/returns")}
-            >
-              <i className="fa fa-undo"></i> Record Return
-            </button>
-
-            <button
-              className="outline-btn"
-              onClick={() => navigate("/dashboard/CurrentStock")}
-            >
-              <i className="fa fa-box"></i> View Stock
-            </button>
-
-            <button
-              className="outline-btn"
-              onClick={() => navigate("/dashboard/reports")}
-            >
-              <i className="fa fa-chart-bar"></i> View Reports
-            </button>
-          </div>
-
-          {/* STOCK FORMULA */}
-          <div className="card">
-            <h3>Stock Formula</h3>
-            <p><strong>Current Stock</strong> is calculated as:</p>
-
-            <div className="formula-box">
-              <p>Current Stock Calculations</p>
-              <p>+ Line Returns</p>
-              <p>- Line Feed Out</p>
-              <br />
-              <p>= Current Stock</p>
-            </div>
-          </div>
-
-        </div>
       </div>
     </div>
   );
