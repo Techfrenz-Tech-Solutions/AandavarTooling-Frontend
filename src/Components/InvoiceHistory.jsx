@@ -146,6 +146,7 @@ function InvoiceHistory() {
 
       <div className="sales-header">
         <h1>Invoice History</h1>
+        <p>View and track invoice records</p>
       </div>
 
       <div className="sales-form">

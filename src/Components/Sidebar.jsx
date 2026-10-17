@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../CSS/Sidebar.css";
 
@@ -110,11 +110,36 @@ const Sidebar = ({ collapsed }) => {
 
   const inGroup   = (items) => items.some((m) => location.pathname === m.path);
 
-  const [openMasters,     setOpenMasters]     = useState(() => inGroup(MASTER_ITEMS));
-  const [openTransactions,setOpenTransactions]= useState(() => inGroup(TRANSACTION_ITEMS));
-  const [openInventory,   setOpenInventory]   = useState(() => inGroup(INVENTORY_ITEMS));
-  const [openSupplier,    setOpenSupplier]    = useState(() => inGroup(SUPPLIER_ITEMS));
-  const [openWorker,      setOpenWorker]      = useState(() => inGroup(WORKER_ITEMS));
+  // Accordion: only one dropdown section open at a time.
+  // The section containing the current route starts open.
+  const [openSection, setOpenSection] = useState(() => {
+    if (inGroup(MASTER_ITEMS))      return "masters";
+    if (inGroup(TRANSACTION_ITEMS)) return "transactions";
+    if (inGroup(INVENTORY_ITEMS))   return "inventory";
+    if (inGroup(SUPPLIER_ITEMS))    return "supplier";
+    if (inGroup(WORKER_ITEMS))      return "worker";
+    return null;
+  });
+
+  // Keep the open dropdown in sync with the active route so the
+  // section containing the current page stays expanded after
+  // navigation.  This runs during render (no flash) and only fires
+  // when the pathname actually changes, so manual toggling is
+  // preserved while staying on the same route.
+  const prevPath = useRef(location.pathname);
+  if (prevPath.current !== location.pathname) {
+    prevPath.current = location.pathname;
+    if (inGroup(MASTER_ITEMS))      setOpenSection("masters");
+    else if (inGroup(TRANSACTION_ITEMS)) setOpenSection("transactions");
+    else if (inGroup(INVENTORY_ITEMS))   setOpenSection("inventory");
+    else if (inGroup(SUPPLIER_ITEMS))    setOpenSection("supplier");
+    else if (inGroup(WORKER_ITEMS))      setOpenSection("worker");
+    // Routes outside all sections (e.g. /dashboard) leave the
+    // current openSection unchanged so a dropdown isn't forced closed.
+  }
+
+  const toggle = (section) =>
+    setOpenSection((prev) => (prev === section ? null : section));
 
   return (
     <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
@@ -148,8 +173,8 @@ const Sidebar = ({ collapsed }) => {
         icon="fa fa-layer-group"
         items={MASTER_ITEMS}
         collapsed={collapsed}
-        isOpen={openMasters}
-        onToggle={() => setOpenMasters((o) => !o)}
+        isOpen={openSection === "masters"}
+        onToggle={() => toggle("masters")}
       />
 
       {/* ── Transactions ── */}
@@ -158,8 +183,8 @@ const Sidebar = ({ collapsed }) => {
         icon="fa fa-exchange-alt"
         items={TRANSACTION_ITEMS}
         collapsed={collapsed}
-        isOpen={openTransactions}
-        onToggle={() => setOpenTransactions((o) => !o)}
+        isOpen={openSection === "transactions"}
+        onToggle={() => toggle("transactions")}
       />
 
       {/* ── Inventory ── */}
@@ -168,8 +193,8 @@ const Sidebar = ({ collapsed }) => {
         icon="fa fa-boxes"
         items={INVENTORY_ITEMS}
         collapsed={collapsed}
-        isOpen={openInventory}
-        onToggle={() => setOpenInventory((o) => !o)}
+        isOpen={openSection === "inventory"}
+        onToggle={() => toggle("inventory")}
       />
 
       {/* ── Supplier Transaction ── */}
@@ -178,8 +203,8 @@ const Sidebar = ({ collapsed }) => {
         icon="fa fa-truck-loading"
         items={SUPPLIER_ITEMS}
         collapsed={collapsed}
-        isOpen={openSupplier}
-        onToggle={() => setOpenSupplier((o) => !o)}
+        isOpen={openSection === "supplier"}
+        onToggle={() => toggle("supplier")}
       />
 
       {/* ── Aandavar Worker ── */}
@@ -188,8 +213,8 @@ const Sidebar = ({ collapsed }) => {
         icon="fa fa-hard-hat"
         items={WORKER_ITEMS}
         collapsed={collapsed}
-        isOpen={openWorker}
-        onToggle={() => setOpenWorker((o) => !o)}
+        isOpen={openSection === "worker"}
+        onToggle={() => toggle("worker")}
       />
 
       {/* ── Footer / Logout ── */}

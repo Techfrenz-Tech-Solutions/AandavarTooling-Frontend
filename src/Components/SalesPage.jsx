@@ -177,6 +177,7 @@ function SalesPage() {
 
       <div className="sales-header">
         <h1>Sales</h1>
+        <p>Create and manage sales transactions</p>
       </div>
 
       <div className="sales-form">

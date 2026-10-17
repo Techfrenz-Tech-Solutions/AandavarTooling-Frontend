@@ -520,6 +520,7 @@ function WorkOrder() {
 
       <div className="cs-header">
         <h1>Line Out Entry</h1>
+        <p>Create and manage line out work entries</p>
       </div>
 
       <div className="cs-table-card">

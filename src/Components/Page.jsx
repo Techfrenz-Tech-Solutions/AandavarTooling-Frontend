@@ -83,7 +83,7 @@ const Page = () => {
       <div className="dashboard-header">
         <div>
           <h1>Dashboard</h1>
-          <p>Real-time overview — <span className="company">SHREE AANDAVAR TOOLING</span></p>
+          <p>Real-time overview — <button type="button" className="company company-link" onClick={() => window.open(new URL("/dashboard", window.location.href).href, "_blank", "noopener,noreferrer")} aria-label="Open SHREE AANDAVAR TOOLING dashboard in a new tab" title="Open dashboard in a new tab">SHREE AANDAVAR TOOLING <span aria-hidden="true" className="company-link-indicator">↗</span></button></p>
         </div>
         <button className="db-refresh-btn" onClick={() => window.location.reload()}>
           <i className="fa fa-sync-alt"></i> Refresh

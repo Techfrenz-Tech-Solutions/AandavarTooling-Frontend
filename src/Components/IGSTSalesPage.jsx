@@ -189,6 +189,7 @@ function IGSTSalesPage() {
 
       <div className="sales-header">
         <h1>IGST- SalesPage</h1>
+        <p>Create and manage IGST sales transactions</p>
       </div>
 
       <div className="sales-form">

@@ -26,6 +26,8 @@
 }
 .dashboard-header p { color: #666; font-size: 13px; margin: 0; }
 .company { color: #d60000; font-weight: 600; }
+.company-link { appearance: none; border: 0; background: transparent; padding: 0; margin: 0; font: inherit; color: #d60000; font-weight: 600; cursor: pointer; text-decoration: none; }
+.company-link:hover, .company-link:focus-visible { text-decoration: underline; outline-offset: 3px; }
 
 .db-refresh-btn {
   background: #fff; border: 1px solid #d0d5dd; border-radius: 7px;

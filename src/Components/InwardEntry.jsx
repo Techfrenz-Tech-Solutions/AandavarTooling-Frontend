@@ -238,7 +238,10 @@ function InwardEntry() {
       <Topbar />
 
       <div className="ie-header">
-        <h1>Item Inward Entry</h1>
+        <div>
+          <h1>Item Inward Entry</h1>
+          <p>Record product inward stock movements</p>
+        </div>
       </div>
 
       {/* ── FORM ── */}

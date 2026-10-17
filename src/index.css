@@ -11,3 +11,241 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* ════════════════════════════════════════════════════════════════
+   Consistent application page layout
+   Every sub-module page renders inside .main-area, which already
+   offsets for the fixed sidebar via margin-left.  These page
+   wrappers must NOT add their own sidebar offset (margin-left or
+   padding-left) or the content drifts away from the sidebar and a
+   large gap appears between them.
+   ════════════════════════════════════════════════════════════════ */
+.product-page,
+.cs-page,
+.lr-page,
+.wo-page,
+.dashboard-page,
+.customer-page,
+.category-page,
+.machine-page,
+.worker-page,
+.report-page,
+.ie-page,
+.sales-page,
+.sales-product-page,
+.uom-master-page,
+.pdc-page,
+.si-page,
+.sdc-page {
+  margin-left: 0 !important;
+  padding-left: 30px !important;
+  background: #fff !important;
+  box-sizing: border-box;
+}
+
+/* Keep page canvases white throughout the application. */
+html, body, #root {
+  background: #fff;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   Consistent page headings + sub-headings
+   h1 → page title (bold, dark)
+   p  → sub-heading directly below (smaller, muted)
+   ════════════════════════════════════════════════════════════════ */
+.product-header,
+.cs-header,
+.lr-header,
+.wo-header,
+.customer-header,
+.category-header,
+.machine-header,
+.worker-header,
+.report-header,
+.ie-header,
+.sales-header,
+.sales-product-header,
+.uom-master-header,
+.pdc-header,
+.si-header,
+.sdc-header {
+  margin-top: 0 !important;
+  margin-bottom: 22px !important;
+}
+
+.product-header h1,
+.cs-header h1,
+.lr-header h1,
+.wo-header h1,
+.customer-header h1,
+.category-header h1,
+.machine-header h1,
+.worker-header h1,
+.report-header h1,
+.ie-header h1,
+.sales-header h1,
+.sales-product-header h1,
+.uom-master-header h1,
+.pdc-header h1,
+.si-header h1,
+.sdc-header h1 {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: #1e2430 !important;
+  line-height: 1.25 !important;
+  margin: 0 !important;
+}
+
+.product-header p,
+.cs-header p,
+.lr-header p,
+.wo-header p,
+.customer-header p,
+.category-header p,
+.machine-header p,
+.worker-header p,
+.report-header p,
+.ie-header p,
+.sales-header p,
+.sales-product-header p,
+.uom-master-header p,
+.pdc-header p,
+.si-header p,
+.sdc-header p {
+  font-size: 14px !important;
+  color: #777 !important;
+  font-weight: 400 !important;
+  line-height: 1.4 !important;
+  margin: 4px 0 0 !important;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   Consistent table header style — dark background, white text.
+   Matches the WorkOrderEntry reference design from the image.
+   Excludes print-template tables (.dc-page, .invoice-table,
+   .inv2-table) which have their own branded header colors.
+   ════════════════════════════════════════════════════════════════ */
+
+/* Override every thead row and th that isn't inside a print template */
+.cs-table thead,
+.lr-table thead,
+.ie-table thead,
+.category-table thead,
+.customer-table thead,
+.machine-table thead,
+.worker-table thead,
+.sales-product-table thead,
+.uom-master-table thead,
+.product-table thead,
+.wo-table thead,
+.pdc-table thead,
+.sdc-table thead,
+.si-table thead {
+  background: #1e2430 !important;
+  border: none !important;
+}
+
+.cs-table th,
+.lr-table th,
+.ie-table th,
+.category-table th,
+.customer-table th,
+.machine-table th,
+.worker-table th,
+.sales-product-table th,
+.uom-master-table th,
+.product-table th,
+.sales-table th,
+.wo-table th,
+.pdc-table th,
+.sdc-table th,
+.si-table th {
+  background: #1e2430 !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  padding: 10px 12px !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+  border: none !important;          /* removes horizontal line between columns */
+  border-bottom: none !important;   /* removes bottom divider line on header row */
+}
+
+/* ════════════════════════════════════════════════════════════════
+   Page heading + sub-heading: always stacked vertically.
+   Some header classes use display:flex justify-content:space-between
+   which pushes h1 and p to opposite ends of the row.
+   Override them all to flex-column so p always sits below h1.
+   ════════════════════════════════════════════════════════════════ */
+.worker-header,
+.category-header,
+.machine-header,
+.lr-header,
+.ie-header,
+.product-header,
+.sales-product-header {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   Table border-radius — curved corners on both ends of every
+   table header row.  Works by rounding the first-child and
+   last-child <th> in every thead <tr>.
+   ════════════════════════════════════════════════════════════════ */
+
+/* Ensure the card/wrap containers clip the rounded corners */
+.cs-table-card,
+.lr-table-card,
+.ie-table-card,
+.table-card,
+.customer-table-card,
+.uom-master-table-card,
+.sales-table-card,
+.wo-table-wrap,
+.pdc-table-wrap,
+.sdc-table-wrap,
+.si-table-wrap {
+  border-radius: 10px !important;
+  overflow: hidden !important;
+}
+
+/* Round the first th — top-left corner */
+.cs-table thead tr th:first-child,
+.lr-table thead tr th:first-child,
+.ie-table thead tr th:first-child,
+.category-table thead tr th:first-child,
+.customer-table thead tr th:first-child,
+.machine-table thead tr th:first-child,
+.worker-table thead tr th:first-child,
+.sales-product-table thead tr th:first-child,
+.uom-master-table thead tr th:first-child,
+.product-table thead tr th:first-child,
+.wo-table thead tr th:first-child,
+.pdc-table thead tr th:first-child,
+.sdc-table thead tr th:first-child,
+.si-table thead tr th:first-child,
+.sales-table tr th:first-child {
+  border-radius: 10px 0 0 0 !important;
+}
+
+/* Round the last th — top-right corner */
+.cs-table thead tr th:last-child,
+.lr-table thead tr th:last-child,
+.ie-table thead tr th:last-child,
+.category-table thead tr th:last-child,
+.customer-table thead tr th:last-child,
+.machine-table thead tr th:last-child,
+.worker-table thead tr th:last-child,
+.sales-product-table thead tr th:last-child,
+.uom-master-table thead tr th:last-child,
+.product-table thead tr th:last-child,
+.wo-table thead tr th:last-child,
+.pdc-table thead tr th:last-child,
+.sdc-table thead tr th:last-child,
+.si-table thead tr th:last-child,
+.sales-table tr th:last-child {
+  border-radius: 0 10px 0 0 !important;
+}

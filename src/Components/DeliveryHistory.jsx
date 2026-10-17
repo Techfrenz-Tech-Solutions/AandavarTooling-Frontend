@@ -275,20 +275,20 @@ function DeliveryHistory() {
 
       <div className="sales-header">
         <h1>Delivery Challan History</h1>
+        <p>View and track delivery challan records</p>
+      </div>
+
+      <div className="dh-search">
+        <i className="fa fa-search"></i>
+        <input
+          type="text"
+          placeholder="Search by customer name or date..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
 
       <div className="sales-table-card">
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <h2>History</h2>
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ padding: "10px", width: "300px" }}
-          />
-        </div>
-
         <table className="sales-table">
           <thead>
             <tr>

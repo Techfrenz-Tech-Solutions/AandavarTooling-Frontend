@@ -418,6 +418,7 @@ function WorkOrderHistory() {
 
       <div className="cs-header">
         <h1>Work Order History</h1>
+        <p>View work order history and returns</p>
       </div>
 
       {/* FILTER */}

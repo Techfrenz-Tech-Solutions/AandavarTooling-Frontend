@@ -127,3 +127,38 @@ padding:10px;
 }
 
 }
+
+
+/* SEARCH BAR */
+
+.cs-search {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #e2e2e2;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+}
+
+.cs-search i {
+  color: #aaa;
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+.cs-search input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  color: #333;
+  background: transparent;
+}
+
+.cs-search input::placeholder {
+  color: #aaa;
+}

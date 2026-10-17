@@ -91,7 +91,10 @@ function ToolInwardEntry() {
       <Topbar />
 
       <div className="ie-header">
-        <h1>Tool Inward Entry</h1>
+        <div>
+          <h1>Tool Inward Entry</h1>
+          <p>Record tool inward stock movements</p>
+        </div>
       </div>
 
       <div className="ie-form">

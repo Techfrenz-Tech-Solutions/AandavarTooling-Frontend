@@ -233,9 +233,10 @@ function ToolStack() {
 
       {/* SEARCH */}
       <div className="cs-search">
+        <i className="fa fa-search"></i>
         <input
           type="text"
-          placeholder="Search by Tool Name, UOM or ID"
+          placeholder="Search by Tool Name, UOM or ID..."
           value={searchTerm}
           onChange={handleSearch}
         />
